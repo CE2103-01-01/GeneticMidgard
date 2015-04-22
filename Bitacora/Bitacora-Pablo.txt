@@ -1,0 +1,3 @@
+Timesheet:
+22/04/2015
+      Se crea la interfaz random para pruebas, Y las clases iniciales casi vacias
