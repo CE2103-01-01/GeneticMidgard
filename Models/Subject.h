@@ -6,23 +6,24 @@
 #define PROJECTMIDGARD_SUBJECT_H
 
 
+#include <stdint.h>
 #include "Genes.h"
 #include "Weapon.h"
 #include "Armor.h"
 
 class Subject {
 private:
-    unsigned int health;
-    unsigned int generation;
-    unsigned int age;
-    unsigned int exp;//Experiencia
+    uint8_t health;
+    uint8_t generation;
+    uint8_t age;
+    uint8_t exp;//Experiencia
     Genes genes;
     Weapon weapon;
     Armor armor;
 
 public:
-    unsigned int getAtack();// Se suma armor y la defensa de los genes
-    unsigned int makeDamage();// Se suma ataque y weapon
+    uint8_t getAtack();// Se suma armor y la defensa de los genes
+    uint8_t makeDamage();// Se suma ataque y weapon
 };
 
 
