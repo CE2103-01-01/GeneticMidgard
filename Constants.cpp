@@ -10,4 +10,6 @@ namespace constants {
     extern const std::string homePath = getenv("HOME");
     extern const std::string projectPath = homePath + "/Midgard";
     int a = mkdir(projectPath.c_str(), 0777);
+
 }
+
