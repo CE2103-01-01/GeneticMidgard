@@ -4,7 +4,7 @@
 
 
 #include "Random.h"
-namespace random{
+namespace trueRandom{
     int getRandom() {
         std::srand(std::time(0)); //use current time as seed for random generator
         return std::rand();
