@@ -31,10 +31,10 @@ public:
     uint8_t getAtack();// Se suma armor y la defensa de los genes
     uint8_t makeDamage();// Se suma ataque y weapon
     Genes getGenes(); // Retorna los genes del individuo
-    Subject* getParrent1(); // Obtiene padre 1
-    Subject* getParrent2(); // Obtiene padre 2
-    void setParrent1(Subject* parrent1); //setea valor de padre 1
-    void setParrent2(Subject* parrent2); //setea valor de padre 2
+    Subject*getFather(); // Obtiene padre 1
+    Subject*getMother(); // Obtiene padre 2
+    void setFather(Subject *pFather); //setea valor de padre 1
+    void setMother(Subject *pMother); //setea valor de padre 2
     void setGenes();
     void setFitness(int);
     int getFitness();

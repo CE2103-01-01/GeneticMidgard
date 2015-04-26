@@ -11,22 +11,22 @@
 }*/
 
 
-void Subject::setParrent1(Subject *parrent1)
+void Subject::setFather(Subject *pFather)
 {
-    this->father = parrent1;
+    this->father = pFather;
 }
 
-Subject* Subject::getParrent1()
+Subject* Subject::getFather()
 {
     return this->father;
 }
 
-void Subject::setParrent2(Subject *parrent2)
+void Subject::setMother(Subject *pMother)
 {
-    this->mother = parrent2;
+    this->mother = pMother;
 }
 
-Subject* Subject::getParrent2()
+Subject* Subject::getMother()
 {
     return this->mother;
 }
