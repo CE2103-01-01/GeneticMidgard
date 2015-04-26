@@ -1,0 +1,7 @@
+25/04/15
+    Reunión con los compañeros mediante audio llamada en skype  1h
+    18.00 se inicia con lectura de algoritmo genetico.
+    de forma teórica para así tener de forma clara la implementación de estos 50 min
+        -http://www.sc.ehu.es/ccwbayes/docencia/mmcc/docs/t2geneticos.pdf
+    se establece funciones basico de la clase de poblacion 10 min
+    se realiza investigacion sobre uso de operadores logicos para facilitar uso de mascara en cruze de genes

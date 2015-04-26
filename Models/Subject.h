@@ -17,6 +17,7 @@ private:
     uint8_t generation;
     uint8_t age;
     uint8_t exp;//Experiencia
+    int fitness;
 
     Subject* parrent1; //padre del individuo
     Subject* parrent2; //padre del individuo
@@ -34,6 +35,8 @@ public:
     void setParrent1(Subject* parrent1); //setea valor de padre 1
     void setParrent2(Subject* parrent2); //setea valor de padre 2
     void setGenes();
+    void setFitness(int);
+    int getFitness();
 };
 
 
