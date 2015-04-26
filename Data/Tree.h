@@ -22,6 +22,7 @@ public:
     ~Tree();
     T* searchElement(int);
     void insertElement(T,int);
+    void insertElement(T);
     void deleteElement(int);
     void deleteElement(int index, void method(T*));
     int lenght();
@@ -126,6 +127,21 @@ template <class T> void Tree<T>::insertElement(T newElement, int index){
         split(root);
         (*floors)++;
         insertElement(newElement,index);
+    }
+}
+
+/** Inserta
+ * @param: T param: dato a insertar
+ * @brief: calcula la ruta al indice recibido e inserta el dato
+ */
+template <class T> void Tree<T>::insertElement(T newElement){
+    if((*len) < max(*floors)){
+        T* container = searchElement(++(*len));
+        *container = newElement;
+    }else{
+        split(root);
+        (*floors)++;
+        insertElement(newElement);
     }
 }
 
