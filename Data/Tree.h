@@ -54,7 +54,7 @@ template <class T> Tree<T>::~Tree(){
  */
 template <class T> int Tree<T>::max(int floor){
     if(floor > 0){
-        return Constants::TREE_SIZE + (((floor-1)*floor)/2) * pow(Constants::TREE_SIZE,2);
+        return TREE_SIZE + (((floor-1)*floor)/2) * pow(TREE_SIZE,2);
     }else{
         return 0;
     }
@@ -67,7 +67,7 @@ template <class T> int Tree<T>::max(int floor){
 template <class T> void Tree<T>::split(Leaf* toSplit){
     if(!(toSplit->isTerminal())){
         void* sons = toSplit->getSons();
-        for(int i=0; i<Constants::TREE_SIZE; i++){
+        for(int i=0; i<TREE_SIZE; i++){
             split((Leaf*)(sons+i*sizeof(Leaf)));
         };
     }else{
@@ -81,12 +81,12 @@ template <class T> void Tree<T>::split(Leaf* toSplit){
  * @brief: Realiza los calculos necesarios para generar una serie de enteros con la ruta
  */
 template <class T> void Tree<T>::createPath(int indexToInsert, int floor, int* path){
-    *path = (indexToInsert-1)%Constants::TREE_SIZE;  //Container final
-    indexToInsert = (indexToInsert-1-max((floor-1)))/Constants::TREE_SIZE;
+    *path = (indexToInsert-1)%TREE_SIZE;  //Container final
+    indexToInsert = (indexToInsert-1-max((floor-1)))/TREE_SIZE;
     for(int i=1; i<floor; i++){
-        if(indexToInsert>=Constants::TREE_SIZE) indexToInsert %= Constants::TREE_SIZE;
+        if(indexToInsert>=TREE_SIZE) indexToInsert %= TREE_SIZE;
         *(path + i*sizeof(int)) = indexToInsert;
-        if(i<floor-1) indexToInsert /= Constants::TREE_SIZE;
+        if(i<floor-1) indexToInsert /= TREE_SIZE;
     }
 };
 

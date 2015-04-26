@@ -10,12 +10,13 @@
 #include <fstream>
 #include <sys/stat.h>
 
+#define TREE_SIZE 100
+
 namespace constants
 {
     // forward declarations only
     extern const std::string homePath;
     extern const std::string projectPath;
-
 }
 
 
