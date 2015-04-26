@@ -4,8 +4,15 @@
 
 #include "Algorithms.h"
 
-Subject* Algorithms::crossOver(Subject parrent1, Subject parrent2)
+Subject* Algorithms::crossOver(Subject* father, Subject* mother)
 {
-    Subject* new_subject = new Subject();
+//    Subject* new_subject = new Subject();
+    int pivot = trueRandom::randRange(0, 8);
+
+    for(int i = 0; i < pivot; i++)
+    {
+
+    }
+
 
 }

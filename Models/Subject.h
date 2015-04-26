@@ -13,15 +13,14 @@
 
 class Subject {
 private:
-    uint16_t id;
     uint8_t health;
     uint8_t generation;
     uint8_t age;
     uint8_t exp;//Experiencia
     int fitness;
 
-    Subject*father; //padre del individuo
-    Subject*mother; //madre del individuo
+    Subject* father; //padre del individuo
+    Subject* mother; //padre del individuo
     Genes genes;
     Weapon weapon;
     Armor armor;

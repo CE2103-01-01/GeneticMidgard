@@ -16,6 +16,8 @@ public:
     Genes(char pDna[Gene::lenght]);
     Genes(void* pDna);//largo: 8 bits * Gene::lenght;
     char getGene(Gene gen);
+    int getGenelenght(); //
+    void* getGenes();
 };
 
 
