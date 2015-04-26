@@ -13,6 +13,6 @@ Subject* Algorithms::crossOver(Subject* father, Subject* mother)
     {
 
     }
-
+    return NULL;
 
 }
