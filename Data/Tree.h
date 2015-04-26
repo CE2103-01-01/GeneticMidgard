@@ -2,12 +2,11 @@
 // Created by roberto on 19/04/15.
 //
 
-#ifndef VH2015_TREE_H
-#define VH2015_TREE_H
+#ifndef PROJECTMIDGARD_TREE_H
+#define PROJECTMIDGARD_TREE_H
 
 #include <cstdlib>
 #include <math.h>
-#include "Constants.h"
 #include "Leaf.h"
 
 template <class T> class Tree{
@@ -21,6 +20,7 @@ public:
     Tree();
     ~Tree();
     T* searchElement(int);
+    void searchAndDo(int indexToSearch, void method(T*));
     void insertElement(T,int);
     void insertElement(T);
     void deleteElement(int);
@@ -85,11 +85,14 @@ template <class T> void Tree<T>::createPath(int indexToInsert, int floor, int* p
     *path = (indexToInsert-1)%TREE_SIZE;  //Container final
     indexToInsert = (indexToInsert-1-max((floor-1)))/TREE_SIZE;
     for(int i=1; i<floor; i++){
-        if(indexToInsert>=TREE_SIZE) indexToInsert %= TREE_SIZE;
-        *(path + i*sizeof(int)) = indexToInsert;
-        if(i<floor-1) indexToInsert /= TREE_SIZE;
+        if(indexToInsert>=TREE_SIZE){
+            indexToInsert = indexToInsert%TREE_SIZE;
+        }
+        if(i<floor-1){
+            indexToInsert = indexToInsert/TREE_SIZE;
+        }
     }
-};
+}
 
 /** Buscador
  * @param: int index: indice a buscar
@@ -98,7 +101,9 @@ template <class T> void Tree<T>::createPath(int indexToInsert, int floor, int* p
 template <class T> T* Tree<T>::searchElement(int indexToSearch){
     int dataFloor=*floors;
     if(indexToSearch <= max(dataFloor)){
-        while(max(dataFloor-1) > indexToSearch) dataFloor--;
+        while(max(dataFloor-1) > indexToSearch) {
+            dataFloor--;
+        }
         int* pathToFollow = static_cast<int*>(malloc(dataFloor*sizeof(int)));
         createPath(indexToSearch,dataFloor,pathToFollow);
         Leaf* tmpFather = root;
@@ -107,10 +112,19 @@ template <class T> T* Tree<T>::searchElement(int indexToSearch){
             tmpFather = static_cast<Leaf*>(tmpFather->getSons() + offset*sizeof(Leaf));
         }
         free(pathToFollow);
-        return static_cast<T*>(tmpFather->getContainers() + (*pathToFollow)*sizeof(T));
+        return static_cast<T*>(tmpFather->getContainers() + ((indexToSearch-1)%TREE_SIZE)*sizeof(T));
     }else{
         return 0;
     }
+}
+
+/** Buscador
+ * @param: int index: indice a buscar
+ * @param: void method(T*): metodo a ejecutar
+ * @brief: calcula la ruta al indice recibido
+ */
+template <class T> void Tree<T>::searchAndDo(int indexToSearch, void method(T*)){
+    method(searchElement(indexToSearch));
 }
 
 /** Inserta
@@ -135,14 +149,7 @@ template <class T> void Tree<T>::insertElement(T newElement, int index){
  * @brief: calcula la ruta al indice recibido e inserta el dato
  */
 template <class T> void Tree<T>::insertElement(T newElement){
-    if((*len) < max(*floors)){
-        T* container = searchElement(++(*len));
-        *container = newElement;
-    }else{
-        split(root);
-        (*floors)++;
-        insertElement(newElement);
-    }
+    insertElement(newElement,*len);
 }
 
 /** Borrador con metodo
@@ -171,4 +178,4 @@ template <class T> int Tree<T>::max(){
 }
 
 
-#endif //VH2015_TREE_H
+#endif //PROJECTMIDGARD_TREE_H

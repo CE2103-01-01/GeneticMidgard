@@ -2,12 +2,12 @@
 // Created by roberto on 20/04/15.
 //
 
-#ifndef VH2015_LEAF_H
-#define VH2015_LEAF_H
+#ifndef PROJECTMIDGARD_LEAF_H
+#define PROJECTMIDGARD_LEAF_H
 
 #include <cstdlib>
 #include <iostream>
-#include "Constants.h"
+#include "../Constants.h"
 
 /** @brief miembro del arbol
  * Numero de hijos: n, tal que n=treeSize 
@@ -30,4 +30,4 @@ public:
     int len();
 };
 
-#endif //VH2015_LEAF_H
+#endif //PROJECTMIDGARD_LEAF_H

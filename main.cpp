@@ -1,8 +1,9 @@
 #include <iostream>
+#include "Data/TreeProof.h"
 
 using namespace std;
 
 int main() {
-    cout << "Hello, World!" << endl;
+    proof();
     return 0;
 }

@@ -6,6 +6,6 @@
 
 Subject* Algorithms::crossOver(Subject parrent1, Subject parrent2)
 {
-    Subject* new_subject = new Subject();
+//    Subject* new_subject = new Subject();
 
 }
