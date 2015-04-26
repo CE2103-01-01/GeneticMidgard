@@ -9,7 +9,7 @@
 #include <iostream>
 #include <ctime>
 
-namespace random
+namespace trueRandom
 {
     int getRandom();
     int randRange(int,int);

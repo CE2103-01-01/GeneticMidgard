@@ -1,0 +1,13 @@
+25/04/2015
+    Reunión con los compañeros mediante audio llamada en skype1h
+    Se establecen los funcionamientos básicos del proyecto
+    12:06 Se inicia con la lectura de algorítmos genéticos,
+    de forma teórica para así tener de forma clara la implementación de estos 1h:30min
+        -http://www.sc.ehu.es/ccwbayes/docencia/mmcc/docs/t2geneticos.pdf
+        -http://www.theprojectspot.com/tutorial-post/creating-a-genetic-algorithm-for-beginners/3
+
+    3:00 Se establecen en la clase subject los padres de cada individuo y sus respectivos getters y setters
+    Se realiza investigación sobre el corrimiento(desplazamiento) en bytes en un void*
+        -http://arco.esi.uclm.es/~david.villa/pensar_en_C++/vol1/ch03s07s06.html
+    Se crea la clase Algorithms la cual se encargará de realizar los cruces de genes entre individuos
+

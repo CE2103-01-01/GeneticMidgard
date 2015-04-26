@@ -5,23 +5,17 @@
 #ifndef PROJECTMIDGARD_GENES_H
 #define PROJECTMIDGARD_GENES_H
 
-
-#include "../Data/BitVector.h"
+#include "../Constants.h"
+#include <stdlib.h>
 
 class Genes {
 private:
-    BitVector dna;
+    void* dna;
 
 public:
-    unsigned int getInmuneSystem();
-    unsigned int getInteligence();
-    unsigned int getAttack();
-    unsigned int getDefense();
-    unsigned int getVitalEnergy();
-    unsigned int getBlot();
-    unsigned int getRunes();
-    unsigned int getSuperstition();
-    bool getGender();// T:Male F:Female
+    Genes(char pDna[Gene::lenght]);
+    Genes(void* pDna);//largo: 8 bits * Gene::lenght;
+    char getGene(Gene gen);
 };
 
 

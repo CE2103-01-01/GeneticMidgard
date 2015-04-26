@@ -1,3 +1,5 @@
 Timesheet:
 22/04/2015
-      Se crea la interfaz random para pruebas, Y las clases iniciales casi vacias
+      Se crea la interfaz random para pruebas, Y las clases iniciales casi vacias 1h
+25/04/2015
+      Reunion Jairo y Alex Diagrama de clases 2h

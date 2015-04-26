@@ -19,5 +19,9 @@ namespace constants
     extern const std::string projectPath;
 }
 
+enum Gene{InmuneSystem, Inteligence, Attack, Defense, VitalEnergy, Blot, Runes, Superstition, lenght};
+
+
+
 
 #endif //PROJECTMIDGARD_CONSTANTS_H
