@@ -6,11 +6,12 @@
 #define PROJECTMIDGARD_ALGORITHMS_H
 
 #include "../Models/Subject.h"
+#include "../Interface/Random.h"
 
 class Algorithms {
 public:
 
-    Subject* crossOver(Subject parrent1, Subject parrent2);
+    Subject* crossOver(Subject* father, Subject* mother);
 
 };
 

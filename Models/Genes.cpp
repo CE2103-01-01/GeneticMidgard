@@ -5,7 +5,8 @@
 
 #include "Genes.h"
 
-Genes::Genes(char pDna[Gene::lenght]) {
+Genes::Genes(char pDna[Gene::lenght])
+{
  dna = calloc(1,sizeof((Gene::lenght*sizeof(char))));
  char* tmp =  static_cast<char*>(dna);
  for (int i = 0; i < Gene::lenght; ++i) {
@@ -13,12 +14,18 @@ Genes::Genes(char pDna[Gene::lenght]) {
  }
 };
 
-Genes::Genes(void *pDna) {
+Genes::Genes(void *pDna)
+{
  dna = pDna;
 };
 
-
-char Genes::getGene(Gene gen) {
+char Genes::getGene(Gene gen)
+{
  char* tmp =  static_cast<char*>(dna);
  return *(tmp+gen);
+}
+
+int Genes::getGenelenght()
+{
+ return 0;
 }
