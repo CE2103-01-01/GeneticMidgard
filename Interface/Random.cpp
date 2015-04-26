@@ -10,11 +10,11 @@ namespace trueRandom{
         return std::rand();
     }
 
-    int randRange(int i, int i1) {
-        return 0;
+    int randRange(int min, int max) {
+        return min + (rand() % (int)(max - min + 1));
     }
 
-    float randRange(float d, float d1) {
-        return 0;
+    float randRange(float min, float max) {
+        return min + (rand() % (int)(max - min + 1));//TODO-pablo check si funciona
     }
 }
