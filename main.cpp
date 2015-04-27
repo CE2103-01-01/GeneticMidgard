@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Data/TreeProof.h"
 #include "Interface/Random.h"
+#include "Models/Terrain.h"
 
 #define PR(STR, EXPR) \
   cout << STR; printBinary(EXPR); cout << endl;
@@ -10,7 +11,7 @@ void printBinary(const unsigned char val);
 
 int main()
 {
-    proof();
+    Terrain::initArray();
 
     unsigned int getval;
     unsigned char a, b;

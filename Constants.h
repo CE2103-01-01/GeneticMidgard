@@ -24,6 +24,10 @@
 
 namespace constants {
     extern const std::string HOME_PATH; //TODO : Buscar usos, pasar a mayucula
+    extern const std::string PROJECT_PATH; //TODO : Buscar usos, pasar a mayucula
+    extern char const *const MAP_FILE;
 }
+
+enum Gene{InmuneSystem, Inteligence, Attack, Defense, VitalEnergy, Blot, Runes, Superstition, lenght};
 
 #endif //PROJECTMIDGARD_CONSTANTS_H

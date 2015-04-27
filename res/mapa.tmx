@@ -1,20 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="80" height="80" tilewidth="32" tileheight="32" nextobjectid="5">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="80" height="80" tilewidth="32" tileheight="32" backgroundcolor="#387100" nextobjectid="5">
  <tileset firstgid="1" name="terrain_atlas" tilewidth="32" tileheight="32">
   <image source="terrain_atlas.png" trans="d6d6d6" width="1024" height="1024"/>
-  <terraintypes>
-   <terrain name="lake" tile="-1"/>
-   <terrain name="tree" tile="-1"/>
-  </terraintypes>
-  <tile id="358" terrain="0,0,0,0"/>
-  <tile id="359" terrain="0,0,0,0"/>
-  <tile id="360" terrain="0,0,0,0"/>
-  <tile id="390" terrain="0,0,0,0"/>
-  <tile id="391" terrain="0,0,0,0"/>
-  <tile id="392" terrain="0,0,0,0"/>
-  <tile id="422" terrain="0,0,0,0"/>
-  <tile id="423" terrain="0,0,0,0"/>
-  <tile id="424" terrain="0,0,0,0"/>
  </tileset>
  <layer name="Terreno" width="80" height="80">
   <data>
@@ -6421,7 +6408,7 @@
   </data>
  </layer>
  <layer name="Objetos" width="80" height="80">
-  <data>
+  <data >
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -11082,7 +11069,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="458"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
