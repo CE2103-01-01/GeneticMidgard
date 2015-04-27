@@ -1,9 +1,11 @@
 Timesheet
 
 26/04 1h Arreglos e integracion de Tree
+27/04 1h Implementación de clase Chromosome
 
 
 
 Bitácora
 
-26/04 1h Arreglos e integracion de Tree: se implementan nuevos metodos, se corrije error generado por nombres de variables y se intregra Tree
+26/04 1h Arreglos e integracion de Tree: se implementan nuevos metodos, se corrije error generado por nombres de variables y se intregra Tree.
+17/04 1h Implementación de clase Chromosome: esta clase contiene el material genetico, se definen las constantes necesarias y la lectuara de genes mediante XML, asi mismo se crea un metodo random para la primera generación y se integra con Subject.
