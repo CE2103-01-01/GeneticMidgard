@@ -18,8 +18,7 @@ set(HEADER_FILES Interface/Random.h
                  Data/Leaf.h
                  Data/Tree.h
                  Data/TreeProof.h
-                 libs/TMXParser.h
-                 libs/base64.h)
+  )
 
 set(SOURCE_FILES main.cpp
                  Interface/Random.cpp
@@ -36,7 +35,9 @@ set (DATA_STRUCTS   Data/TreeProof.cpp
                     Data/Leaf.cpp)
                     
 set(TMX_FILES   libs/TMXParser.cpp
-                libs/base64.cpp)
+                libs/base64.cpp
+                libs/TMXParser.h
+                libs/base64.h)
                 
 set(XML libs/rapidxml/rapidxml.hpp
         libs/rapidxml/rapidxml_iterators.hpp
@@ -47,6 +48,7 @@ set(XML libs/rapidxml/rapidxml.hpp
         libs/pugixml/pugixml.cpp)
 
 add_executable(ProjectMidgard   ${SOURCE_FILES}
+                                ${HEADER_FILES}
                                 ${TMX_FILES}
                                 ${XML}
                                 ${DATA_STRUCTS})
