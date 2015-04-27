@@ -12,12 +12,14 @@ set(HEADER_FILES Interface/Random.h
                  Models/Subject.h
                  Models/Genes.h
                  Models/Weapon.h
-                 Algorithms/Algorithms.h
                  Models/Armor.h
+                 Algorithms/Algorithms.h
                  Generators/EvolutionGenerator.h
                  Data/Leaf.h
                  Data/Tree.h
-                 Data/TreeProof.h)
+                 Data/TreeProof.h
+                 libs/TMXParser.h
+                 libs/base64.h)
 
 set(SOURCE_FILES main.cpp
                  Interface/Random.cpp
@@ -29,19 +31,12 @@ set(SOURCE_FILES main.cpp
                  Generators/EvolutionGenerator.cpp
                  Algorithms/Algorithms.cpp)
 
-                 
-set (DATA_STRUCTS
-                    Data/TreeProof.cpp
+set (DATA_STRUCTS   Data/TreeProof.cpp
                     Data/DoubleList.cpp
-                    Data/Leaf.cpp
-                    )
+                    Data/Leaf.cpp)
                     
-set(TMX_FILES   libs/TMXParser.h
-                libs/base64.h
-                libs/TMXParser.cpp
-                libs/TMXParser.cpp
-                libs/base64.cpp
-                )
+set(TMX_FILES   libs/TMXParser.cpp
+                libs/base64.cpp)
                 
 set(XML libs/rapidxml/rapidxml.hpp
         libs/rapidxml/rapidxml_iterators.hpp
@@ -49,8 +44,9 @@ set(XML libs/rapidxml/rapidxml.hpp
         libs/rapidxml/rapidxml_utils.hpp
         libs/pugixml/pugiconfig.hpp
         libs/pugixml/pugixml.hpp
-        libs/pugixml/pugixml.cpp
-        )
+        libs/pugixml/pugixml.cpp)
 
-
-add_executable(ProjectMidgard ${SOURCE_FILES} ${TMX_FILES} ${XML} ${DATA_STRUCTS}  )
+add_executable(ProjectMidgard   ${SOURCE_FILES}
+                                ${TMX_FILES}
+                                ${XML}
+                                ${DATA_STRUCTS})
