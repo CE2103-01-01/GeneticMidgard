@@ -19,7 +19,7 @@ Chromosome::Chromosome() {
     srand(time(NULL));
     for (int i = 0; i < *numberOfGenes; ++i) {
         for(int j = 0; j < GENE_LEN_ON_BYTES; j++){
-            *static_cast<char*>(geneticData + i*j) = rand()%256;
+            *static_cast<unsigned char*>(geneticData + i*j) = rand()%256;
         }
     }
 };
