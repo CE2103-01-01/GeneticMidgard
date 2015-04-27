@@ -6,8 +6,6 @@
 #define PROJECTMIDGARD_TREE_H
 
 #include "Leaf.h"
-#include <math.h>
-#include <iostream>
 
 template <class T> class Tree{
     int* len;
