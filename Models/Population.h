@@ -8,7 +8,7 @@
 #define PROJECTMIDGARD_POPULATION_H
 class Population {
 private:
-    DoubleList people; //lista de los individuos de la poblacion
+    DoubleList<Subject> people; //lista de los individuos de la poblacion
     std::string populationType;// tipo de la poblacion
 
 

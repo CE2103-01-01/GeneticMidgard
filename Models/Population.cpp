@@ -5,11 +5,11 @@
 #include "Population.h"
 Population::Population(int size, std::string type) {
     populationType = type;
-    people = new DoubleList();
-    for(int i = 0; i<size,i++){
-        Subject newIndividual = new Subject();
+    people = DoubleList<Subject>();
+    for(int i = 0; i<size;i++){
+        //Subject newIndividual =  Subject();
         //generar el invididuo
-        people.add(newIndividual);
+        //people.add(newIndividual);
 
     }
 
@@ -19,7 +19,7 @@ Population::~Population() {
 }
 Subject Population::getIndividual(int position) {
     if(position<people.len()){
-        return people.get(position);
+        return *people.get(position);
     }
 }
 Subject Population::getFittest() {

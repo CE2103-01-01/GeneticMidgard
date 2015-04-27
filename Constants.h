@@ -13,8 +13,9 @@
 #include <sys/stat.h>
 
 namespace constants {
-    extern const std::string homePath; //TODO : Buscar usos, pasar a mayucula
-    extern const std::string projectPath; //TODO : Buscar usos, pasar a mayucula
+    extern const std::string HOME_PATH; //TODO : Buscar usos, pasar a mayucula
+    extern const std::string PROJECT_PATH; //TODO : Buscar usos, pasar a mayucula
+    extern char const *const MAP_FILE;
 }
 
 enum Gene{InmuneSystem, Inteligence, Attack, Defense, VitalEnergy, Blot, Runes, Superstition, lenght};

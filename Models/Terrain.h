@@ -5,13 +5,30 @@
 #ifndef PROJECTMIDGARD_TERRAIN_H
 #define PROJECTMIDGARD_TERRAIN_H
 
-#include "../libs/TMXParser.h"
+
+static char const *const MAP_NODE = "map";
+
+static char const *const LAYER_NODE = "layer";
+
+static char const *const HEIGHT = "height";
+
+static char const *const WIDTH = "width";
+
+static char const *const DATA_NODE = "data";
+
+static char const *const TILE_NODE = "tile";
+#include <iostream>
+#include "../libs/rapidxml/rapidxml.hpp"
+#include "../libs/rapidxml/rapidxml_utils.hpp"
+#include "../Constants.h"
 
 class Terrain {
-private:
-    int array[80][80] ;
 public:
-    void initArray();
+    static int width;
+    static int height;
+    static int *array ;
+    static void initArray();
+    static void printArray();
 };
 
 

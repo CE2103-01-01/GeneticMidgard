@@ -4,15 +4,12 @@
 
 
 #include "Constants.h"
-#include <stdlib.h>
-#include <iosfwd>
-#include <fstream>
-#include <sys/stat.h>
 
 namespace constants {
 
-    extern const std::string homePath = getenv("HOME"); //TODO : Buscar usos, pasar a mayucula
-    extern const std::string projectPath = homePath + "/Midgard"; //TODO : Buscar usos, pasar a mayucula
-    int a = mkdir(projectPath.c_str(), 0777);   //TODO : ¿QUE ES a?
+    extern const std::string HOME_PATH = getenv("HOME"); //TODO : Buscar usos, pasar a mayucula
+    extern const std::string PROJECT_PATH = HOME_PATH + "/Midgard"; //TODO : Buscar usos, pasar a mayucula
+    int creaDirA = mkdir(PROJECT_PATH.c_str(), 0777);
+    extern char const *const MAP_FILE = "../res/mapa.tmx";
 
 }
