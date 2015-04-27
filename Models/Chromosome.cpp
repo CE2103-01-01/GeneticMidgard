@@ -17,9 +17,9 @@ Chromosome::Chromosome() {
     *numberOfGenes = genesXML.child(GENES_XML_ROOT).child(GENES_XML_LENGHT).attribute(GENES_XML_LENGHT_INFO).as_int();
     geneticData = malloc((*numberOfGenes) * GENE_LEN_ON_BYTES);
     srand(time(NULL));
-    for (int i = 0; i < *numberOfGenes; ++i) {
+    for (int i = 0; i < (*numberOfGenes)*(GENE_LEN_ON_BYTES); i+=GENE_LEN_ON_BYTES) {
         for(int j = 0; j < GENE_LEN_ON_BYTES; j++){
-            *static_cast<unsigned char*>(geneticData + i*j) = rand()%256;
+            *static_cast<unsigned char*>(geneticData + i + j) = rand()%256;
         }
     }
 };
@@ -36,3 +36,10 @@ void* Chromosome::getGene(int geneNumber) {
         return 0;
     }
 }
+
+/**Accede al numero de genes
+ * @return int: *numberOfGenes
+ */
+int Chromosome::getNumberOfGenes(){
+    return *numberOfGenes;
+};
