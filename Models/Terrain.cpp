@@ -9,6 +9,7 @@ using namespace std;
 int Terrain::width = 0;
 int Terrain::height = 0;
 int *Terrain::array = 0;
+
 void Terrain::initArray() {
     rapidxml::xml_node<>* root_node;
     rapidxml::xml_document<> doc;
@@ -40,3 +41,5 @@ void Terrain::printArray() {
         if(i%width==0)cout<<endl;
     }
 }
+
+

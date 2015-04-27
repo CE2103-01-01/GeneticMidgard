@@ -12,6 +12,7 @@
  * @return Chromosome*: dos cromosomas hijos, (return) & (return + sizeof(Chromosome))
  */
 Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation, Chromosome* motherGeneticInformation){
+    int numberOfGenes;// TODO-roberto que es esto?? no esta definido
     int numOfGenes = fatherGeneticInformation->getNumberOfGenes();
     void* newGeneticMaterial = malloc(2*numberOfGenes*GENE_LEN_ON_BYTES);
     for(int i=0; i < numOfGenes; i++){

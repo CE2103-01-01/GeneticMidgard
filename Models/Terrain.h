@@ -16,7 +16,7 @@ static char const *const WIDTH = "width";
 
 static char const *const DATA_NODE = "data";
 
-static char const *const TILE_NODE = "tile";
+static char const *const TILE_NODE = "title";
 #include <iostream>
 #include "../libs/rapidxml/rapidxml.hpp"
 #include "../libs/rapidxml/rapidxml_utils.hpp"

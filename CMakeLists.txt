@@ -9,11 +9,13 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/r
 
 set(HEADER_FILES Interface/Random.h
                  Constants.h
+                 #Models/Population.h
                  Models/Subject.h
                  Models/Chromosome.h
                  Models/Weapon.h
                  Models/Armor.h
                  Algorithms/Algorithms.h
+                 Algorithms/ChromosomeMixer.h
                  Generators/EvolutionGenerator.h
                  Data/Leaf.h
                  Data/Tree.h
@@ -23,12 +25,15 @@ set(HEADER_FILES Interface/Random.h
 set(SOURCE_FILES main.cpp
                  Interface/Random.cpp
                  Constants.cpp
+                 #Models/Population.cpp
                  Models/Subject.cpp
                  Models/Chromosome.cpp
                  Models/Weapon.cpp
                  Models/Armor.cpp
+                 Models/Terrain.cpp
                  Generators/EvolutionGenerator.cpp
-                 Algorithms/Algorithms.cpp)
+                 Algorithms/Algorithms.cpp
+                 Algorithms/ChromosomeMixer.cpp)
 
 set (DATA_STRUCTS   Data/TreeProof.cpp
                     Data/DoubleList.cpp

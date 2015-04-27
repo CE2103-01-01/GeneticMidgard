@@ -5,8 +5,8 @@
 #ifndef PROJECTMIDGARD_CHROMOSOMEMIXER_H
 #define PROJECTMIDGARD_CHROMOSOMEMIXER_H
 
-#include "Chromosome.h"
-#include "Constants.h"
+#include "../Models/Chromosome.h"
+#include "../Constants.h"
 
 class ChromosomeMixer {
     public:
