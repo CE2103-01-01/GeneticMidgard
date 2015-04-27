@@ -13,7 +13,6 @@
 #define GENES_XML_LENGHT_INFO "CHR_LEN"
 #define GENES_XML_CHILD "GENE"
 #define GENES_XML_CHILD_INFO "NAME"
-#define PROJECT_PATH "/Midgard"
 
 //TODO: estas bibliotecas se estan incluyendo en muchos archivos donde no se ocupan y hacen el codigo mas pesado,
 // se debe buscar su uso y separarlo...
@@ -27,7 +26,5 @@ namespace constants {
     extern const std::string PROJECT_PATH; //TODO : Buscar usos, pasar a mayucula
     extern char const *const MAP_FILE;
 }
-
-enum Gene{InmuneSystem, Inteligence, Attack, Defense, VitalEnergy, Blot, Runes, Superstition, lenght};
 
 #endif //PROJECTMIDGARD_CONSTANTS_H
