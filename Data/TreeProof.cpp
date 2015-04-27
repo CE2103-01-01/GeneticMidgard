@@ -14,7 +14,7 @@ void setNumber(int* toSet, void* number){
 
 void proof(){
     Tree<int>* tree = static_cast<Tree<int>*>(malloc(sizeof(Tree<int>)));
-    new(tree) Tree<int>();
+    new(tree) Tree<int>(TREE_SIZE);
     std::cout << "SE CREA EL ARBOL" <<std::endl;
     std::cout << "SE INSERTARAN LOS ELEMENTOS MEDIANTE AMBOS METODOS" <<std::endl;
     std::cin.get();

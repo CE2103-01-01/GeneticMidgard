@@ -6,19 +6,19 @@
 #define PROJECTMIDGARD_LEAF_H
 
 #include <cstdlib>
-#include "../Constants.h"
 
 /** @brief miembro del arbol
  * Numero de hijos: n, tal que n=treeSize 
  * Numero de containers: n-1
  */
 class Leaf{
+    int* numberOfSons;
     int* sizeOfContainer;
     void* containers;
     void* sons;
     bool* terminal;                 //Bandera que indica si es terminal: true=sin hijos
 public:
-    Leaf(int);
+    Leaf(int,int*);
     ~Leaf();
     void* getSons();
     void* getContainers();

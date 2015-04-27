@@ -9,6 +9,7 @@
 
 template <class T> class Tree{
     int* len;
+    int* size;
     int* floors;
     Leaf* root;
     void split(Leaf*);
@@ -28,14 +29,17 @@ public:
 
 /** Constructor
  * @brief: Reserva el espacio de las variables y la primera hoja
+ * @param int leafSizeParam: numero de hijos y nodos por hoja
  */
-template <class T> Tree<T>::Tree(){
-    root = static_cast<Leaf*>(malloc(sizeof(Leaf)));
-    new(root) Leaf(sizeof(T));
+template <class T> Tree<T>::Tree(int leafSizeParam){
+    leafSize = static_cast<int*>(malloc(sizeof(int)));
+    *leafSize = leafSizeParam;
     len = static_cast<int*>(malloc(sizeof(int)));
     *len = 0;
     floors = static_cast<int*>(malloc(sizeof(int)));
     *floors= 1;
+    root = static_cast<Leaf*>(malloc(sizeof(Leaf)));
+    new(root) Leaf(sizeof(T), leafSize);
 }
 
 /** Destructor
@@ -43,6 +47,7 @@ template <class T> Tree<T>::Tree(){
  */
 template <class T> Tree<T>::~Tree(){
     free(len);
+    free(leafSize);
     free(root);
     free(floors);
 }
@@ -52,7 +57,7 @@ template <class T> Tree<T>::~Tree(){
  */
 template <class T> int Tree<T>::max(int floor){
     if(floor > 0){
-        return TREE_SIZE + (((floor-1) * floor) / 2) * TREE_SIZE * TREE_SIZE;
+        return (*leafSize) + (((floor-1) * floor) / 2) * (*leafSize) * (*leafSize);
     }else{
         return 0;
     }
@@ -65,7 +70,7 @@ template <class T> int Tree<T>::max(int floor){
 template <class T> void Tree<T>::split(Leaf* toSplit){
     if(!(toSplit->isTerminal())){
         void* sons = toSplit->getSons();
-        for(int i=0; i<TREE_SIZE; i++){
+        for(int i=0; i<(*leafSize); i++){
             split((Leaf*)(sons+i*sizeof(Leaf)));
         };
     }else{
@@ -79,15 +84,15 @@ template <class T> void Tree<T>::split(Leaf* toSplit){
  * @brief: Realiza los calculos necesarios para generar una serie de enteros con la ruta
  */
 template <class T> void Tree<T>::createPath(int indexToCreate, int floor, int* path){
-    *path = (indexToCreate-1)%TREE_SIZE;  //Container
-    indexToCreate=(indexToCreate-1-max((floor-1)))/TREE_SIZE;
+    *path = (indexToCreate-1)%(*leafSize);  //Container
+    indexToCreate=(indexToCreate-1-max((floor-1)))/(*leafSize);
     for(int i=1; i<floor; i++){
-        if(indexToCreate>=TREE_SIZE){
-            indexToCreate=indexToCreate%TREE_SIZE;
+        if(indexToCreate>=(*leafSize)){
+            indexToCreate=indexToCreate%(*leafSize);
         }
         *(path+i*sizeof(int)) = indexToCreate;
         if(i<floor-1){
-            indexToCreate=indexToCreate/TREE_SIZE;
+            indexToCreate=indexToCreate/(*leafSize);
         }
     }
 }

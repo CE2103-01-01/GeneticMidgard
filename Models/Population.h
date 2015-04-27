@@ -4,6 +4,7 @@
 #include "../Data/Tree.h"
 #include "Subject.h"
 #include <iostream>
+#include "../Constants.h"
 
 #ifndef PROJECTMIDGARD_POPULATION_H
 #define PROJECTMIDGARD_POPULATION_H

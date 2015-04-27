@@ -6,6 +6,7 @@
 #define PROJECTMIDGARD_TREEPROOF_H
 
 #include "Tree.h"
+#include "../Constants.h"
 #include <iostream>
 
 void print(int*, void*);
