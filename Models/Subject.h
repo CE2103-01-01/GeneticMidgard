@@ -5,38 +5,38 @@
 #ifndef PROJECTMIDGARD_SUBJECT_H
 #define PROJECTMIDGARD_SUBJECT_H
 
-
-#include <stdint.h>
-#include "Genes.h"
+#include "Chromosome.h"
 #include "Weapon.h"
 #include "Armor.h"
 
 class Subject {
-private:
-    uint8_t health;
-    uint8_t generation;
-    uint8_t age;
-    uint8_t exp;//Experiencia
-    int fitness;
-
+    int* health;
+    int* generation;
+    int* age;
+    int* experience;//Experiencia
+    int* fitness;
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
-    Genes genes;
-    Weapon weapon;
-    Armor armor;
+    Chromosome* geneticInformation;
+    Weapon* weapon;
+    Armor* armor;
 
 public:
     Subject();
-    uint8_t getAtack();// Se suma armor y la defensa de los genes
-    uint8_t makeDamage();// Se suma ataque y weapon
-    Genes getGenes(); // Retorna los genes del individuo
-    Subject*getFather(); // Obtiene padre 1
-    Subject*getMother(); // Obtiene padre 2
-    void setFather(Subject *pFather); //setea valor de padre 1
-    void setMother(Subject *pMother); //setea valor de padre 2
-    void setGenes();
+    Subject(Subject*,Subject*);
+    int makeDamage();// Se suma ataque y weapon
     void setFitness(int);
+    int getAtack();// Se suma armor y la defensa de los genes
+    Subject* getFather(); // Obtiene padre 1
+    Subject* getMother(); // Obtiene padre 2
+    Chromosome* getGeneticInformation();
     int getFitness();
+    int getHealth();
+    int getGeneration();
+    int getAge();
+    int getExperience();
+    Weapon* getWeapon();
+    Armor* getArmor();
 };
 
 

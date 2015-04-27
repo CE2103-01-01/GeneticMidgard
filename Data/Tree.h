@@ -5,12 +5,11 @@
 #ifndef PROJECTMIDGARD_TREE_H
 #define PROJECTMIDGARD_TREE_H
 
-#include <cstdlib>
-#include <math.h>
 #include "Leaf.h"
 
 template <class T> class Tree{
     int* len;
+    int* size;
     int* floors;
     Leaf* root;
     void split(Leaf*);
@@ -20,25 +19,27 @@ public:
     Tree();
     ~Tree();
     T* searchElement(int);
-    void searchAndDo(int indexToSearch, void method(T*));
+    void searchAndDo(int, void(T*, void*), void*);
     void insertElement(T,int);
     void insertElement(T);
-    void deleteElement(int);
-    void deleteElement(int index, void method(T*));
+    void deleteElement(int, void(T*, void*), void*);
     int lenght();
     int max();
 };
 
 /** Constructor
  * @brief: Reserva el espacio de las variables y la primera hoja
+ * @param int leafSizeParam: numero de hijos y nodos por hoja
  */
-template <class T> Tree<T>::Tree(){
-    root = static_cast<Leaf*>(malloc(sizeof(Leaf)));
-    new(root) Leaf(sizeof(T));
+template <class T> Tree<T>::Tree(int leafSizeParam){
+    leafSize = static_cast<int*>(malloc(sizeof(int)));
+    *leafSize = leafSizeParam;
     len = static_cast<int*>(malloc(sizeof(int)));
     *len = 0;
     floors = static_cast<int*>(malloc(sizeof(int)));
     *floors= 1;
+    root = static_cast<Leaf*>(malloc(sizeof(Leaf)));
+    new(root) Leaf(sizeof(T), leafSize);
 }
 
 /** Destructor
@@ -46,6 +47,7 @@ template <class T> Tree<T>::Tree(){
  */
 template <class T> Tree<T>::~Tree(){
     free(len);
+    free(leafSize);
     free(root);
     free(floors);
 }
@@ -55,7 +57,7 @@ template <class T> Tree<T>::~Tree(){
  */
 template <class T> int Tree<T>::max(int floor){
     if(floor > 0){
-        return TREE_SIZE + (((floor-1)*floor)/2) * pow(TREE_SIZE,2);
+        return (*leafSize) + (((floor-1) * floor) / 2) * (*leafSize) * (*leafSize);
     }else{
         return 0;
     }
@@ -68,7 +70,7 @@ template <class T> int Tree<T>::max(int floor){
 template <class T> void Tree<T>::split(Leaf* toSplit){
     if(!(toSplit->isTerminal())){
         void* sons = toSplit->getSons();
-        for(int i=0; i<TREE_SIZE; i++){
+        for(int i=0; i<(*leafSize); i++){
             split((Leaf*)(sons+i*sizeof(Leaf)));
         };
     }else{
@@ -81,15 +83,16 @@ template <class T> void Tree<T>::split(Leaf* toSplit){
  * @param: int floor: piso a ocupar
  * @brief: Realiza los calculos necesarios para generar una serie de enteros con la ruta
  */
-template <class T> void Tree<T>::createPath(int indexToInsert, int floor, int* path){
-    *path = (indexToInsert-1)%TREE_SIZE;  //Container final
-    indexToInsert = (indexToInsert-1-max((floor-1)))/TREE_SIZE;
+template <class T> void Tree<T>::createPath(int indexToCreate, int floor, int* path){
+    *path = (indexToCreate-1)%(*leafSize);  //Container
+    indexToCreate=(indexToCreate-1-max((floor-1)))/(*leafSize);
     for(int i=1; i<floor; i++){
-        if(indexToInsert>=TREE_SIZE){
-            indexToInsert = indexToInsert%TREE_SIZE;
+        if(indexToCreate>=(*leafSize)){
+            indexToCreate=indexToCreate%(*leafSize);
         }
+        *(path+i*sizeof(int)) = indexToCreate;
         if(i<floor-1){
-            indexToInsert = indexToInsert/TREE_SIZE;
+            indexToCreate=indexToCreate/(*leafSize);
         }
     }
 }
@@ -101,18 +104,22 @@ template <class T> void Tree<T>::createPath(int indexToInsert, int floor, int* p
 template <class T> T* Tree<T>::searchElement(int indexToSearch){
     int dataFloor=*floors;
     if(indexToSearch <= max(dataFloor)){
-        while(max(dataFloor-1) > indexToSearch) {
+        //Identifica el piso anterior
+        while(max(dataFloor-1) > indexToSearch){
             dataFloor--;
         }
-        int* pathToFollow = static_cast<int*>(malloc(dataFloor*sizeof(int)));
-        createPath(indexToSearch,dataFloor,pathToFollow);
+        //Crea la ruta
+        int* elementPath = static_cast<int*>(malloc((dataFloor)*sizeof(int)));
+        createPath(indexToSearch,dataFloor,elementPath);
+        //Recorre la ruta
         Leaf* tmpFather = root;
         for(int i=dataFloor-1; i>0; i--){
-            int offset = *(pathToFollow + i*sizeof(int));
-            tmpFather = static_cast<Leaf*>(tmpFather->getSons() + offset*sizeof(Leaf));
+            tmpFather = (Leaf*)(tmpFather->getSons() + (*(elementPath+i*sizeof(int)))*sizeof(Leaf));
         }
-        free(pathToFollow);
-        return static_cast<T*>(tmpFather->getContainers() + ((indexToSearch-1)%TREE_SIZE)*sizeof(T));
+        //Borra la ruta y retorna el dato
+        int lastStep = (*elementPath) * sizeof(T);
+        free(elementPath);
+        return static_cast<T*>(tmpFather->getContainers() + lastStep);
     }else{
         return 0;
     }
@@ -121,10 +128,11 @@ template <class T> T* Tree<T>::searchElement(int indexToSearch){
 /** Buscador
  * @param: int index: indice a buscar
  * @param: void method(T*): metodo a ejecutar
+ * @param: void* methodParam: parametro del metodo a ejecutar
  * @brief: calcula la ruta al indice recibido
  */
-template <class T> void Tree<T>::searchAndDo(int indexToSearch, void method(T*)){
-    method(searchElement(indexToSearch));
+template <class T> void Tree<T>::searchAndDo(int indexToSearch, void method(T*, void*), void* methodParam){
+    method(searchElement(indexToSearch), methodParam);
 }
 
 /** Inserta
@@ -154,11 +162,13 @@ template <class T> void Tree<T>::insertElement(T newElement){
 
 /** Borrador con metodo
  * @param: int index: indice a buscar
+ * @param: void method(T*, void*): metodo a ejecutar
+ * @param: void* methodParam: parametro del metodo a ejecutar
  * @brief: calcula la ruta al indice recibido y lo borra, pero antes ejecuta un metodo sobre el
  */
-template <class T> void Tree<T>::deleteElement(int index, void method(T*)){
-    index--;
-    method(searchElement(index));
+template <class T> void Tree<T>::deleteElement(int index, void method(T*, void*), void* methodParam){
+    method(searchElement(index),methodParam);
+    (*len)--;
 }
 
 /** Longitud

@@ -6,23 +6,25 @@
 
 /** @brief crea una hoja con n-1 containers, tal que n=treeSize
  */
-Leaf::Leaf(int sizeOfContainerParam){
+Leaf::Leaf(int sizeOfContainerParam, int* numberOfSonsParam){
+    numberOfSons = numberOfSonsParam;
     sizeOfContainer = static_cast<int*>(malloc(sizeof(int)));
     *sizeOfContainer = sizeOfContainerParam;
     terminal = static_cast<bool*>(malloc(sizeof(bool)));
     *terminal = true;
-    containers = malloc((*sizeOfContainer) * TREE_SIZE);
+    containers = malloc((*sizeOfContainer) * (*numberOfSons));
 }
 
 /** @brief recorre los containers eliminando cada uno
  */
 Leaf::~Leaf(){
+    numberOfSons = 0;
     free(terminal);
     free(sons);
     free(containers);
 }
 
-/** @brief crea n hojas hijas, tal que n=TREE_SIZE
+/** @brief crea n hojas hijas, tal que n=(*numberOfSons)
  */
 bool Leaf::isTerminal(){
     return *terminal;
@@ -31,8 +33,8 @@ bool Leaf::isTerminal(){
 /** @brief divide la hoja creando hijos
  */
 void Leaf::split(){
-    sons = malloc((TREE_SIZE)*sizeof(Leaf));
-    for(int i=0; i<TREE_SIZE; i++){
+    sons = malloc(((*numberOfSons))*sizeof(Leaf));
+    for(int i=0; i<(*numberOfSons); i++){
         new(static_cast<Leaf*>(sons+i*sizeof(Leaf))) Leaf(*sizeOfContainer);
     }
     *terminal = false;

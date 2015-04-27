@@ -3,23 +3,25 @@
 //
 
 #include "Population.h"
-Population::Population(int size, std::string type) {
-    populationType = type;
-    people = DoubleList<Subject>();
-    for(int i = 0; i<size;i++){
-        //Subject newIndividual =  Subject();
+Population::Population(int size, char type) {
+    populationType = static_cast<char*>(malloc(sizeof(char)));
+    *populationType = type;
+    people = static_cast<Tree<Subject>*>(malloc(sizeof(Tree<Subject>)));
+    new(people) Tree<Subject>(TREE_SIZE);
+    for(int i = 0; i<size,i++){
+        Subject newIndividual = new Subject();
         //generar el invididuo
-        //people.add(newIndividual);
+        people.add(newIndividual);
 
     }
 
 }
 Population::~Population() {
-    delete(this);
+
 }
 Subject Population::getIndividual(int position) {
     if(position<people.len()){
-        return *people.get(position);
+        return people.get(position);
     }
 }
 Subject Population::getFittest() {

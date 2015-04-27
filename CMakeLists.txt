@@ -7,46 +7,46 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/build")
 execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/res
                                                            ${CMAKE_BINARY_DIR}/res)
 
+set(HEADER_FILES Interface/Random.h
+                 Constants.h
+                 Models/Subject.h
+                 Models/Chromosome.h
+                 Models/Weapon.h
+                 Models/Armor.h
+                 Algorithms/Algorithms.h
+                 Generators/EvolutionGenerator.h
+                 Data/Leaf.h
+                 Data/Tree.h
+                 Data/TreeProof.h
+                 libs/TMXParser.h
+                 libs/base64.h)
+
 set(SOURCE_FILES main.cpp
                  Interface/Random.cpp
-                 Interface/Random.h
                  Constants.cpp
-                 Constants.h
                  Models/Subject.cpp
-                 Models/Subject.h
-                 Models/Genes.cpp
-                 Models/Genes.h
+                 Models/Chromosome.cpp
                  Models/Weapon.cpp
-                 Models/Weapon.h
                  Models/Armor.cpp
-                 Models/Armor.h
-                 Models/Terrain.cpp
-                 Models/Terrain.h
-                 Models/Population.cpp
-                 Models/Population.h
                  Generators/EvolutionGenerator.cpp
-                 Generators/EvolutionGenerator.h
-                 Algorithms/Algorithms.cpp
-                 Algorithms/Algorithms.h
-                 )
-set (DATA_STRUCTS
+                 Algorithms/Algorithms.cpp)
+
+set (DATA_STRUCTS   Data/TreeProof.cpp
                     Data/DoubleList.cpp
-                    Data/DoubleList.h
-                    Data/Tree.h
-                    Data/Leaf.cpp
-                    Data/Tree.h)
-set(TMX_FILES libs/TMXParser.h
-                libs/TMXParser.cpp
-                libs/base64.cpp
-                libs/base64.h)
+                    Data/Leaf.cpp)
+                    
+set(TMX_FILES   libs/TMXParser.cpp
+                libs/base64.cpp)
+                
 set(XML libs/rapidxml/rapidxml.hpp
         libs/rapidxml/rapidxml_iterators.hpp
         libs/rapidxml/rapidxml_print.hpp
         libs/rapidxml/rapidxml_utils.hpp
-        libs/pugixml/pugixml.cpp
         libs/pugixml/pugiconfig.hpp
         libs/pugixml/pugixml.hpp
-        )
+        libs/pugixml/pugixml.cpp)
 
-
-add_executable(ProjectMidgard ${SOURCE_FILES} ${TMX_FILES} ${XML} ${DATA_STRUCTS}  )
+add_executable(ProjectMidgard   ${SOURCE_FILES}
+                                ${TMX_FILES}
+                                ${XML}
+                                ${DATA_STRUCTS})

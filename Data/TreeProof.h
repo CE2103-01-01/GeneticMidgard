@@ -6,9 +6,11 @@
 #define PROJECTMIDGARD_TREEPROOF_H
 
 #include "Tree.h"
+#include "../Constants.h"
+#include <iostream>
 
-void print(int* toPrint);
-void setCero(int* toSetCero);
+void print(int*, void*);
+void setNumber(int*,void*);
 void proof();
 
 #endif //PROJECTMIDGARD_TREEPROOF_H
