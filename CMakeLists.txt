@@ -20,19 +20,33 @@ set(SOURCE_FILES main.cpp
                  Models/Weapon.h
                  Models/Armor.cpp
                  Models/Armor.h
+                 Models/Terrain.cpp
+                 Models/Terrain.h
+                 Models/Population.cpp
+                 Models/Population.h
                  Generators/EvolutionGenerator.cpp
                  Generators/EvolutionGenerator.h
                  Algorithms/Algorithms.cpp
-                 Algorithms/Algorithms.h)
+                 Algorithms/Algorithms.h
+                 )
+set (DATA_STRUCTS
+                    Data/DoubleList.cpp
+                    Data/DoubleList.h
+                    Data/Tree.h
+                    Data/Leaf.cpp
+                    Data/Tree.h)
 set(TMX_FILES libs/TMXParser.h
-                libs/TMXParser.cpp)
+                libs/TMXParser.cpp
+                libs/base64.cpp
+                libs/base64.h)
 set(XML libs/rapidxml/rapidxml.hpp
         libs/rapidxml/rapidxml_iterators.hpp
         libs/rapidxml/rapidxml_print.hpp
         libs/rapidxml/rapidxml_utils.hpp
         libs/pugixml/pugixml.cpp
         libs/pugixml/pugiconfig.hpp
-        libs/pugixml/pugixml.hpp)
+        libs/pugixml/pugixml.hpp
+        )
 
 
-add_executable(ProjectMidgard ${SOURCE_FILES} ${TMX_FILES} ${XML} libs/base64.cpp libs/base64.h)
+add_executable(ProjectMidgard ${SOURCE_FILES} ${TMX_FILES} ${XML} ${DATA_STRUCTS}  )
