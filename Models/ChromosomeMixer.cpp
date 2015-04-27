@@ -12,5 +12,6 @@
  * @return Chromosome*: dos cromosomas hijos, (return) & (return + sizeof(Chromosome))
  */
 Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation, Chromosome* motherGeneticInformation){
+    Chromosome* toReturn = static_cast<Chromosome*>(malloc(2*sizeof(Chromosome)));
 
 };

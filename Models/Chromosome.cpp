@@ -30,5 +30,9 @@ Chromosome::Chromosome() {
  * @return void*: espacio de memoria que ocupa el gen
  */
 void* Chromosome::getGene(int geneNumber) {
-  return geneticData + geneNumber*GENE_LEN_ON_BYTES;
+    if(geneNumber < *numberOfGenes){
+        return geneticData + geneNumber*GENE_LEN_ON_BYTES;
+    }else{
+        return 0;
+    }
 }
