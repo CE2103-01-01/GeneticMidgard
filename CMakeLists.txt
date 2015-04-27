@@ -10,7 +10,7 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/r
 set(HEADER_FILES Interface/Random.h
                  Constants.h
                  Models/Subject.h
-                 Models/Genes.h
+                 Models/Chromosome.h
                  Models/Weapon.h
                  Models/Armor.h
                  Algorithms/Algorithms.h
@@ -25,7 +25,7 @@ set(SOURCE_FILES main.cpp
                  Interface/Random.cpp
                  Constants.cpp
                  Models/Subject.cpp
-                 Models/Genes.cpp
+                 Models/Chromosome.cpp
                  Models/Weapon.cpp
                  Models/Armor.cpp
                  Generators/EvolutionGenerator.cpp
