@@ -11,6 +11,7 @@ void printBinary(const unsigned char val);
 int main()
 {
     proof();
+
     unsigned int getval;
     unsigned char a, b;
     cout << "Enter a number between 0 and 255: ";
