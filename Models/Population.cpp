@@ -3,9 +3,11 @@
 //
 
 #include "Population.h"
-Population::Population(int size, std::string type) {
-    populationType = type;
-    people = new DoubleList();
+Population::Population(int size, char type) {
+    populationType = static_cast<char*>(malloc(sizeof(char)));
+    *populationType = type;
+    people = static_cast<Tree<Subject>*>(malloc(sizeof(Tree<Subject>)));
+    new(people) Tree<Subject>();
     for(int i = 0; i<size,i++){
         Subject newIndividual = new Subject();
         //generar el invididuo
@@ -15,7 +17,7 @@ Population::Population(int size, std::string type) {
 
 }
 Population::~Population() {
-    delete(this);
+
 }
 Subject Population::getIndividual(int position) {
     if(position<people.len()){

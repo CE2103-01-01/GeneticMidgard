@@ -6,7 +6,6 @@
 #define PROJECTMIDGARD_LEAF_H
 
 #include <cstdlib>
-#include <iostream>
 #include "../Constants.h"
 
 /** @brief miembro del arbol
