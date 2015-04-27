@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<GENES>
+    <GENE name="INMUNE_SYSTEM" />
+    <GENE name="INTELIGENCE" />
+    <GENE name="ATTACK" />
+    <GENE name="DEFENSE" />
+    <GENE name="VITAL_ENERGY" />
+    <GENE name="BLOT" />
+    <GENE name="RUNES" />
+    <GENE name="SUPERSTITION" />
+</GENES>
