@@ -9,14 +9,14 @@
 
 template <class T> class Tree{
     int* len;
-    int* size;
+    int* leafSize;
     int* floors;
     Leaf* root;
     void split(Leaf*);
     int max(int);
     void createPath(int,int,int*);
 public:
-    Tree();
+    Tree(int);
     ~Tree();
     T* searchElement(int);
     void searchAndDo(int, void(T*, void*), void*);

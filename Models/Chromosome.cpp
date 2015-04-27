@@ -24,6 +24,17 @@ Chromosome::Chromosome() {
     }
 };
 
+/**Constructor
+ * @brief Crea la cantidad de genes del archivo genes.xml con tamaño definido en Constants.h
+ */
+Chromosome::Chromosome(void* genes) {
+    xml_document genesXML;
+    genesXML.load_file(GENES_XML_PATH);
+    numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
+    *numberOfGenes = genesXML.child(GENES_XML_ROOT).child(GENES_XML_LENGHT).attribute(GENES_XML_LENGHT_INFO).as_int();
+    geneticData = genes;
+};
+
 /**Buscador de gen
  * @brief Realiza aritmetica de punteros con el numero  y tamaño del gen
  * @param int geneNumber: numero de gen

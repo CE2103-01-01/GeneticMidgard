@@ -18,13 +18,14 @@ Leaf::Leaf(int sizeOfContainerParam, int* numberOfSonsParam){
 /** @brief recorre los containers eliminando cada uno
  */
 Leaf::~Leaf(){
-    numberOfSons = 0;
+    free(numberOfSons);
     free(terminal);
     free(sons);
+    free(sizeOfContainer);
     free(containers);
 }
 
-/** @brief crea n hojas hijas, tal que n=(*numberOfSons)
+/** @brief crea n hojas hijas, tal que n=(*(*numberOfSons))
  */
 bool Leaf::isTerminal(){
     return *terminal;
@@ -33,17 +34,21 @@ bool Leaf::isTerminal(){
 /** @brief divide la hoja creando hijos
  */
 void Leaf::split(){
-    sons = malloc(((*numberOfSons))*sizeof(Leaf));
-    for(int i=0; i<(*numberOfSons); i++){
-        new(static_cast<Leaf*>(sons+i*sizeof(Leaf))) Leaf(*sizeOfContainer);
+    sons = malloc((*numberOfSons) * sizeof(Leaf));
+    for(int i=0; i<((*numberOfSons)); i++){
+        new(static_cast<Leaf*>(sons + i*sizeof(Leaf))) Leaf(*sizeOfContainer, numberOfSons);
     }
     *terminal = false;
 }
 
+/** @brief devuelve los hijos
+ */
 void* Leaf::getSons(){
     return sons;
 }
 
+/** @brief devuelve los datos
+ */
 void* Leaf::getContainers(){
     return containers;
 }

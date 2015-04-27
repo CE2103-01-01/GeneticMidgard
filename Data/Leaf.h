@@ -6,6 +6,7 @@
 #define PROJECTMIDGARD_LEAF_H
 
 #include <cstdlib>
+#include <iostream>
 
 /** @brief miembro del arbol
  * Numero de hijos: n, tal que n=treeSize 
@@ -23,10 +24,7 @@ public:
     void* getSons();
     void* getContainers();
     bool isTerminal();
-    bool isFull(int);
     void split();
-    Leaf* getFather();
-    int len();
 };
 
 #endif //PROJECTMIDGARD_LEAF_H

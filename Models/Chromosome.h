@@ -17,6 +17,7 @@ private:
     int* numberOfGenes;
 public:
     Chromosome();
+    Chromosome(void*);
     void* getGene(int);
     int getNumberOfGenes();
 };
