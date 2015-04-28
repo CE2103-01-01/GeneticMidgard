@@ -61,4 +61,5 @@ add_executable(ProjectMidgard   ${SOURCE_FILES}
                                 ${HEADER_FILES}
                                 ${TMX_FILES}
                                 ${XML}
-                                ${DATA_STRUCTS})
+                                ${DATA_STRUCTS}
+                                )

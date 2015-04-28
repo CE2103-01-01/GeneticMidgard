@@ -69,6 +69,8 @@ public:
     bool deleteNode(unsigned int); //Busca nodo y lo borra
     void deleteAll(); //Borra all
     bool empty(); //True=vacia
+    bool has(T data);
+    bool has(T *data);
     bool swap(unsigned int i, unsigned int j);
 
     Node<T> *search(T); //Busca dato T
@@ -253,7 +255,7 @@ template<class T>
 bool DoubleList<T>::deleteNodeByData(T d) {
     Node<T> *tmp = _head;
     for(int i=0; i<l; i++){
-        if(*tmp->getData()()==d){
+        if(*tmp->getData()==d){
             if(i<l-1){
                 tmp->getPreNode()->insertAfter(tmp->getNextNode());
             }
@@ -463,5 +465,26 @@ bool DoubleList<T>::swap(unsigned int i, unsigned int j) {
 
 }
 
+
+template<class T>
+bool DoubleList<T>::has(T data) {
+    Node<T> * currentNode = _head;
+    while(!currentNode)
+    {
+        if(*currentNode->getData() == data)
+        currentNode= currentNode->next;
+    }
+    return false;
+}
+template<class T>
+bool DoubleList<T>::has(T *data) {
+    Node<T> * currentNode = _head;
+    while(!currentNode)
+    {
+        if(currentNode->getData() == data)
+            currentNode= currentNode->next;
+    }
+    return false;
+}
 
 #endif //PROJECTMIDGARD_DOUBLELIST_H

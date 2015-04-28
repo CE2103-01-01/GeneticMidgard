@@ -3,6 +3,7 @@
 //
 
 
+#include <pm.h>
 #include "Terrain.h"
 
 using namespace std;
@@ -40,6 +41,115 @@ void Terrain::printArray() {
         cout<<*(array+i)<<"|";
         if(i%width==0)cout<<endl;
     }
+}
+
+DoubleList<Point> Terrain::neighborNodes(Point point) {
+    DoubleList<Point> neighbors = DoubleList<Point>();
+    uint8_t x = point.getX();
+    uint8_t y = point.getY();
+    for (int i = -1; i < 2; ++i) {
+        int newX = x+i;
+        if (newX <0||newX>width) continue;
+        for (int j = -1; j < 2; ++j) {
+            int newY = y+i;
+            if(newY <0|| newY >height) continue;
+            neighbors.append(Point(newX,newY));
+        } 
+    }
+    return neighbors;
+};
+
+DoubleList<Point> Terrain::AStar(Point start, Point goal) {
+    DoubleList<Point> closedSet = DoubleList<Point>();
+    DoubleList<Point> openSet = DoubleList<Point>(); openSet.append(start);
+    DoubleList<Point> trace = DoubleList<Point>();
+    start.setGScore(0); start.setFScore(heuristic(start,goal));
+    Point *current;
+    while(!openSet.empty())
+    {
+        Point* current = Point::lowestFScore(openSet);
+        if (goal == current) return trace;
+        openSet.deleteNodeByData(*current);//TODO- check if by number
+        closedSet.append(current);
+        DoubleListIterator<Point> *neighborIter = neighborNodes(*current).getIterator();
+        while (neighborIter->exists())
+        {
+            Point *neighbor = neighborIter->next();
+            if (closedSet.has(*neighbor))continue;
+            
+        }
+    }
+    return trace;
+}
+
+inline int Terrain::heuristic(Point start, Point goal) {
+    return abs(start.getX() - goal.getX()) + abs(start.getY() - goal.getY());
+}
+
+
+
+//Point
+//Constructors
+Point::Point(uint8_t pX, uint8_t pY) {
+    x,y = pX,pY;
+}
+
+Point::Point(uint8_t pX, uint8_t pY, uint8_t pfScore) {
+    x,y,fScore = pX,pY,pfScore;
+}
+
+
+// Getters and Setters
+uint8_t Point::getX() {
+    return x;
+}
+
+uint8_t Point::getY() {
+    return y;
+}
+
+uint8_t Point::getFScore() {
+    return fScore;
+}
+
+uint8_t Point::getGScore() {
+    return gScore;
+}
+
+void Point::setX(uint8_t pX) {
+    x = pX;
+}
+
+void Point::setY(uint8_t pY) {
+    y = pY;
+}
+
+void Point::setFScore(uint8_t pScore) {
+    fScore = pScore;
+}
+
+void Point::setGScore(uint8_t pScore) {
+    gScore = pScore;
+}
+
+Point *Point::lowestFScore(DoubleList<Point> list) {
+    DoubleListIterator<Point>* iter = list.getIterator();
+    Point* lowest;
+    if (iter->exists()) lowest = iter->next();
+    while(iter->exists())
+    {
+        Point* actual = iter->next();
+        if (actual->getFScore()<lowest->getFScore()) lowest = actual;
+    }
+    return lowest;
+}
+//Operators
+bool Point::operator==(Point point) {
+    return (point.getX()==x && point.getY() == y);
+}
+
+bool Point::operator==(Point *point) {
+    return (point->getX()==x && point->getY() == y);
 }
 
 
