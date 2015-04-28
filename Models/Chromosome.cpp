@@ -11,10 +11,9 @@ using namespace pugi;
  * @brief Crea la cantidad de genes del archivo genes.xml con tamaño definido en Constants.h
  */
 Chromosome::Chromosome() {
-    xml_document genesXML;
-    genesXML.load_file(GENES_XML_PATH);
     numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
-    *numberOfGenes = genesXML.child(GENES_XML_ROOT).child(GENES_XML_LENGHT).attribute(GENES_XML_LENGHT_INFO).as_int();
+    *numberOfGenes = 8;
+    //*numberOfGenes = readLenghtFromXML();
     geneticData = malloc((*numberOfGenes) * GENE_LEN_ON_BYTES);
     srand(time(NULL));
     for (int i = 0; i < (*numberOfGenes)*(GENE_LEN_ON_BYTES); i+=GENE_LEN_ON_BYTES) {
@@ -28,11 +27,16 @@ Chromosome::Chromosome() {
  * @brief Crea la cantidad de genes del archivo genes.xml con tamaño definido en Constants.h
  */
 Chromosome::Chromosome(void* genes) {
+    numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
+    *numberOfGenes = 8;
+    //*numberOfGenes = readLenghtFromXML();
+    geneticData = genes;
+};
+
+int Chromosome::readLenghtFromXML(){
     xml_document genesXML;
     genesXML.load_file(GENES_XML_PATH);
-    numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
-    *numberOfGenes = genesXML.child(GENES_XML_ROOT).child(GENES_XML_LENGHT).attribute(GENES_XML_LENGHT_INFO).as_int();
-    geneticData = genes;
+    return genesXML.child(GENES_XML_ROOT).child(GENES_XML_LENGHT).attribute(GENES_XML_LENGHT_INFO).as_int();
 };
 
 /**Buscador de gen

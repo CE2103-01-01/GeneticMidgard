@@ -2,17 +2,13 @@
 #include "Data/TreeProof.h"
 #include "Interface/Random.h"
 #include "Models/Terrain.h"
+#include "Algorithms/chromosomeMixerProof.h"
 
 #define PR(STR, EXPR) \
   cout << STR; printBinary(EXPR); cout << endl;
 using namespace std;
 
-void printBinary(const unsigned char val);
-
-int main()
-{
-    Terrain::initArray();
-
+void proofBinary(){
     unsigned int getval;
     unsigned char a, b;
     cout << "Enter a number between 0 and 255: ";
@@ -35,20 +31,12 @@ int main()
     PR("b &= c; b = ", b);
     b ^= a;
     PR("b ^= a; b = ", b);
-
-    /*short signed cero = 0, uno = 1, dos = 2;
-
-    cout << "~0 == " << ~cero << endl;
-    cout << "~1 == " << ~uno << endl;
-    cout << "~2 == " << ~dos << endl;*/
-    return 0;
 }
 
-void printBinary(const unsigned char val) {
-    for(int i = 7; i >= 0; i--){
-        if(val & (1 << i))
-            std::cout << "1";
-        else
-            std::cout << "0";
-    }
-} ///:~
+int main() {
+    chromosomeMixerProof();
+    //Terrain::initArray();
+    //proofBinary();
+    //treeProof();
+    return 0;
+}

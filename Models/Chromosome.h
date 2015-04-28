@@ -12,9 +12,9 @@
 #include "../libs/pugixml/pugixml.hpp"
 
 class Chromosome {
-private:
     void* geneticData;
     int* numberOfGenes;
+    int readLenghtFromXML();
 public:
     Chromosome();
     Chromosome(void*);

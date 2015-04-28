@@ -12,7 +12,7 @@ void setNumber(int* toSet, void* number){
     *toSet = *static_cast<int*>(number);
 }
 
-void proof(){
+void treeProof(){
     Tree<int>* tree = static_cast<Tree<int>*>(malloc(sizeof(Tree<int>)));
     new(tree) Tree<int>(TREE_SIZE);
     std::cout << "SE CREA EL ARBOL" <<std::endl;

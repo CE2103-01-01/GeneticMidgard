@@ -20,7 +20,7 @@ set(HEADER_FILES Interface/Random.h
                  Data/Leaf.h
                  Data/Tree.h
                  Data/TreeProof.h
-  )
+                 Algorithms/chromosomeMixerProof.h)
 
 set(SOURCE_FILES main.cpp
                  Interface/Random.cpp
@@ -33,7 +33,8 @@ set(SOURCE_FILES main.cpp
                  Models/Terrain.cpp
                  Generators/EvolutionGenerator.cpp
                  Algorithms/Algorithms.cpp
-                 Algorithms/ChromosomeMixer.cpp)
+                 Algorithms/ChromosomeMixer.cpp
+                 Algorithms/chromosomeMixerProof.cpp)
 
 set (DATA_STRUCTS   Data/TreeProof.cpp
                     Data/DoubleList.cpp

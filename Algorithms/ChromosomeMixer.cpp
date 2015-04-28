@@ -11,10 +11,12 @@
  * @param: Chromosome* motherGeneticInformation: cromosoma de la madre
  * @return Chromosome*: dos cromosomas hijos, (return) & (return + sizeof(Chromosome))
  */
-Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation, Chromosome* motherGeneticInformation){
-    int numberOfGenes;// TODO-roberto que es esto?? no esta definido
+Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation,
+                                 Chromosome* motherGeneticInformation,
+                                 Chromosome* toReturn)
+{
     int numOfGenes = fatherGeneticInformation->getNumberOfGenes();
-    void* newGeneticMaterial = malloc(2*numberOfGenes*GENE_LEN_ON_BYTES);
+    void* newGeneticMaterial = malloc(2*numOfGenes*GENE_LEN_ON_BYTES);
     for(int i=0; i < numOfGenes; i++){
         //Se toma el gen del padre, la madre y los hijos
         unsigned char* fatherGene =
@@ -34,7 +36,6 @@ Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation, Chromosom
             *(secondSonGene+j) = (~tmpMask & *(fatherGene + j))|(tmpMask & *(motherGene + j));
         }
     }
-    Chromosome* toReturn = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
     new(toReturn) Chromosome(newGeneticMaterial);
     new(toReturn+sizeof(Chromosome)) Chromosome(newGeneticMaterial + numOfGenes*GENE_LEN_ON_BYTES);
     return toReturn;

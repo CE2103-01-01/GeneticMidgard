@@ -11,6 +11,6 @@
 
 void print(int*, void*);
 void setNumber(int*,void*);
-void proof();
+void treeProof();
 
 #endif //PROJECTMIDGARD_TREEPROOF_H
