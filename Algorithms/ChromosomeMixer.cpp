@@ -37,6 +37,6 @@ Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation,
         }
     }
     new(toReturn) Chromosome(newGeneticMaterial);
-    new(toReturn+sizeof(Chromosome)) Chromosome(newGeneticMaterial + numOfGenes*GENE_LEN_ON_BYTES);
+    new(toReturn+sizeof(Chromosome)) Chromosome(newGeneticMaterial + (numOfGenes-1)*GENE_LEN_ON_BYTES);
     return toReturn;
 };
