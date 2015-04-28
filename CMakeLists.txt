@@ -20,7 +20,9 @@ set(HEADER_FILES Interface/Random.h
                  Data/Leaf.h
                  Data/Tree.h
                  Data/TreeProof.h
-                 Algorithms/chromosomeMixerProof.h)
+                 Algorithms/printBinary.h
+                 Proof/chromosomeMixerProof.h
+                 Proof/proofBinary.h)
 
 set(SOURCE_FILES main.cpp
                  Interface/Random.cpp
@@ -34,7 +36,9 @@ set(SOURCE_FILES main.cpp
                  Generators/EvolutionGenerator.cpp
                  Algorithms/Algorithms.cpp
                  Algorithms/ChromosomeMixer.cpp
-                 Algorithms/chromosomeMixerProof.cpp)
+                 Algorithms/printBinary.cpp
+                 Proof/chromosomeMixerProof.cpp
+                 Proof/proofBinary.cpp)
 
 set (DATA_STRUCTS   Data/TreeProof.cpp
                     Data/DoubleList.cpp

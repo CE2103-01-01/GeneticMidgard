@@ -5,10 +5,9 @@
 #ifndef PROJECTMIDGARD_CHROMOSOMEMIXERPROOF_H
 #define PROJECTMIDGARD_CHROMOSOMEMIXERPROOF_H
 
-#include "ChromosomeMixer.h"
-#include <iostream>
+#include "../Algorithms/printBinary.h"
+#include "../Algorithms/ChromosomeMixer.h"
 
-void printBinary(const unsigned char);
 void printChromosome(Chromosome*);
 void chromosomeMixerProof();
 

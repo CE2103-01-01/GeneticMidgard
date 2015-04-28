@@ -4,16 +4,6 @@
 
 #include "chromosomeMixerProof.h"
 
-void printBinary(const unsigned char val){
-    for(int i = 7; i >= 0; i--){
-        if(val & (1 << i))
-            std::cout << "1";
-        else
-            std::cout << "0";
-    }
-    std::cout << " ";
-}
-
 void printChromosome(Chromosome* toPrint){
     for(int i =0; i < toPrint->getNumberOfGenes(); i++){
         for(int j = 0; j < GENE_LEN_ON_BYTES; j++){
