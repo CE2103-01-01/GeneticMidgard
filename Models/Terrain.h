@@ -18,11 +18,15 @@ static char const *const DATA_NODE = "data";
 
 static char const *const TILE_NODE = "title";
 #include <iostream>
+
+#include <tgmath.h>
+
+#include <cstdlib>
+#include <cstdio>
 #include "../libs/rapidxml/rapidxml.hpp"
 #include "../libs/rapidxml/rapidxml_utils.hpp"
 #include "../Constants.h"
-#include "../Data/DoubleList.h"
-class Point;
+
 class Terrain {
 public:
     static int width;
@@ -30,34 +34,29 @@ public:
     static int *array ;
     static void initArray();
     static void printArray();
-    static inline int heuristic(Point start, Point goal);
-    static DoubleList<Point> AStar(Point start, Point goal);
-    static DoubleList<Point> neighborNodes(Point);
+    static void findPathAS(const int & xStart, const int & yStart,
+                           const int & xFinish, const int & yFinish);
+
 };
 
-class Point
-{
+class Node {
 private:
-    uint8_t x;
-    uint8_t y;
-    uint8_t fScore;
-    uint8_t gScore;
+    int xPos;
+    int yPos;
+    // total distance already travelled to reach the node
+    int level;
+    // priority=level+remaining distance estimate
+    int priority;  // 1 / realPriority
 public:
-    Point(uint8_t, uint8_t);
-    Point(uint8_t, uint8_t, uint8_t);
-    bool operator==(Point);
-    bool operator==(Point*);
-    static Point* lowestFScore(DoubleList<Point>);
-    static Point* lowestGScore(DoubleList<Point>);
-    uint8_t getX();
-    uint8_t getY();
-    uint8_t getFScore();
-    uint8_t getGScore();
-    void setX(uint8_t pX);
-    void setY(uint8_t pY);
-    void setFScore(uint8_t pScore);
-    void setGScore(uint8_t pScore);
-    
+    Node(int xp, int yp, int d, int p) {xPos=xp; yPos=yp; level=d; priority=p;}
+    void updatePriority(const int & xDest, const int & yDest);
+    void nextLevel(const int & i);
+    int const &estimate(const int & xDest, const int & yDest) const;
+    int getxPos() const;
+    int getyPos() const;
+    int getLevel() const;
+    int getPriority() const;
+
 };
 
 #endif //PROJECTMIDGARD_TERRAIN_H

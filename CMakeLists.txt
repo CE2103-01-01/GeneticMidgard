@@ -14,6 +14,7 @@ set(HEADER_FILES Interface/Random.h
                  Models/Chromosome.h
                  Models/Weapon.h
                  Models/Armor.h
+                 Models/Terrain.h
                  Algorithms/Algorithms.h
                  Algorithms/ChromosomeMixer.h
                  Generators/EvolutionGenerator.h
