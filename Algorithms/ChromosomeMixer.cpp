@@ -3,7 +3,6 @@
 //
 
 #include "ChromosomeMixer.h"
-
 /* Mezclador de cromosomas
  * @brief: Recibe la informacion genetica de dos individuos, la mezcla y retorna dos
  *         individuos que se accesan mediante aritmetica de punteros
@@ -26,7 +25,7 @@ Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation,
         unsigned char* firstSonGene =
                 static_cast<unsigned char*>(newGeneticMaterial + i*GENE_LEN_ON_BYTES);
         unsigned char* secondSonGene =
-                static_cast<unsigned char*>(newGeneticMaterial + (i+numOfGenes-1)*GENE_LEN_ON_BYTES);
+                static_cast<unsigned char*>(newGeneticMaterial + (i+numOfGenes)*GENE_LEN_ON_BYTES);
         //Se recorre el gen byte por byte
         for(int j=0; j < GENE_LEN_ON_BYTES; j++){
             //Se crea mascara y el pedazo de gen temporal
@@ -37,6 +36,6 @@ Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation,
         }
     }
     new(toReturn) Chromosome(newGeneticMaterial);
-    new(toReturn+sizeof(Chromosome)) Chromosome(newGeneticMaterial + (numOfGenes-1)*GENE_LEN_ON_BYTES);
+    new(toReturn+sizeof(Chromosome)) Chromosome(newGeneticMaterial + (numOfGenes)*GENE_LEN_ON_BYTES);
     return toReturn;
 };
