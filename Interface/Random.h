@@ -11,6 +11,7 @@
 
 namespace trueRandom
 {
+    void init();
     int getRandom();
     int randRange(int,int);
     float randRange(float, float);

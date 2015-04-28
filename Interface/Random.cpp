@@ -6,8 +6,11 @@
 #include "Random.h"
 
 namespace trueRandom{
-    int getRandom() {
+    void init()
+    {
         std::srand(std::time(0)); //use current time as seed for random generator
+    }
+    int getRandom() {
         return std::rand();
     }
 
@@ -16,6 +19,6 @@ namespace trueRandom{
     }
 
     float randRange(float min, float max) {
-        return min + (rand() % (int)(max - min + 1));//TODO-pablo check si funciona
+        return min + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(max-min)));
     }
 }
