@@ -16,11 +16,13 @@ static char const *const WIDTH = "width";
 
 static char const *const DATA_NODE = "data";
 
-static char const *const TILE_NODE = "title";
+static char const *const TILE_NODE = "tile";
 #include <iostream>
-
-#include <tgmath.h>
-
+#include <iomanip>
+#include <queue>
+#include <string>
+#include <math.h>
+#include <ctime>
 #include <cstdlib>
 #include <cstdio>
 #include "../libs/rapidxml/rapidxml.hpp"
@@ -31,7 +33,7 @@ class Terrain {
 public:
     static int width;
     static int height;
-    static int *array ;
+    static int *map;
     static void initArray();
     static void printArray();
     static void findPathAS(const int & xStart, const int & yStart,
@@ -48,7 +50,7 @@ private:
     // priority=level+remaining distance estimate
     int priority;  // 1 / realPriority
 public:
-    Node(int xp, int yp, int d, int p) {xPos=xp; yPos=yp; level=d; priority=p;}
+    Node(int xPos, int yPos, int level, int priority);
     void updatePriority(const int & xDest, const int & yDest);
     void nextLevel(const int & i);
     int const &estimate(const int & xDest, const int & yDest) const;
@@ -56,6 +58,7 @@ public:
     int getyPos() const;
     int getLevel() const;
     int getPriority() const;
+
 
 };
 

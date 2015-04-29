@@ -18,9 +18,6 @@ set(HEADER_FILES Interface/Random.h
                  Algorithms/Algorithms.h
                  Algorithms/ChromosomeMixer.h
                  Generators/EvolutionGenerator.h
-                 Data/Leaf.h
-                 Data/Tree.h
-                 Data/TreeProof.h
                  Algorithms/printBinary.h
                  Proof/chromosomeMixerProof.h
                  Proof/proofBinary.h)
@@ -42,8 +39,12 @@ set(SOURCE_FILES main.cpp
                  Proof/proofBinary.cpp)
 
 set (DATA_STRUCTS   Data/TreeProof.cpp
-                    Data/DoubleList.cpp
-                    Data/Leaf.cpp)
+                    Data/Leaf.cpp
+                    Data/DoubleList.h
+                    Data/PriorityQueue.h
+                     Data/Leaf.h
+                     Data/Tree.h
+                     Data/TreeProof.h)
                     
 set(TMX_FILES   libs/TMXParser.cpp
                 libs/base64.cpp
