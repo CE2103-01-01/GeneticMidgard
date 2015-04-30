@@ -19,14 +19,14 @@ class Subject {
     int* generation;
     int* fitness;
     std::string profession;
-    int* characteristics;//lista de caracteristicas
+    unsigned char* characteristics;//lista de caracteristicas
     // TODO: el orden va edad-experiencia-vida-ataque-velocidad-defensa-inteligencia-magia-runes-energia-blot-supersticion
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
     Chromosome* geneticInformation;
     Weapon* weapon;
     Armor* armor;
-    void initConstants(int* constants);
+    void initConstants(unsigned char* constants);
 public:
     Subject();
     Subject(Subject*,Subject*,Chromosome*,int);
@@ -39,10 +39,10 @@ public:
     Weapon* getWeapon();
     Armor* getArmor();
     int getFitness();
-    int getHealth();
     int getGeneration();
-    int getAge();
-    int getExperience();
+    unsigned char getHealth();
+    unsigned char getAge();
+    unsigned char getExperience();
 };
 
 

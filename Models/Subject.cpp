@@ -20,9 +20,9 @@ Subject::Subject() {
     profession = "";
     weapon = 0; //TODO:  revisar si se debe cambiar
     armor = 0; //TODO:  revisar si se debe cambiar
-    characteristics = static_cast<int*>(malloc(NUMBER_OF_CHARACTERISTICS * sizeof(int)));
+    characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     for(int i = 0; i < NUMBER_OF_CHARACTERISTICS; i++){
-        *(characteristics + i*sizeof(int)) = 0;    //TODO: MODIFICAR
+        *(characteristics + i) = 0;    //TODO: MODIFICAR
     }
     father = 0;
     mother = 0;
@@ -42,9 +42,9 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam,
     profession = "";
     weapon = 0;
     armor = 0;
-    characteristics = static_cast<int*>(malloc(NUMBER_OF_CHARACTERISTICS * sizeof(int)));
+    characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
-        *(characteristics + i*sizeof(int)) = 0;    //TODO: MODIFICAR
+        *(characteristics + i) = 0;    //TODO: MODIFICAR
     }
     father = fatherParam;
     mother = motherParam;
@@ -72,10 +72,10 @@ Chromosome* Subject::getGeneticInformation() {
 }
 
 /** @brief Accede a la salud
- * @return int
+ * @return unsigned char
  */
-int Subject::getHealth(){
-    return *(characteristics + POSITION_OF_HEALTH*sizeof(int));
+unsigned char Subject::getHealth(){
+    return *(characteristics + POSITION_OF_HEALTH);
 }
 
 /** @brief Accede a la generacion
@@ -86,17 +86,17 @@ int Subject::getGeneration(){
 }
 
 /** @brief Accede a la edad
- * @return int
+ * @return unsigned char
  */
-int Subject::getAge(){
-    return *(characteristics + POSITION_OF_AGE*sizeof(int));
+unsigned char Subject::getAge(){
+    return *(characteristics + POSITION_OF_AGE);
 }
 
 /** @brief Accede a la experiencia
- * @return int
+ * @return unsigned char
  */
-int Subject::getExperience(){
-    return  *(characteristics + POSITION_OF_EXPERIENCE*sizeof(int));
+unsigned char Subject::getExperience(){
+    return  *(characteristics + POSITION_OF_EXPERIENCE);
 }
 
 /** @brief Accede al fitness
@@ -109,39 +109,39 @@ int Subject::getFitness(){
  *
  */
 void Subject::calculateFitness() {
-    int* constants = static_cast<int*>(malloc(NUMBER_OF_CHARACTERISTICS * sizeof(int)));
+    unsigned char* constants = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     initConstants(constants);
     for(int i = 0; i<NUMBER_OF_CHARACTERISTICS;i++){
-        (*fitness) += (*(constants + i*sizeof(int))) * (*(characteristics + i*sizeof(int)));
+        (*fitness) += (*(constants + i)) * (*(characteristics + i));
     }
 }
 
-void Subject::initConstants(int* constants){
+void Subject::initConstants(unsigned char* constants){
     xml_document constantXml;
     constantXml.load_file(CONSTANT_XML_PATH);
     int index = 0;
-    *(constants + (++index)*sizeof(int)) =
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(AGE_XML).as_int());
-    *(constants + (++index)*sizeof(int)) =
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(EXPERIENCE_XML).as_int());
-    *(constants + (++index)*sizeof(int)) =
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(HEALTH_XML).as_int());
-    *(constants + (++index)*sizeof(int)) =
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(ATTACK_XML).as_int());
-    *(constants + (++index)*sizeof(int)) =
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(SPEED_XML).as_int());
-    *(constants + (++index)*sizeof(int)) =
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(DEFENSE_XML).as_int());
-    *(constants + (++index)*sizeof(int)) =
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(INTELLIGENCE_XML).as_int());
-    *(constants + (++index)*sizeof(int)) =
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(MAGIC_XML).as_int());
-    *(constants + (++index)*sizeof(int)) =
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(RUNES_XML).as_int());
-    *(constants + (++index)*sizeof(int)) =
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(BLOT_XML).as_int());
-    *(constants + (++index)*sizeof(int)) =
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(SUPERSTITION_XML).as_int());
+    *(constants + (++index)) = static_cast<unsigned char>(
+            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(AGE_XML).as_int()));
+    *(constants + (++index)) = static_cast<unsigned char>(
+            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(EXPERIENCE_XML).as_int()));
+    *(constants + (++index)) = static_cast<unsigned char>(
+            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(HEALTH_XML).as_int()));
+    *(constants + (++index)) = static_cast<unsigned char>(
+            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(ATTACK_XML).as_int()));
+    *(constants + (++index)) = static_cast<unsigned char>(
+            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(SPEED_XML).as_int()));
+    *(constants + (++index)) = static_cast<unsigned char>(
+            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(DEFENSE_XML).as_int()));
+    *(constants + (++index)) = static_cast<unsigned char>(
+            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(INTELLIGENCE_XML).as_int()));
+    *(constants + (++index)) = static_cast<unsigned char>(
+            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(MAGIC_XML).as_int()));
+    *(constants + (++index)) = static_cast<unsigned char>(
+            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(RUNES_XML).as_int()));
+    *(constants + (++index)) = static_cast<unsigned char>(
+            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(BLOT_XML).as_int()));
+    *(constants + (++index)) = static_cast<unsigned char>(
+            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(SUPERSTITION_XML).as_int()));
 }
 /** @brief Accede al armadura
  * @return Armor*
