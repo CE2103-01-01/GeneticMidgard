@@ -112,11 +112,13 @@ int Subject::getFitness(){
 void Subject::calculateFitness() {
     xml_document constantXml;
     constantXml.load_file(CONSTANT_XML_PATH);
-    int index = 0;
+    int* index = static_cast<int*>(malloc(sizeof(int)));
+    (*index)=0;
     for(xml_attribute attrIter = constantXml.child(CONSTANT_XML_ROOT).child(profession).first_attribute();
-        attrIter && index<NUMBER_OF_CHARACTERISTICS; attrIter = attrIter.next_attribute(), index++) {
-            (*fitness) += attrIter.as_int() * (*(characteristics + index));
+        attrIter && (*index)<NUMBER_OF_CHARACTERISTICS; attrIter = attrIter.next_attribute(), (*index)++) {
+            (*fitness) += attrIter.as_int() * (*(characteristics + (*index)));
     }
+    free(index);
 };
 
 /** @brief Accede al armadura
