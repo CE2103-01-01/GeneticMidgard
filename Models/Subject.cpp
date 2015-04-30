@@ -115,6 +115,7 @@ void Subject::calculateFitness() {
     for(int i = 0; i<NUMBER_OF_CHARACTERISTICS;i++){
         (*fitness) += (*(constants + i)) * (*(characteristics + i));
     }
+    free(constants);
 }
 
 /** @brief inicializa las constantes desde XML y las retorna por argumento
