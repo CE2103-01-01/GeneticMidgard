@@ -4,7 +4,9 @@
 
 
 
+
 #include "Terrain.h"
+#include "../Data/PriorityQueue.h"
 
 using namespace std;
 int Terrain::width = 0;
@@ -52,7 +54,7 @@ void Terrain::findPathAS(const int &xStart, const int &yStart, const int &xFinis
     static int dx[dir]={1, 1, 0, -1, -1, -1, 0, 1};
     static int dy[dir]={0, 1, 1, 1, 0, -1, -1, -1};
 
-    static priority_queue<Node> priorityQueue[2]; // list of open (not-yet-tried) Nodes
+    static PriorityQueue<Node> priorityQueue[2]; // list of open (not-yet-tried) Nodes
     static int pqi; // pq index
     static Node* n0;
     static Node* m0;
@@ -195,6 +197,10 @@ void Terrain::findPathAS(const int &xStart, const int &yStart, const int &xFinis
 }
 Node::Node(int xPos, int yPos, int level, int priority) : xPos(xPos), yPos(yPos), level(level), priority(priority) { }
 
+bool Node::operator<(Node node) {
+    return priority > node.getPriority();
+}
+
 void Node::updatePriority(const int &xDest, const int &yDest) {
     priority=level+estimate(xDest, yDest)*10; //A*
 };
@@ -219,7 +225,3 @@ int Node::getPriority() const {
     return priority;
 }
 
-bool operator<(const Node & a, const Node & b)
-{
-    return a.getPriority() > b.getPriority();
-}

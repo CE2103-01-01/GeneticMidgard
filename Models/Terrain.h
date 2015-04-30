@@ -18,14 +18,8 @@ static char const *const DATA_NODE = "data";
 
 static char const *const TILE_NODE = "tile";
 
-#include <iostream>
-#include <iomanip>
-#include <queue>
-#include <string>
+
 #include <math.h>
-#include <ctime>
-#include <cstdlib>
-#include <cstdio>
 #include "../libs/rapidxml/rapidxml.hpp"
 #include "../libs/rapidxml/rapidxml_utils.hpp"
 #include "../Constants.h"
@@ -52,6 +46,7 @@ private:
     int priority;  // 1 / realPriority
 public:
     Node(int xPos, int yPos, int level, int priority);
+    bool operator<(Node node);
     void updatePriority(const int & xDest, const int & yDest);
     void nextLevel(const int & i);
     int const &estimate(const int & xDest, const int & yDest) const;

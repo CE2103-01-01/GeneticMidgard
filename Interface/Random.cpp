@@ -6,7 +6,7 @@
 #include "Random.h"
 
 void trueRandom::init(){
-    std::srand(std::time(0)); //use current time as seed for random generator
+    std::srand(std::time(NULL)); //use current time as seed for random generator
 }
 
 int trueRandom::getRandom(){

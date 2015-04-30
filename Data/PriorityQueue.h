@@ -18,7 +18,11 @@ private:
 public:
     void push(T*);
     void push(T);
-    T pop();
+    void pop();
+    bool empty();
+    int size();
+
+    T top();
 };
 
 template<class T>
@@ -80,15 +84,26 @@ void PriorityQueue<T>::pushNode(NodeQ<T>* node) {
     lenght++;
 }
 
+template<class T>
+T PriorityQueue<T>::top() {
+    return *(_head->getData());
+}
 
 template<class T>
-T PriorityQueue<T>::pop() {
+void PriorityQueue<T>::pop() {
     NodeQ<T> * headTemp = _head;//Nodo para liberarlo
-    T element = *(_head->getData());
     _head = _head->getNextNode();
     lenght--;//Actualiza largo
     free(headTemp);//GarbageCollection
-    return element;
+}
+
+template<class T>
+bool PriorityQueue<T>::empty() {
+    return lenght == 0;
+}
+template<class T>
+int PriorityQueue<T>::size() {
+    return lenght;
 }
 
 
@@ -116,4 +131,3 @@ template<class T>
 NodeQ<T> *NodeQ<T>::getNextNode() {
     return next;
 }
-
