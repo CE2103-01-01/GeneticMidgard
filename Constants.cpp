@@ -14,14 +14,14 @@ namespace constants {
 }
 
 namespace constantsSubjectXML {
-    extern const char* CONSTANT_XML_PATH = "constant.xml";
+    extern const char* CONSTANT_XML_PATH = "../res/constant.xml";
     extern const char* CONSTANT_XML_ROOT = "CONSTANTS";
-    extern const char* GENES_XML_PATH = "genes.xml";
+    extern const char* GENES_XML_PATH = "../res/genes.xml";
     extern const char* GENES_XML_ROOT = "GENES";
     extern const char* GENES_XML_LENGHT = "CHROMOSOME_LENGHT";
     extern const char* GENES_XML_LENGHT_INFO = "CHR_LEN";
     extern const char* GENES_XML_CHILD = "GENE";
-    extern const char* GENES_XML_CHILD_INFO = "NAME";
+    extern const char* GENES_XML_CHILD_INFO = "GENE_NAME";
     extern const char* AGE_XML = "age";
     extern const char* EXPERIENCE_XML = "experience";
     extern const char* HEALTH_XML = "health";

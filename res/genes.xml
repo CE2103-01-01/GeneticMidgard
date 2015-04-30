@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <GENES>
-    <GENE name="INMUNE_SYSTEM" />
-    <GENE name="INTELIGENCE" />
-    <GENE name="ATTACK" />
-    <GENE name="DEFENSE" />
-    <GENE name="VITAL_ENERGY" />
-    <GENE name="BLOT" />
-    <GENE name="RUNES" />
-    <GENE name="SUPERSTITION" />
+    <GENE GENE_NAME="INMUNE_SYSTEM" />
+    <GENE GENE_NAME="INTELIGENCE" />
+    <GENE GENE_NAME="ATTACK" />
+    <GENE GENE_NAME="DEFENSE" />
+    <GENE GENE_NAME="VITAL_ENERGY" />
+    <GENE GENE_NAME="BLOT" />
+    <GENE GENE_NAME="RUNES" />
+    <GENE GENE_NAME="SUPERSTITION" />
+    <CHROMOSOME_LENGHT CHR_LEN="8" />
 </GENES>

@@ -105,6 +105,7 @@ unsigned char Subject::getExperience(){
 int Subject::getFitness(){
     return *fitness;
 };
+
 /** @brief calcular  fitness
  *
  */
@@ -116,33 +117,37 @@ void Subject::calculateFitness() {
     }
 }
 
+/** @brief inicializa las constantes desde XML y las retorna por argumento
+ * @param unsigned char* constants: puntero a las constantes a inicializar
+ */
 void Subject::initConstants(unsigned char* constants){
     xml_document constantXml;
     constantXml.load_file(CONSTANT_XML_PATH);
     int index = 0;
     *(constants + (++index)) = static_cast<unsigned char>(
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(AGE_XML).as_int()));
+            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(AGE_XML).as_int());
     *(constants + (++index)) = static_cast<unsigned char>(
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(EXPERIENCE_XML).as_int()));
+            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(EXPERIENCE_XML).as_int());
     *(constants + (++index)) = static_cast<unsigned char>(
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(HEALTH_XML).as_int()));
+            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(HEALTH_XML).as_int());
     *(constants + (++index)) = static_cast<unsigned char>(
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(ATTACK_XML).as_int()));
+            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(ATTACK_XML).as_int());
     *(constants + (++index)) = static_cast<unsigned char>(
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(SPEED_XML).as_int()));
+            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(SPEED_XML).as_int());
     *(constants + (++index)) = static_cast<unsigned char>(
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(DEFENSE_XML).as_int()));
+            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(DEFENSE_XML).as_int());
     *(constants + (++index)) = static_cast<unsigned char>(
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(INTELLIGENCE_XML).as_int()));
+            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(INTELLIGENCE_XML).as_int());
     *(constants + (++index)) = static_cast<unsigned char>(
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(MAGIC_XML).as_int()));
+            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(MAGIC_XML).as_int());
     *(constants + (++index)) = static_cast<unsigned char>(
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(RUNES_XML).as_int()));
+            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(RUNES_XML).as_int());
     *(constants + (++index)) = static_cast<unsigned char>(
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(BLOT_XML).as_int()));
+            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(BLOT_XML).as_int());
     *(constants + (++index)) = static_cast<unsigned char>(
-            (constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(SUPERSTITION_XML).as_int()));
+            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(SUPERSTITION_XML).as_int());
 }
+
 /** @brief Accede al armadura
  * @return Armor*
  */
@@ -156,4 +161,3 @@ Armor* Subject::getArmor(){
 Weapon* Subject::getWeapon(){
     return weapon;
 };
-

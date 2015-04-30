@@ -13,8 +13,7 @@ using namespace constantsSubjectXML;
  */
 Chromosome::Chromosome() {
     numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
-    *numberOfGenes = 8;
-    //*numberOfGenes = readLenghtFromXML();
+    *numberOfGenes = readLenghtFromXML();
     trueRandom::init();
     geneticData = malloc((*numberOfGenes) * GENE_LEN_ON_BYTES);
     for (int i = 0; i < (*numberOfGenes)*(GENE_LEN_ON_BYTES); i+=GENE_LEN_ON_BYTES) {
@@ -29,8 +28,7 @@ Chromosome::Chromosome() {
  */
 Chromosome::Chromosome(void* genes) {
     numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
-    *numberOfGenes = 8;
-    //*numberOfGenes = readLenghtFromXML();
+    *numberOfGenes = readLenghtFromXML();
     geneticData = genes;
 };
 
