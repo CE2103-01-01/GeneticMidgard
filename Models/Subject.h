@@ -14,13 +14,16 @@
 #include <stdio.h>
 #include "../Constants.h"
 
-
+/** Clase Subject
+ * @brief clase a la cual pertenecen todos los individuos vivos
+ * @caracteristicas: edad, experiencia, vida, ataque, velocidad, defensa,
+ *                   inteligencia, magia, runes-energia, blot, supersticion
+*/
 class Subject {
     int* generation;
     int* fitness;
-    std::string profession;
+    std::string profession; //TODO: mejor usar un char que gasta menos espacio
     unsigned char* characteristics;//lista de caracteristicas
-    // TODO: el orden va edad-experiencia-vida-ataque-velocidad-defensa-inteligencia-magia-runes-energia-blot-supersticion
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
     Chromosome* geneticInformation;
