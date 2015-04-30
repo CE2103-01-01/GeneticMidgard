@@ -8,13 +8,20 @@
 #include "Chromosome.h"
 #include "Weapon.h"
 #include "Armor.h"
+#include "../Data/DoubleList.h"
+#include "../libs/pugixml/pugixml.hpp"
+#include <cstdlib>
+#include <stdio.h>
+#include "../Constants.h"
+
 
 class Subject {
-    int* health;
+
     int* generation;
-    int* age;
-    int* experience;//Experiencia
     int* fitness;
+    std::string profession;
+    DoubleList<int> caracteristics;//lista de caracteristicas
+    // TODO: el orden va edad-experiencia-vida-ataque-velocidad-defensa-inteligencia-magia-runes-energia-blot-supersticion
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
     Chromosome* geneticInformation;
@@ -32,6 +39,7 @@ public:
     Chromosome* getGeneticInformation();
     int getFitness();
     int getHealth();
+    void calculateFitness();//funcion de calcular fitness y set fitness
     int getGeneration();
     int getAge();
     int getExperience();

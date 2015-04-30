@@ -5,3 +5,14 @@
         -http://www.sc.ehu.es/ccwbayes/docencia/mmcc/docs/t2geneticos.pdf
     se establece funciones basico de la clase de poblacion 10 min
     se realiza investigacion sobre uso de operadores logicos para facilitar uso de mascara en cruze de genes
+26/04/15
+    investigacion sobre funcion de fitness teorico y ejemplos  4h
+        -https://www.youtube.com/watch?v=kHyNqSnzP8Y
+        -http://www.cs.nott.ac.uk/~nza/G52PAS/lecture4.pdf
+        -http://mnemstudio.org/ai/ga/simple_cpp_ex1.txt
+        -http://www.wacong.org/wac2006/allpapers/issci/issci_15.pdf
+27/04/15
+    Definir y discutir sobre la implementacion de fitness y tambien investigar sobre metodos como diversity ranking
+     y fitness ranking para la seleccion. 3h
+29/04/15
+    Modificacion en la clase Subject, implementar la funcion de fitness y crear archivo de constantes en xml. 1.5h

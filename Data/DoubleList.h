@@ -41,6 +41,7 @@ public:
     Node(T); //Constructor
     ~Node(); //Destructor
     T *getData(); //Devuelve el dato del objeto
+    void setData(T);// Modifica el dato del objeto
     Node<T> *getNextNode(); //Accede al nodo next
     Node<T> *getPreNode(); //Accede al nodo prev
     void insertAfter(Node<T> *); //Inserta un nodo next
@@ -132,11 +133,20 @@ template<class T>
 T* Node<T>::getData() {
     return data;
 };
+/** @brief modifica el dato contenido
+*
+* @param T
+*/
+template<class T>
+void Node<T>::setData(T Data) {
+    *data = Data;
+};
 /** @brief Inserta un nodo despues
 *
 * @param Node<T>*
 */
 template<class T>
+
 void Node<T>::insertAfter(Node<T> *n) {
     if(next!=0){
         Node<T> *tmp = next;

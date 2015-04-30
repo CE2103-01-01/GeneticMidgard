@@ -7,6 +7,8 @@
 
 #define TREE_SIZE 50
 #define GENE_LEN_ON_BYTES 1
+#define CONSTANT_XML_PATH "constant.xml"
+#define CONSTANT_XML_ROOT "CONSTANTS"
 #define GENES_XML_PATH "genes.xml"
 #define GENES_XML_ROOT "GENES"
 #define GENES_XML_LENGHT "CHROMOSOME_LENGHT"
