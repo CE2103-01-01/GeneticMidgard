@@ -10,7 +10,15 @@
 #define GENE_LEN_ON_BYTES 1
 #define POSITION_OF_AGE 0
 #define POSITION_OF_EXPERIENCE 1
-#define POSITION_OF_HEALTH 2
+#define POSITION_OF_LIFE 2
+#define POSITION_OF_ATTACK 3
+#define POSITION_OF_DEFENSE 4
+#define POSITION_OF_INTELLIGENCE 5
+#define POSITION_OF_MAGIC 6
+#define POSITION_OF_RUNES 7
+#define POSITION_OF_ENERGY 8
+#define POSITION_OF_BLOT 9
+#define POSITION_OF_SUPERSTITION 10
 
 //TODO: estas bibliotecas se estan incluyendo en muchos archivos donde no se ocupan y hacen el codigo mas pesado,
 // se debe buscar su uso y separarlo...
