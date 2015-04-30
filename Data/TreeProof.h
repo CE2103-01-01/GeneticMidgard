@@ -7,7 +7,6 @@
 
 #include "Tree.h"
 #include "../Constants.h"
-#include <iostream>
 
 void print(int*, void*);
 void setNumber(int*,void*);
