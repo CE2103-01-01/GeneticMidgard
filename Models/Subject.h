@@ -16,20 +16,19 @@
 
 /** Clase Subject
  * @brief clase a la cual pertenecen todos los individuos vivos
- * @caracteristicas: edad, experiencia, vida, ataque, velocidad, defensa,
+ * @caracteristicas: edad, experiencia, salud, ataque, velocidad, defensa,
  *                   inteligencia, magia, runes-energia, blot, supersticion
 */
 class Subject {
     int* generation;
     int* fitness;
-    std::string profession; //TODO: mejor usar un char que gasta menos espacio
+    char* profession; //TODO: mejor usar un char que gasta menos espacio
     unsigned char* characteristics;//lista de caracteristicas
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
     Chromosome* geneticInformation;
     Weapon* weapon;
     Armor* armor;
-    void initConstants(unsigned char* constants);
 public:
     Subject();
     Subject(Subject*,Subject*,Chromosome*,int);

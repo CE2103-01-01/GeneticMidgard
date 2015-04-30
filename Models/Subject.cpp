@@ -110,44 +110,14 @@ int Subject::getFitness(){
  *
  */
 void Subject::calculateFitness() {
-    unsigned char* constants = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
-    initConstants(constants);
-    for(int i = 0; i<NUMBER_OF_CHARACTERISTICS;i++){
-        (*fitness) += (*(constants + i)) * (*(characteristics + i));
-    }
-    free(constants);
-}
-
-/** @brief inicializa las constantes desde XML y las retorna por argumento
- * @param unsigned char* constants: puntero a las constantes a inicializar
- */
-void Subject::initConstants(unsigned char* constants){
     xml_document constantXml;
     constantXml.load_file(CONSTANT_XML_PATH);
     int index = 0;
-    *(constants + (++index)) = static_cast<unsigned char>(
-            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(AGE_XML).as_int());
-    *(constants + (++index)) = static_cast<unsigned char>(
-            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(EXPERIENCE_XML).as_int());
-    *(constants + (++index)) = static_cast<unsigned char>(
-            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(HEALTH_XML).as_int());
-    *(constants + (++index)) = static_cast<unsigned char>(
-            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(ATTACK_XML).as_int());
-    *(constants + (++index)) = static_cast<unsigned char>(
-            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(SPEED_XML).as_int());
-    *(constants + (++index)) = static_cast<unsigned char>(
-            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(DEFENSE_XML).as_int());
-    *(constants + (++index)) = static_cast<unsigned char>(
-            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(INTELLIGENCE_XML).as_int());
-    *(constants + (++index)) = static_cast<unsigned char>(
-            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(MAGIC_XML).as_int());
-    *(constants + (++index)) = static_cast<unsigned char>(
-            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(RUNES_XML).as_int());
-    *(constants + (++index)) = static_cast<unsigned char>(
-            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(BLOT_XML).as_int());
-    *(constants + (++index)) = static_cast<unsigned char>(
-            constantXml.child(CONSTANT_XML_ROOT).child(profession.c_str()).attribute(SUPERSTITION_XML).as_int());
-}
+    for(xml_attribute attrIter = constantXml.child(CONSTANT_XML_ROOT).child(profession).first_attribute();
+        attrIter && index<NUMBER_OF_CHARACTERISTICS; attrIter = attrIter.next_attribute(), index++) {
+            (*fitness) += attrIter.as_int() * (*(characteristics + index));
+    }
+};
 
 /** @brief Accede al armadura
  * @return Armor*
