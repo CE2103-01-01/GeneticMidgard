@@ -16,35 +16,33 @@
 
 
 class Subject {
-
     int* generation;
     int* fitness;
     std::string profession;
-    DoubleList<int> caracteristics;//lista de caracteristicas
+    int* characteristics;//lista de caracteristicas
     // TODO: el orden va edad-experiencia-vida-ataque-velocidad-defensa-inteligencia-magia-runes-energia-blot-supersticion
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
     Chromosome* geneticInformation;
     Weapon* weapon;
     Armor* armor;
-
+    void initConstants(int* constants);
 public:
     Subject();
-    Subject(Subject*,Subject*);
-    int makeDamage();// Se suma ataque y weapon
-    void setFitness(int);
-    int getAtack();// Se suma armor y la defensa de los genes
+    Subject(Subject*,Subject*,Chromosome*,int);
+    int calculateDamage();  // TODO: implementar
+    int calculateDefense(); // TODO: implementar
+    void calculateFitness();//funcion de calcular fitness y set fitness
+    Chromosome* getGeneticInformation();
     Subject* getFather(); // Obtiene padre 1
     Subject* getMother(); // Obtiene padre 2
-    Chromosome* getGeneticInformation();
+    Weapon* getWeapon();
+    Armor* getArmor();
     int getFitness();
     int getHealth();
-    void calculateFitness();//funcion de calcular fitness y set fitness
     int getGeneration();
     int getAge();
     int getExperience();
-    Weapon* getWeapon();
-    Armor* getArmor();
 };
 
 

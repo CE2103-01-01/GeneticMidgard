@@ -6,9 +6,7 @@
 #define PROJECTMIDGARD_GENES_H
 
 #include "../Constants.h"
-#include <cstdlib>
-#include <stdio.h>
-#include <time.h>
+#include "../Interface/Random.h"
 #include "../libs/pugixml/pugixml.hpp"
 
 class Chromosome {

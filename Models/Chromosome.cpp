@@ -6,6 +6,7 @@
 #include "Chromosome.h"
 
 using namespace pugi;
+using namespace constantsSubjectXML;
 
 /**Constructor
  * @brief Crea la cantidad de genes del archivo genes.xml con tamaño definido en Constants.h
@@ -14,11 +15,11 @@ Chromosome::Chromosome() {
     numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
     *numberOfGenes = 8;
     //*numberOfGenes = readLenghtFromXML();
+    trueRandom::init();
     geneticData = malloc((*numberOfGenes) * GENE_LEN_ON_BYTES);
-    srand(time(NULL));
     for (int i = 0; i < (*numberOfGenes)*(GENE_LEN_ON_BYTES); i+=GENE_LEN_ON_BYTES) {
         for(int j = 0; j < GENE_LEN_ON_BYTES; j++){
-            *static_cast<unsigned char*>(geneticData + i + j) = rand()%256;
+            *static_cast<unsigned char*>(geneticData + i + j) = trueRandom::getRandom()%256;
         }
     }
 };
