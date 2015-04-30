@@ -8,11 +8,6 @@
 #include "Chromosome.h"
 #include "Weapon.h"
 #include "Armor.h"
-#include "../Data/DoubleList.h"
-#include "../libs/pugixml/pugixml.hpp"
-#include <cstdlib>
-#include <stdio.h>
-#include "../Constants.h"
 
 /** Clase Subject
  * @brief clase a la cual pertenecen todos los individuos vivos

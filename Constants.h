@@ -43,17 +43,6 @@ namespace constantsSubjectXML {
     extern const char* GENES_XML_LENGHT_INFO;
     extern const char* GENES_XML_CHILD;
     extern const char* GENES_XML_CHILD_INFO;
-    extern const char* AGE_XML;
-    extern const char* EXPERIENCE_XML;
-    extern const char* HEALTH_XML;
-    extern const char* ATTACK_XML;
-    extern const char* SPEED_XML;
-    extern const char* DEFENSE_XML;
-    extern const char* INTELLIGENCE_XML;
-    extern const char* MAGIC_XML;
-    extern const char* RUNES_XML;
-    extern const char* BLOT_XML;
-    extern const char* SUPERSTITION_XML;
 }
 
 #endif //PROJECTMIDGARD_CONSTANTS_H

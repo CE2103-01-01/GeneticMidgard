@@ -17,6 +17,7 @@ static char const *const WIDTH = "width";
 static char const *const DATA_NODE = "data";
 
 static char const *const TILE_NODE = "tile";
+
 #include <iostream>
 #include <iomanip>
 #include <queue>

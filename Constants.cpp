@@ -22,15 +22,4 @@ namespace constantsSubjectXML {
     extern const char* GENES_XML_LENGHT_INFO = "CHR_LEN";
     extern const char* GENES_XML_CHILD = "GENE";
     extern const char* GENES_XML_CHILD_INFO = "GENE_NAME";
-    extern const char* AGE_XML = "age";
-    extern const char* EXPERIENCE_XML = "experience";
-    extern const char* HEALTH_XML = "health";
-    extern const char* ATTACK_XML = "attack";
-    extern const char* SPEED_XML = "speed";
-    extern const char* DEFENSE_XML = "defense";
-    extern const char* INTELLIGENCE_XML = "intelligence";
-    extern const char* MAGIC_XML = "magic";
-    extern const char* RUNES_XML = "runes";
-    extern const char* BLOT_XML = "blot";
-    extern const char* SUPERSTITION_XML = "superstition";
 }
