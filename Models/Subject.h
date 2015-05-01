@@ -17,13 +17,14 @@
 class Subject {
     int* generation;
     int* fitness;
-    char* profession; //TODO: mejor usar un char que gasta menos espacio
+    const char* profession; //TODO: mejor usar un char que gasta menos espacio
     unsigned char* characteristics;//lista de caracteristicas
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
     Chromosome* geneticInformation;
     Weapon* weapon;
     Armor* armor;
+    const char* race;
 public:
     Subject();
     Subject(Subject*,Subject*,Chromosome*,int);
@@ -40,6 +41,16 @@ public:
     unsigned char getHealth();
     unsigned char getAge();
     unsigned char getExperience();
+    void setHealth(int);
+    void setAttack(int);
+    void setSpeed(int);
+    void setDefense(int);
+    void setIntelligent(int);
+    void setMagic(int);
+    void setRunes(int);
+    void setEnergy(int);
+    void setBlot(int);
+    void setSuperstition(int);
 };
 
 

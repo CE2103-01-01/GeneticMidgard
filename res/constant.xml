@@ -1,8 +1,36 @@
 <?xml version="1.0"?>
 <CONSTANTS>
-    <warrior age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
-    <defender age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
-    <sorcerer age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
-    <engineer age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
-    <quack age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+
+    <Dwarves>
+        <warrior age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <defender age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <sorcerer age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <engineer age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <quack age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+    </Dwarves>
+
+    <Elves>
+        <warrior age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <defender age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <sorcerer age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <engineer age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <quack age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+    </Elves>
+
+    <DarkElves>
+        <warrior age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <defender age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <sorcerer age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <engineer age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <quack age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+    </DarkElves>
+
+    <Giants>
+        <warrior age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <defender age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <sorcerer age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <engineer age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+        <quack age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
+    </Giants>
+
 </CONSTANTS>

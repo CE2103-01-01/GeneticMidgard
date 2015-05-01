@@ -21,6 +21,11 @@ public:
     void createObject();
     void decreseCounter();
 };
+/** Clase movilObject
+ * @brief clase de los objetos generado por el Manager
+ *
+ *
+*/
 class movilObject {
 private:
     movilObjectManager* manager;
