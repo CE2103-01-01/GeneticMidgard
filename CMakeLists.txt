@@ -20,6 +20,7 @@ set(HEADER_FILES Interface/Random.h
                  Algorithms/printBinary.h
                  Proof/chromosomeMixerProof.h
                  Proof/proofBinary.h
+                 Data/BitVector.h
                  )
 
 set(SOURCE_FILES main.cpp
@@ -36,6 +37,7 @@ set(SOURCE_FILES main.cpp
                  Algorithms/lifeLaboratory.cpp
                  Proof/chromosomeMixerProof.cpp
                  Proof/proofBinary.cpp
+                 Data/BitVector.cpp
                  )
 
 set (DATA_STRUCTS   Data/TreeProof.cpp
