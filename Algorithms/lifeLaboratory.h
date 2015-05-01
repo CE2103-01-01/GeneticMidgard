@@ -10,6 +10,7 @@
 #include "../Models/Subject.h"
 
 class LifeLaboratory {
+
     Chromosome* selectChromosome(Chromosome*,Chromosome*);
     Subject* selectParents(Tree*);
 public:
