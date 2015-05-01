@@ -16,11 +16,8 @@
 
 #include "pugixml.hpp"
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include <wchar.h>
 
 #ifndef PUGIXML_NO_XPATH
 #	include <math.h>
@@ -31,13 +28,9 @@
 #endif
 
 #ifndef PUGIXML_NO_STL
-#	include <istream>
-#	include <ostream>
-#	include <string>
 #endif
 
 // For placement new
-#include <new>
 
 #ifdef _MSC_VER
 #	pragma warning(push)
@@ -121,7 +114,6 @@ using std::memmove;
 
 // uintptr_t
 #if !defined(_MSC_VER) || _MSC_VER >= 1600
-#	include <stdint.h>
 #else
 #	ifndef _UINTPTR_T_DEFINED
 // No native uintptr_t in MSVC6 and in some WinCE versions

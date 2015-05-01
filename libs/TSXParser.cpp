@@ -1,9 +1,3 @@
-#include "TSXParser.h"
-
-#include <cstdlib>
-#include <iostream>
-#include <sstream>
-
 namespace TSX {
 
   Parser::Parser( const char* filename )
