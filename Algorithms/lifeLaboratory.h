@@ -9,11 +9,12 @@
 #include "ChromosomeMixer.h"
 #include "../Models/Subject.h"
 
-class lifeLaboratory {
+class LifeLaboratory {
+
     Chromosome* selectChromosome(Chromosome*,Chromosome*);
     Subject* selectParents(Tree*);
-    public:
-    Subject* createGeneration(Tree*,int);
+public:
+        Subject* createGeneration(Tree*,int,int);
 };
 
 

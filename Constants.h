@@ -6,8 +6,8 @@
 #define PROJECTMIDGARD_CONSTANTS_H
 
 #define TREE_SIZE 50
-#define NUMBER_OF_CHARACTERISTICS 12
 #define GENE_LEN_ON_BYTES 1
+#define NUMBER_OF_CHARACTERISTICS 13
 #define POSITION_OF_AGE 0
 #define POSITION_OF_EXPERIENCE 1
 #define POSITION_OF_HEALTH 2
@@ -20,6 +20,8 @@
 #define POSITION_OF_ENERGY 8
 #define POSITION_OF_BLOT 9
 #define POSITION_OF_SUPERSTITION 10
+#define POSITION_OF_ARMOR 11
+#define POSITION_OF_WEAPON 12
 
 //TODO: estas bibliotecas se estan incluyendo en muchos archivos donde no se ocupan y hacen el codigo mas pesado,
 // se debe buscar su uso y separarlo...

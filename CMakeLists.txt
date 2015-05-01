@@ -16,6 +16,7 @@ set(HEADER_FILES Interface/Random.h
                  Models/Armor.h
                  Models/Terrain.h
                  Algorithms/Algorithms.h
+                 Algorithms/lifeLaboratory.h
                  Algorithms/ChromosomeMixer.h
                  Generators/EvolutionGenerator.h
                  Algorithms/printBinary.h
@@ -37,6 +38,7 @@ set(SOURCE_FILES main.cpp
                  Algorithms/Algorithms.cpp
                  Algorithms/ChromosomeMixer.cpp
                  Algorithms/printBinary.cpp
+                 Algorithms/lifeLaboratory.cpp
                  Proof/chromosomeMixerProof.cpp
                  Proof/proofBinary.cpp
                 
