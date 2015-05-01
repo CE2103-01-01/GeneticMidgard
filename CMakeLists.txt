@@ -9,11 +9,9 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/r
 
 set(HEADER_FILES Interface/Random.h
                  Constants.h
-                 #Models/Population.h
+                 Models/Population.h
                  Models/Subject.h
                  Models/Chromosome.h
-                 Models/Weapon.h
-                 Models/Armor.h
                  Models/Terrain.h
                  Algorithms/Algorithms.h
                  Algorithms/lifeLaboratory.h
@@ -23,16 +21,16 @@ set(HEADER_FILES Interface/Random.h
                  Data/BitVector.h
                  Proof/chromosomeMixerProof.h
                  Proof/proofBinary.h
-                 Models/GeneralFitnessCalculator.h)
+                 Models/GeneralFitnessCalculator.h
+                 Models/movilObjectManager.h
+                 Algorithms/lifeLaboratory.h)
 
 set(SOURCE_FILES main.cpp
                  Interface/Random.cpp
                  Constants.cpp
-                 #Models/Population.cpp
+                 Models/Population.cpp
                  Models/Subject.cpp
                  Models/Chromosome.cpp
-                 Models/Weapon.cpp
-                 Models/Armor.cpp
                  Data/BitVector.cpp
                  Models/Terrain.cpp
                  Generators/EvolutionGenerator.cpp
@@ -42,13 +40,15 @@ set(SOURCE_FILES main.cpp
                  Algorithms/lifeLaboratory.cpp
                  Proof/chromosomeMixerProof.cpp
                  Proof/proofBinary.cpp
-                 Models/GeneralFitnessCalculator.cpp)
+                 Models/GeneralFitnessCalculator.cpp
+                 Models/movilObjectManager.cpp
+                 Algorithms/lifeLaboratory.cpp)
 
 set (DATA_STRUCTS   Data/TreeProof.cpp
                     Data/Leaf.cpp
                     Data/DoubleList.h
                     Data/PriorityQueue.h
-                     Data/Leaf.h
+                    Data/Leaf.h
                      Data/Tree.h
                      Data/TreeProof.h)
                     
@@ -65,12 +65,12 @@ set(XML libs/rapidxml/rapidxml.hpp
         libs/pugixml/pugixml.hpp
         libs/pugixml/pugixml.cpp)
 
-add_executable(ProjectMidgardLogic   ${SOURCE_FILES}
-                                ${HEADER_FILES}
-                                ${TMX_FILES}
-                                ${XML}
-                                ${DATA_STRUCTS}
-                                Models/movilObjectManager.cpp Models/movilObjectManager.h Algorithms/lifeLaboratory.cpp Algorithms/lifeLaboratory.h)
+add_executable(ProjectMidgardLogic  ${SOURCE_FILES}
+                                    ${HEADER_FILES}
+                                    ${TMX_FILES}
+                                    ${XML}
+                                    ${DATA_STRUCTS}
+                                )
 
 
 add_subdirectory(GUI)

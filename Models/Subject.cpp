@@ -19,8 +19,6 @@ Subject::Subject() {
     calculateFitness();
     profession = "";
     race ="";
-    weapon = 0; //TODO:  revisar si se debe cambiar
-    armor = 0; //TODO:  revisar si se debe cambiar
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     for(int i = 0; i < NUMBER_OF_CHARACTERISTICS; i++){
         *(characteristics + i) = 0;    //TODO: MODIFICAR

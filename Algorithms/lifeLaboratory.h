@@ -8,13 +8,16 @@
 #include "../Data/Tree.h"
 #include "ChromosomeMixer.h"
 #include "../Models/Subject.h"
+#include "../Models/GeneralFitnessCalculator.h"
 
 class LifeLaboratory {
-
+    int* counterOfPeople;
+    int* totalFitness;
     Chromosome* selectChromosome(Chromosome*,Chromosome*);
-    Subject* selectParents(Tree*);
+    Subject* selectParents(Tree<Subject>*);
 public:
-        Subject* createGeneration(Tree*,int,int);
+        Subject* createGeneration(Tree<Subject>*,int,int);
+        Subject* createLife(int);
 };
 
 

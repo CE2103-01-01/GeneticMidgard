@@ -9,8 +9,8 @@ Chromosome* LifeLaboratory::selectChromosome(Chromosome* firstSon,Chromosome* se
 }
 
 
-Subject* LifeLaboratory::selectParents(Tree* population){
-    
+Subject* LifeLaboratory::selectParents(Tree<Subject>* population){
+
 }
 
 /** Metodo que genera una nueva generacion
@@ -18,7 +18,7 @@ Subject* LifeLaboratory::selectParents(Tree* population){
  * @param int numberOfNewSubjects: numero de sujetos a generar
  * @param int generationNumber: numero de la generacion a crear
  */
-Subject* LifeLaboratory::createGeneration(Tree* population, int numberOfNewSubjects, int generationNumber){
+Subject* LifeLaboratory::createGeneration(Tree<Subject>* population, int numberOfNewSubjects, int generationNumber){
     //Reserva espacio para N sujetos segun parametro
     Subject* newGeneration = static_cast<Subject*> (malloc(sizeof(Subject)*numberOfNewSubjects));
     //Llena la nueva generacion
