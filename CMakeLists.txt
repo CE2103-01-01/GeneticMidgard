@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(ProjectMidgard)
+project(ProjectMidgardLogic)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/build")
@@ -59,7 +59,7 @@ set(XML libs/rapidxml/rapidxml.hpp
         libs/pugixml/pugixml.hpp
         libs/pugixml/pugixml.cpp)
 
-add_executable(ProjectMidgard   ${SOURCE_FILES}
+add_executable(ProjectMidgardLogic   ${SOURCE_FILES}
                                 ${HEADER_FILES}
                                 ${TMX_FILES}
                                 ${XML}
@@ -67,3 +67,4 @@ add_executable(ProjectMidgard   ${SOURCE_FILES}
                                 Models/movilObjectManager.cpp Models/movilObjectManager.h)
 
 
+add_subdirectory(GUI)
