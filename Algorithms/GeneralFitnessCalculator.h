@@ -5,7 +5,9 @@
 #ifndef PROJECTMIDGARDLOGIC_GENERALFITNESSCALCULATOR_H
 #define PROJECTMIDGARDLOGIC_GENERALFITNESSCALCULATOR_H
 
-#include "Chromosome.h"
+#include "../libs/pugixml/pugixml.hpp"
+#include "../Models/Chromosome.h"
+
 using namespace pugi;
 
 class GeneralFitnessCalculator {
