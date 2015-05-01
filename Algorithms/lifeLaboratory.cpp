@@ -8,6 +8,7 @@ Chromosome* selectChromosome(Chromosome* firstSon,Chromosome* secondSon){
 
 };
 
+
 Subject* selectParents(Tree* population){
     
 };

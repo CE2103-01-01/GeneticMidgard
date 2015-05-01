@@ -13,7 +13,7 @@ class lifeLaboratory {
     Chromosome* selectChromosome(Chromosome*,Chromosome*);
     Subject* selectParents(Tree*);
     public:
-    Subject* createGeneration(Tree*,int);
+        Subject* createGeneration(Tree*,int);
 };
 
 

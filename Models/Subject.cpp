@@ -19,8 +19,6 @@ Subject::Subject() {
     calculateFitness();
     profession = "";
     race ="";
-    weapon = 0; //TODO:  revisar si se debe cambiar
-    armor = 0; //TODO:  revisar si se debe cambiar
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     for(int i = 0; i < NUMBER_OF_CHARACTERISTICS; i++){
         *(characteristics + i) = 0;    //TODO: MODIFICAR
@@ -41,9 +39,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam,
     generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = generationParam;
     profession = "";
-    race=""
-    weapon = 0;
-    armor = 0;
+    race="";
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
         *(characteristics + i) = 0;    //TODO: MODIFICAR
@@ -168,13 +164,13 @@ void Subject::calculateFitness() {
 /** @brief Accede al armadura
  * @return Armor*
  */
-Armor* Subject::getArmor(){
-    return armor;
+unsigned char Subject::getArmor(){
+    return  *(characteristics + POSITION_OF_ARMOR);
 };
 
 /** @brief Accede al arma
  * @return Weapon*
  */
-Weapon* Subject::getWeapon(){
-    return weapon;
+unsigned char Subject::getWeapon(){
+    return *(characteristics + POSITION_OF_WEAPON);
 };
