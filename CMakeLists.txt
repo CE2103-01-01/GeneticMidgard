@@ -64,7 +64,7 @@ add_executable(ProjectMidgardLogic   ${SOURCE_FILES}
                                 ${TMX_FILES}
                                 ${XML}
                                 ${DATA_STRUCTS}
-                                Models/movilObjectManager.cpp Models/movilObjectManager.h Algorithms/lifeLaboratory.cpp Algorithms/lifeLaboratory.h Models/GeneralFitnessCalculator.cpp Models/GeneralFitnessCalculator.h)
+                                Models/movilObjectManager.cpp Models/movilObjectManager.h Algorithms/lifeLaboratory.cpp Algorithms/lifeLaboratory.h)
 
 
 add_subdirectory(GUI)
