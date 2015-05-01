@@ -12,8 +12,6 @@ set(HEADER_FILES Interface/Random.h
                  #Models/Population.h
                  Models/Subject.h
                  Models/Chromosome.h
-                 Models/Weapon.h
-                 Models/Armor.h
                  Models/Terrain.h
                  Algorithms/Algorithms.h
                  Algorithms/lifeLaboratory.h
@@ -22,7 +20,6 @@ set(HEADER_FILES Interface/Random.h
                  Algorithms/printBinary.h
                  Proof/chromosomeMixerProof.h
                  Proof/proofBinary.h
-
                  )
 
 set(SOURCE_FILES main.cpp
@@ -31,8 +28,6 @@ set(SOURCE_FILES main.cpp
                  #Models/Population.cpp
                  Models/Subject.cpp
                  Models/Chromosome.cpp
-                 Models/Weapon.cpp
-                 Models/Armor.cpp
                  Models/Terrain.cpp
                  Generators/EvolutionGenerator.cpp
                  Algorithms/Algorithms.cpp
@@ -41,7 +36,6 @@ set(SOURCE_FILES main.cpp
                  Algorithms/lifeLaboratory.cpp
                  Proof/chromosomeMixerProof.cpp
                  Proof/proofBinary.cpp
-                
                  )
 
 set (DATA_STRUCTS   Data/TreeProof.cpp
