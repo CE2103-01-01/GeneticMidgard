@@ -41,7 +41,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam,
     generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = generationParam;
     profession = "";
-    race=""
+    race="";
     weapon = 0;
     armor = 0;
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
