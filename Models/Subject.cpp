@@ -41,7 +41,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam,
     generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = generationParam;
     profession = "";
-    race=""
+    race="";
     weapon = 0;
     armor = 0;
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
@@ -79,52 +79,13 @@ Chromosome* Subject::getGeneticInformation() {
 unsigned char Subject::getHealth(){
     return *(characteristics + POSITION_OF_HEALTH);
 }
-/** @brief Modifica la salud
- * @param int number:valor que modifica salud
+/** @brief Modifica una caracteristica
+ * @param int value:valor que modifica la caracteristica
+ * @param char position:posicion donde es encuentra la caracteristica
  */
-void Subject::setHealth(int number) {
-    *(characteristics+POSITION_OF_HEALTH)=*(characteristics+POSITION_OF_HEALTH)+(unsigned char)number;
-}
-/** @brief Modifica el ataque
- * @param int number:valor que modifica ataque
- */
-void Subject::setAttack(int number) {
-    *(characteristics+POSITION_OF_ATTACK)=*(characteristics+POSITION_OF_ATTACK)+(unsigned char)number;
-}
-/** @brief Modifica la defensa
- * @param int number:valor que modifica defensa
- */
-void Subject::setDefense(int number) {
-    *(characteristics+POSITION_OF_DEFENSE)=*(characteristics+POSITION_OF_DEFENSE)+(unsigned char)number;
-}
-/** @brief Modifica la energia
- * @param int number:valor que modifica energia
- */
-void Subject::setEnergy(int number) {
-    *(characteristics+POSITION_OF_ENERGY)=*(characteristics+POSITION_OF_ENERGY)+(unsigned char)number;
-}
-/** @brief Modifica la blot
- * @param int number:valor que modifica blot
- */
-void Subject::setBlot(int number) {
-    *(characteristics+POSITION_OF_BLOT)=*(characteristics+POSITION_OF_BLOT)+(unsigned char)number;
-}
-/** @brief Modifica la inteligencia
- * @param int number:valor que modifica inteligencia
- */
-void Subject::setIntelligent(int number) {
-    *(characteristics+POSITION_OF_INTELLIGENCE)=*(characteristics+POSITION_OF_INTELLIGENCE)+(unsigned char)number;
-}
-/** @brief Modifica la magia
- * @param int number:valor que modifica magia
- */
-void Subject::setMagic(int number) {
-    *(characteristics+POSITION_OF_MAGIC)=*(characteristics+POSITION_OF_MAGIC)+(unsigned char)number;
-}
-
-/** @brief Accede a la generacion
- * @return int
- */
+void Subject::setCharacteristic(int value, char position) {
+    *(characteristics+position)=*(characteristics+position)+(unsigned char)value;
+};
 int Subject::getGeneration(){
     return *generation;
 }

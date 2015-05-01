@@ -11,8 +11,10 @@ using namespace constantsSubjectXML;
  */
 movilObjectManager::movilObjectManager() {
     xml_document objectSource;
-    objectSource.load_file("object.xml");
-    int elementCounter=std::distance(objectSource.child("MOVILOBJECT").begin(),objectSource.child("MOVILOBJECT").end());
+    objectSource.load_file(CONSTANT_XML_PATH);
+    int elementCounter=std::distance(objectSource.child("CONSTANTS").child("MOVILOBJECT").begin(),
+                                     objectSource.child("CONSTANTS").child("MOVILOBJECT").end());
+    std::cout<<elementCounter<<std::endl;
 }
 /**Reduce cantidad de contador de objetos
  * @brief se reduce 1 cantidad en el contador de objetos
@@ -27,9 +29,6 @@ void movilObjectManager::decreseCounter() {
  * @param int value: valor que se modifica en la caracteristica
  */
 movilObject::movilObject(movilObjectManager* control,std::string name,int caracteristic,int value)  {
-    xml_document objectDocument;
-    objectDocument.load_file(CONSTANT_XML_PATH);
-   objectDocument.child("movilObject").attributes();
     manager = control;
     use = false;
     type=name;
@@ -43,39 +42,7 @@ movilObject::movilObject(movilObjectManager* control,std::string name,int caract
 void movilObject::applyEffect(Subject* person) {
     if (use!=true) {
         use = true;
-        if (object == 0) {
-
-
-        }
-        else if(object==1){
-
-        }
-        else if(object==2){
-
-        }
-        else if(object==3){
-
-        }
-        else if(object==4){
-
-        }
-        else if(object==5){
-
-        }
-        else if(object==6){
-
-        }
-        else if(object==7){
-
-        }
-        else if(object==8){
-
-        }
-        else if(object==9){
-
-        }
-
-
+        person->setCharacteristic(effect,(unsigned char)object);
     }
     
 }

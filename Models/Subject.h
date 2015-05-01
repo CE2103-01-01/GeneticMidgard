@@ -41,16 +41,8 @@ public:
     unsigned char getHealth();
     unsigned char getAge();
     unsigned char getExperience();
-    void setHealth(int);
-    void setAttack(int);
-    void setSpeed(int);
-    void setDefense(int);
-    void setIntelligent(int);
-    void setMagic(int);
-    void setRunes(int);
-    void setEnergy(int);
-    void setBlot(int);
-    void setSuperstition(int);
+    void setCharacteristic(int,char);
+
 };
 
 
