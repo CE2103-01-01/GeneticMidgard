@@ -14,6 +14,7 @@
  *                   arma, armadura
 */
 class Subject {
+    int* id;
     int* generation;
     int* fitness;
     const char* profession; //TODO: mejor usar un char que gasta menos espacio
@@ -23,8 +24,8 @@ class Subject {
     Subject* mother; //padre del individuo
     Chromosome* geneticInformation;
 public:
-    Subject();
-    Subject(Subject*,Subject*,Chromosome*,int);
+    Subject(int);
+    Subject(Subject*,Subject*,Chromosome*,int,int);
     int calculateDamage();  // TODO: implementar
     int calculateDefense(); // TODO: implementar
     void calculateFitness();//funcion de calcular fitness y set fitness

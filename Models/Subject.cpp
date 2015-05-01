@@ -10,7 +10,9 @@ using namespace constantsSubjectXML;
 /** Constructor
  * @brief genera un individuo de primera generacion
  */
-Subject::Subject() {
+Subject::Subject(int idParam) {
+    id = static_cast<int*>(malloc(sizeof(int)));
+    *id = idParam;
     geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
     new(geneticInformation) Chromosome();
     generation = static_cast<int*>(malloc(sizeof(int)));
@@ -33,8 +35,10 @@ Subject::Subject() {
  * @brief genera un individuo de generacion N
  */
 Subject::Subject(Subject* fatherParam, Subject* motherParam,
-                 Chromosome* geneticInformationParam, int generationParam){
+                 Chromosome* geneticInformationParam, int generationParam, int idParam){
 
+    id = static_cast<int*>(malloc(sizeof(int)));
+    *id = idParam;
     geneticInformation = geneticInformationParam;
     fitness = static_cast<int*>(malloc(sizeof(int)));
     calculateFitness();

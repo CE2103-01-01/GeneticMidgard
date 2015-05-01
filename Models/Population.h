@@ -11,17 +11,20 @@
 
 class Population {
 private:
-    Tree<Subject>* people; //lista de los individuos de la poblacion
+    int* populationSize;
+    int* populationFitness;
     char* populationType;// tipo de la poblacion
-
-
+    Tree<Subject>* people; //lista de los individuos de la poblacion
+    void calculateFitness();
 public:
-    Population(int,char); //constructor de la poblacion
+    Population(Tree<Subject>*,char,int); //constructor de la poblacion
     ~Population();// destructor por defecto
+    void insertNewMember(Subject*, Chromosome*);
+    Tree<Subject>* getPopulationTree();
     Subject getIndividual(int);// obtiene un individuo por medio de indice
-    Subject getFittest();// obtiene el mejor individuo de la poblacion
     int getPopulationSize();// obtiene la cantidad de personas en la poblacion
-    std::string getPopulationType();// obtiene el tipo de la poblacion;
+    int getFitness();
+    int getPopulationFitness();
 };
 
 #endif //PROJECTMIDGARD_POPULATION_H
