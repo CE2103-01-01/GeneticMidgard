@@ -8,7 +8,7 @@
 #include "../Data/Tree.h"
 #include "ChromosomeMixer.h"
 #include "../Models/Subject.h"
-#include "../Models/GeneralFitnessCalculator.h"
+#include "../Algorithms/GeneralFitnessCalculator.h"
 
 class LifeLaboratory {
     int* counterOfPeople;
