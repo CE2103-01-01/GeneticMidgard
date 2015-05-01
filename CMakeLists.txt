@@ -19,10 +19,10 @@ set(HEADER_FILES Interface/Random.h
                  Algorithms/ChromosomeMixer.h
                  Generators/EvolutionGenerator.h
                  Algorithms/printBinary.h
-                 Data/BitVector.h
                  Proof/chromosomeMixerProof.h
                  Proof/proofBinary.h
-                 Models/GeneralFitnessCalculator.h)
+
+                 )
 
 set(SOURCE_FILES main.cpp
                  Interface/Random.cpp
@@ -32,7 +32,6 @@ set(SOURCE_FILES main.cpp
                  Models/Chromosome.cpp
                  Models/Weapon.cpp
                  Models/Armor.cpp
-                 Data/BitVector.cpp
                  Models/Terrain.cpp
                  Generators/EvolutionGenerator.cpp
                  Algorithms/Algorithms.cpp
@@ -40,7 +39,8 @@ set(SOURCE_FILES main.cpp
                  Algorithms/printBinary.cpp
                  Proof/chromosomeMixerProof.cpp
                  Proof/proofBinary.cpp
-                 Models/GeneralFitnessCalculator.cpp)
+                
+                 )
 
 set (DATA_STRUCTS   Data/TreeProof.cpp
                     Data/Leaf.cpp
@@ -68,7 +68,7 @@ add_executable(ProjectMidgardLogic   ${SOURCE_FILES}
                                 ${TMX_FILES}
                                 ${XML}
                                 ${DATA_STRUCTS}
-                                Models/movilObjectManager.cpp Models/movilObjectManager.h Algorithms/lifeLaboratory.cpp Algorithms/lifeLaboratory.h)
+                                Models/movilObjectManager.cpp Models/movilObjectManager.h Algorithms/lifeLaboratory.cpp Algorithms/lifeLaboratory.h Algorithms/GeneralFitnessCalculator.cpp Algorithms/GeneralFitnessCalculator.h)
 
 
 add_subdirectory(GUI)
