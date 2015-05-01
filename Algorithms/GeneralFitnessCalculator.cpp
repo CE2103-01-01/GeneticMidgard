@@ -19,7 +19,7 @@ int GeneralFitnessCalculator::calculateFitness(Chromosome chromosome) {
     (*index)=0;
     for(xml_attribute attrIter = constantXml.child(CONSTANT_XML_ROOT).child("Fitness").first_attribute();
         attrIter && (*index)<NUMBER_OF_CHARACTERISTICS; attrIter = attrIter.next_attribute(), (*index)++) {
-        fitness+=  (attrIter.as_int())* (*chromosome.getGene((*index)));
+        fitness+=  (attrIter.as_int()); //TODO: alex tiene que sacar el gen y convertirlo a decimal usando la constante GENE_LEN_ON_BYTES
     }
     free(index);
     return fitness;
