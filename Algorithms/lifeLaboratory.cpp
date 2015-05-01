@@ -12,6 +12,11 @@ Subject* selectParents(Tree* population){
     
 };
 
+/** Metodo que genera una nueva generacion
+ * @param Tree* population: poblacion a analizar
+ * @param int numberOfNewSubjects: numero de sujetos a generar
+ * @param int generationNumber: numero de la generacion a crear
+ */
 Subject* createGeneration(Tree* population, int numberOfNewSubjects, int generationNumber){
     //Reserva espacio para N sujetos segun parametro
     Subject* newGeneration = static_cast<Subject*> (malloc(sizeof(Subject)*numberOfNewSubjects));
