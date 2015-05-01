@@ -1,8 +1,18 @@
-#include <iostream>
+
+#include "../GeneticMidgard/Data/BitVector.h"
+#include "iostream"
 
 int main()
 {
-    std::cout << sizeof(int*) << std::endl;
-    std::cout << sizeof(void*) << std::endl;
+
+    BitVector* b = new BitVector(sizeof(int));
+
+    b->set(5);
+    b->set(6);
+
+    std::cout << b->get(5) << std::endl;
+
     return 0;
+
+
 }

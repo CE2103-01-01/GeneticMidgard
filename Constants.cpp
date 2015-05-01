@@ -22,4 +22,5 @@ namespace constantsSubjectXML {
     extern const char* GENES_XML_LENGHT_INFO = "CHR_LEN";
     extern const char* GENES_XML_CHILD = "GENE";
     extern const char* GENES_XML_CHILD_INFO = "GENE_NAME";
+
 }
