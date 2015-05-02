@@ -1,8 +1,0 @@
-//
-// Created by pablo on 01/05/15.
-//
-
-#ifndef PROJECTMIDGARDLOGIC_MAIN_H
-#define PROJECTMIDGARDLOGIC_MAIN_H
-
-#endif //PROJECTMIDGARDLOGIC_MAIN_H
