@@ -15,16 +15,14 @@ GeneralFitnessCalculator::GeneralFitnessCalculator() {
 }
 int GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
     int* forIteratorIndex = static_cast<int*>(malloc(sizeof(int)));
-    int fitness;
+    int fitness=0;
     (*forIteratorIndex)=0;
-    int index=0;
     for(xml_attribute attributeIterator = constantXml.child(CONSTANT_XML_ROOT).child("Fitness").first_attribute();
         attributeIterator && (*forIteratorIndex) < NUMBER_OF_CHARACTERISTICS;
         attributeIterator = attributeIterator.next_attribute(), (*forIteratorIndex)++)
     {
-        int valor = *static_cast<unsigned char*>(chromosome->getGene((index)));
-        fitness+=  attributeIterator.as_float()*valor;
-        index++;
+        int valor = *static_cast<unsigned char*>(chromosome->getGene(*forIteratorIndex));
+        fitness+=  attributeIterator.as_float() * valor;
     }
 
     free(forIteratorIndex);
