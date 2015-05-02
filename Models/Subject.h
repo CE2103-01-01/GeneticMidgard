@@ -25,12 +25,13 @@ class Subject {
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
     Chromosome* geneticInformation;
-    void calculateFitness();//funcion de calcular fitness y set fitness
+
 public:
     Subject(int);
     Subject(Subject*,Subject*,Chromosome*,int,int);
     int calculateDamage();  // TODO: implementar
     int calculateDefense(); // TODO: implementar
+    void calculateFitness();//funcion de calcular fitness y set fitness
     Chromosome* getGeneticInformation();
     Subject* getFather(); // Obtiene padre 1
     Subject* getMother(); // Obtiene padre 2
