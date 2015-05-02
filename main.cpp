@@ -15,9 +15,11 @@ int main()
         std::cout << b->get(5) << std::endl;
 */
 
-    Chromosome* hola = new Chromosome();
-    GeneralFitnessCalculator* hola2 = new GeneralFitnessCalculator();
-    std::cout<<hola2->calculateFitness(hola)<<std::endl;
+    Chromosome* chromosomeProof = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));\
+    new(chromosomeProof) Chromosome();
+    GeneralFitnessCalculator* calculatorProof = static_cast<GeneralFitnessCalculator*>(malloc(sizeof(GeneralFitnessCalculator)));
+    new(calculatorProof) GeneralFitnessCalculator();
+    std::cout << calculatorProof->calculateFitness(chromosomeProof) << std::endl;
 //
     return 0;
 

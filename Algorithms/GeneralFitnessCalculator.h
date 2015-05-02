@@ -15,7 +15,7 @@ class GeneralFitnessCalculator {
     xml_document constantXml;
 public:
     GeneralFitnessCalculator();
-    long calculateFitness(Chromosome* chromosome);
+    float calculateFitness(Chromosome* chromosome);
 
 };
 
