@@ -12,13 +12,13 @@ Population::Population(Tree<Subject>* peopleTreeParam, char populationTypeParam,
                        int populationSizeParam){
     //Reserva espacios
     populationType = static_cast<char*>(malloc(sizeof(char)));
-    populationFitness = static_cast<int*>(malloc(sizeof(int)));
+    populationFitness = static_cast<float*>(malloc(sizeof(float)));
     populationSize = static_cast<int*>(malloc(sizeof(int)));
     //Llena espacios
     *populationType = populationTypeParam;
-    *populationFitness = 0;
     *populationSize = populationSizeParam;
     peopleTree = peopleTreeParam;
+    calculateFitness();
 }
 
 /**@brief: libera el espacio utilizado
@@ -60,7 +60,7 @@ Tree<Subject>* Population::getPopulationTree(){
 /**@brief devuelve el fitness de poblacion
  * @return int
  */
-int Population::getPopulationFitness(){
+float Population::getPopulationFitness(){
     return *populationFitness;
 }
 

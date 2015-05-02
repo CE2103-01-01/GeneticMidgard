@@ -51,6 +51,6 @@ void* BinaryReader::printBinary(bool numberToRead,  void* variableToUpdate, int 
  */
 void* BinaryReader::convertDecimal(bool numberToRead,  void* variableToUpdate, int byteToRead, int bitToRead){
     if(numberToRead) {
-        *static_cast<int*>(variableToUpdate) = *static_cast<int*>(variableToUpdate) + pow(2 , ((byteToRead)*8 + bitToRead));
+        *static_cast<int*>(variableToUpdate) +=  pow(2 , ((byteToRead)*8 + bitToRead));
     }
 }

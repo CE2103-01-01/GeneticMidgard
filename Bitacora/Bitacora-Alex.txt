@@ -16,3 +16,6 @@
      y fitness ranking para la seleccion. 3h
 29/04/15
     Modificacion en la clase Subject, implementar la funcion de fitness y crear archivo de constantes en xml. 1.5h
+01/05/15
+    Crear la class GeneralFitnessCalculator, implementar la clase de movilObject y movilObjectManager modificacion en
+    el archivo cmake, agregar datos al archivo de constants xml. 3 H

@@ -29,12 +29,13 @@ void movilObjectManager::decreseCounter() {
  * @param string name: nombre de objeto, int carateristic:identificador de caracteristca
  * @param int value: valor que se modifica en la caracteristica
  */
-movilObject::movilObject(movilObjectManager* control,std::string name,int caracteristic,int value)  {
+movilObject::movilObject(movilObjectManager* control,std::string name,int caracteristic,int value,int identificator)  {
     manager = control;
     use = false;
     type=name;
     object = caracteristic;
     effect = value;
+    id=identificator;
 }
 /**aplica el efecto del objeto a una persona
  * @brief modifica la caracteristica correspondiente de la persona
@@ -54,8 +55,16 @@ movilObject::~movilObject() {
 }
 /**obtener el nombre del objeto
  * @brief obtener el nombre del objeto
- * @return string:nombre de objeto
+ * @return string:nombre del objeto
  */
 std::string movilObject::getType() {
     return type;
+}
+/**obtener el id del objeto
+ *@brief obtener el id del objeto
+ * @return int id:  id del objeto
+ *
+ */
+int movilObject::getId() {
+    return id;
 }

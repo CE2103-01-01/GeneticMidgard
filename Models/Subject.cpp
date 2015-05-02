@@ -13,16 +13,16 @@ using namespace constantsSubjectXML;
 Subject::Subject(int idParam) {
     id = static_cast<int*>(malloc(sizeof(int)));
     *id = idParam;
+    alive = static_cast<bool*>(malloc(sizeof(bool)));
+    *alive = true;
     geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
     new(geneticInformation) Chromosome();
     generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = 0;
-    fitness = static_cast<int*>(malloc(sizeof(int)));
+    fitness = static_cast<float*>(malloc(sizeof(float)));
     calculateFitness();
     profession = "";
     race ="";
-  //  weapon = 0; //TODO:  revisar si se debe cambiar
-   // armor = 0; //TODO:  revisar si se debe cambiar
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     for(int i = 0; i < NUMBER_OF_CHARACTERISTICS; i++){
         *(characteristics + i) = 0;    //TODO: MODIFICAR
@@ -40,7 +40,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam,
     id = static_cast<int*>(malloc(sizeof(int)));
     *id = idParam;
     geneticInformation = geneticInformationParam;
-    fitness = static_cast<int*>(malloc(sizeof(int)));
+    fitness = static_cast<float*>(malloc(sizeof(float)));
     calculateFitness();
     generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = generationParam;
@@ -107,9 +107,9 @@ unsigned char Subject::getExperience(){
 }
 
 /** @brief Accede al fitness
- * @return int
+ * @return float
  */
-int Subject::getFitness(){
+float Subject::getFitness(){
     return *fitness;
 };
 
@@ -117,27 +117,36 @@ int Subject::getFitness(){
  *
  */
 void Subject::calculateFitness() {
-    xml_document constantXml;
-    constantXml.load_file(CONSTANT_XML_PATH);
-    int* index = static_cast<int*>(malloc(sizeof(int)));
-    (*index)=0;
-    for(xml_attribute attrIter = constantXml.child(CONSTANT_XML_ROOT).child(profession).first_attribute();
-        attrIter && (*index)<NUMBER_OF_CHARACTERISTICS; attrIter = attrIter.next_attribute(), (*index)++) {
-            (*fitness) += attrIter.as_int() * (*(characteristics + (*index)));
-    }
-    free(index);
+    GeneralFitnessCalculator* gfCalculator = static_cast<GeneralFitnessCalculator*>(malloc(sizeof(GeneralFitnessCalculator)));
+    new(gfCalculator) GeneralFitnessCalculator();
+    (*fitness) = gfCalculator->calculateFitness(geneticInformation);
+    free(gfCalculator);
 };
 
 /** @brief Accede al armadura
- * @return Armor*
+ * @return unsigned char*
  */
 unsigned char Subject::getArmor(){
     return  *(characteristics + POSITION_OF_ARMOR);
 };
 
 /** @brief Accede al arma
- * @return Weapon*
+ * @return unsigned char*
  */
 unsigned char Subject::getWeapon(){
     return *(characteristics + POSITION_OF_WEAPON);
+};
+
+/** @brief Retorna true si el jugador esta vivo
+ * @return bool
+ */
+bool Subject::isAlive(){
+    return (*alive);
+};
+
+/** @brief Mata al jugador colocando en false la bander
+ */
+void Subject::kill(){
+    (*alive) = false;
+    //TODO: mejorar cuando se implemente pthread
 };

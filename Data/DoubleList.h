@@ -404,9 +404,8 @@ T *DoubleList<T>::get(int n) {
             };
             return (tmp->getData());
         };
-    }else{
-    };
-    return nullptr;
+    }
+    return 0;
 };
 /** Devuelve la longitud
 *

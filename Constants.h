@@ -7,7 +7,7 @@
 
 #define TREE_SIZE 50
 #define GENE_LEN_ON_BYTES 1
-#define NUMBER_OF_CHARACTERISTICS 13
+#define NUMBER_OF_CHARACTERISTICS 8
 #define POSITION_OF_AGE 0
 #define POSITION_OF_EXPERIENCE 1
 #define POSITION_OF_HEALTH 2
@@ -23,16 +23,14 @@
 #define POSITION_OF_ARMOR 11
 #define POSITION_OF_WEAPON 12
 
-//TODO: estas bibliotecas se estan incluyendo en muchos archivos donde no se ocupan y hacen el codigo mas pesado,
-// se debe buscar su uso y separarlo...
+//TODO: estas bibliotecas se estan incluyendo en muchos archivos donde no se ocupan y hacen el codigo mas pesado, se debe buscar su uso y separarlo...
 #include <fstream>
 #include <sys/stat.h>
-//TODO: estas bibliotecas se estan incluyendo en muchos archivos donde no se ocupan y hacen el codigo mas pesado,
-// se debe buscar su uso y separarlo...
+//TODO: estas bibliotecas se estan incluyendo en muchos archivos donde no se ocupan y hacen el codigo mas pesado, se debe buscar su uso y separarlo...
 
 namespace constants {
-    extern const std::string HOME_PATH; //TODO : Buscar usos, pasar a mayucula
-    extern const std::string PROJECT_PATH; //TODO : Buscar usos, pasar a mayucula
+    extern const std::string HOME_PATH;
+    extern const std::string PROJECT_PATH;
     extern char const *const MAP_FILE;
 }
 

@@ -7,11 +7,13 @@
 
 #include "ChromosomeMixer.h"
 #include "../Models/Population.h"
+#include "../Data/DoubleList.h"
 
 class LifeLaboratory {
     Chromosome* selectChromosome(Chromosome*,Chromosome*);
-    Subject* selectParents(Population*);
+    void selectParents(Population*, DoubleList<Subject*>);
     Tree<Subject> *createPopulation(int,int);
+    bool checkSeleccions(Subject*, DoubleList<Subject*>);
 public:
     void createGeneration(Population*,int,int);
     Population* createLife(int,int);
