@@ -19,7 +19,7 @@ int main()
     GeneralFitnessCalculator* hola2 = new GeneralFitnessCalculator();
     int valor =  *static_cast<unsigned char*>(hola->getGene(0));
     std::cout<<hola2->calculateFitness(hola)<<std::endl;
-
+//
     return 0;
 
 
