@@ -5,7 +5,7 @@
 #ifndef PROJECTMIDGARD_LEAF_H
 #define PROJECTMIDGARD_LEAF_H
 
-#include <cstdlib>
+#include <malloc.h>
 #include <iostream>
 
 /** @brief miembro del arbol

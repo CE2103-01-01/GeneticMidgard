@@ -7,6 +7,7 @@
 
 #include "../libs/pugixml/pugixml.hpp"
 #include "../Models/Chromosome.h"
+#include "BinaryReader.h"
 
 using namespace pugi;
 
@@ -14,7 +15,7 @@ class GeneralFitnessCalculator {
     xml_document constantXml;
 public:
     GeneralFitnessCalculator();
-    int calculateFitness(Chromosome* chromosome);
+    long calculateFitness(Chromosome* chromosome);
 
 };
 

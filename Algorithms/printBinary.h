@@ -5,8 +5,8 @@
 #ifndef PROJECTMIDGARD_PRINTBINARY_H
 #define PROJECTMIDGARD_PRINTBINARY_H
 
-#include <iostream>
+#include "BinaryReader.h"
 
-void printBinary(const unsigned char);
+void proofBinaryReader();
 
 #endif //PROJECTMIDGARD_PRINTBINARY_H

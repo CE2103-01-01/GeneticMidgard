@@ -4,12 +4,14 @@
 
 #include "printBinary.h"
 
-void printBinary(const unsigned char val){
-    for(int i = 7; i >= 0; i--){
-        if(val & (1 << i))
-            std::cout << "1";
-        else
-            std::cout << "0";
+void proofBinaryReader(){
+    void* tmpResult = malloc(sizeof(int));
+
+    for (int i = 0; i < 1000; i++) {
+        *static_cast<int*>(tmpResult) = 0;
+        BinaryReader::read((void*)&i,sizeof(i),BinaryReader::convertDecimal,tmpResult);
+        std::cout << *static_cast<int*>(tmpResult) << std::endl;
     }
-    std::cout << " ";
+
+    free(tmpResult);
 }

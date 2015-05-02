@@ -7,7 +7,7 @@
 void printChromosome(Chromosome* toPrint){
     for(int i =0; i < toPrint->getNumberOfGenes(); i++){
         for(int j = 0; j < GENE_LEN_ON_BYTES; j++){
-            printBinary(*(static_cast<unsigned char*>(toPrint->getGene(i)) + j));
+            BinaryReader::read(toPrint->getGene(i),GENE_LEN_ON_BYTES,BinaryReader::printBinary,0);
         }
     }
     std::cout << std::endl;
