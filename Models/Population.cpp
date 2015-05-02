@@ -5,10 +5,10 @@
 #include "Population.h"
 
 /** Construye una poblacion
- * @param Tree<Subject>* peopleParam: primera generacion
+ * @param Tree<Subject>* peopleTreeParam: primera generacion
  * @param char populationTypeParam: tipo de poblacion
  */
-Population::Population(Tree<Subject>* peopleParam, char populationTypeParam,
+Population::Population(Tree<Subject>* peopleTreeParam, char populationTypeParam,
                        int populationSizeParam){
     //Reserva espacios
     populationType = static_cast<char*>(malloc(sizeof(char)));
@@ -18,21 +18,21 @@ Population::Population(Tree<Subject>* peopleParam, char populationTypeParam,
     *populationType = populationTypeParam;
     *populationFitness = 0;
     *populationSize = populationSizeParam;
-    people = peopleParam;
+    peopleTree = peopleTreeParam;
 }
 
 /**@brief: libera el espacio utilizado
  */
 Population::~Population() {
     free(populationType);
-    free(people);
+    free(peopleTree);
 }
 
 /**@brief: calcula el fitness
  */
 void Population::calculateFitness(){
     //TODO: implementar
-};
+}
 
 /**@brief: inserta un nuevo miembro
  * @param Subject* parents: padres del individuo
@@ -47,27 +47,27 @@ void Population::insertNewMember(Subject* parents, Chromosome* chromosome) {
  * @return Subject*
  */
 Subject* Population::getIndividual(int id) {
-    return people->searchElement(id/10);
+    return peopleTree->searchElement(id/10);
 }
 
 /**@brief devuelve el arbol de poblacion
  * @return Tree<Subject>*
  */
-Tree<Subject>* getPopulationTree(){
-    return people;
+Tree<Subject>* Population::getPopulationTree(){
+    return peopleTree;
 };
 
 /**@brief devuelve el fitness de poblacion
  * @return int
  */
-int getPopulationFitness(){
+int Population::getPopulationFitness(){
     return *populationFitness;
 }
 
 /**@brief devuelve el tamano de poblacion
  * @return int
  */
-int getPopulationSize(){
+int Population::getPopulationSize(){
     return *populationSize;
 }
 

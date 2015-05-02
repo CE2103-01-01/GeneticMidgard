@@ -24,7 +24,7 @@ Tree<Subject>* LifeLaboratory::createPopulation(int populationSize, int populati
     //Reserva espacio para el arbol
     Tree<Subject>* toReturn = static_cast<Tree<Subject>*>(malloc(sizeof(Tree<Subject>)));
     //Crea el arbol
-    new(toReturn) Tree<Subject>*(TREE_SIZE);
+    new(toReturn) Tree<Subject>(TREE_SIZE);
     for (int i = 0; i < populationSize; i++) {
         //Crea un sujeto
         //Si es sujeto numero 3 de poblacion 5, su id sera 35 y estara en posicion 3

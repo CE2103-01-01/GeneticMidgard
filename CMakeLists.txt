@@ -9,7 +9,7 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/r
 
 set(HEADER_FILES Interface/Random.h
                  Constants.h
-                 #Models/Population.h
+                 Models/Population.h
                  Models/Subject.h
                  Models/Chromosome.h
                  Models/Terrain.h
@@ -26,7 +26,7 @@ set(HEADER_FILES Interface/Random.h
 set(SOURCE_FILES main.cpp
                  Interface/Random.cpp
                  Constants.cpp
-                 #Models/Population.cpp
+                 Models/Population.cpp
                  Models/Subject.cpp
                  Models/Chromosome.cpp
                  Models/Terrain.cpp
