@@ -4,6 +4,9 @@
 
 #include "GeneralFitnessCalculator.h"
 
+#include "../libs/pugixml/pugixml.hpp"
+#include "../Constants.h"
+
 using namespace pugi;
 using namespace constantsSubjectXML;
 

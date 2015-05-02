@@ -14,6 +14,7 @@ movilObjectManager::movilObjectManager() {
     objectSource.load_file(CONSTANT_XML_PATH);
     int elementCounter=std::distance(objectSource.child("CONSTANTS").child("MOVILOBJECT").begin(),
                                      objectSource.child("CONSTANTS").child("MOVILOBJECT").end());
+    trueRandom::randRange(0.0,elementCounter);
     std::cout<<elementCounter<<std::endl;
 }
 /**Reduce cantidad de contador de objetos
