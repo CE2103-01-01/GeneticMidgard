@@ -17,10 +17,11 @@ int main()
 
     Chromosome* chromosomeProof = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));\
     new(chromosomeProof) Chromosome();
+    std::cout << chromosomeProof->getNumberOfGenes() << std::endl;
+
     GeneralFitnessCalculator* calculatorProof = static_cast<GeneralFitnessCalculator*>(malloc(sizeof(GeneralFitnessCalculator)));
     new(calculatorProof) GeneralFitnessCalculator();
     std::cout << calculatorProof->calculateFitness(chromosomeProof) << std::endl;
-//
     return 0;
 
 

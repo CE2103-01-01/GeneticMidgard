@@ -4,9 +4,6 @@
 
 #include "GeneralFitnessCalculator.h"
 
-#include "../libs/pugixml/pugixml.hpp"
-#include "../Constants.h"
-
 using namespace pugi;
 using namespace constantsSubjectXML;
 
@@ -19,7 +16,7 @@ float GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
     int forIteratorIndex = 0;
 
     for(xml_attribute attributeIterator = constantXml.child(CONSTANT_XML_ROOT).child("Fitness").first_attribute();
-        attributeIterator && forIteratorIndex < NUMBER_OF_CHARACTERISTICS;
+        attributeIterator && (forIteratorIndex < chromosome->getNumberOfGenes());
         attributeIterator = attributeIterator.next_attribute(), forIteratorIndex++)
     {
         fitness += attributeIterator.as_float() * (*static_cast<unsigned char*>(chromosome->getGene(forIteratorIndex)));
