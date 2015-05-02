@@ -23,7 +23,7 @@ long GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
         attributeIterator = attributeIterator.next_attribute(), (*forIteratorIndex)++)
     {
         void* valueOfGene = malloc(GENE_LEN_ON_BYTES);
-        BinaryReader::read(valueOfGene,GENE_LEN_ON_BYTES,BinaryReader::convertDecimal,0);
+        BinaryReader::read(chromosome->getGene((*forIteratorIndex)),GENE_LEN_ON_BYTES,BinaryReader::convertDecimal,valueOfGene);
         fitness +=  attributeIterator.as_float() * (*static_cast<long*>(valueOfGene));
     }
 
