@@ -5,12 +5,8 @@
 #ifndef PROJECTMIDGARDLOGIC_LIFELABORATORY_H
 #define PROJECTMIDGARDLOGIC_LIFELABORATORY_H
 
-#include "../Data/Tree.h"
 #include "ChromosomeMixer.h"
-#include "../Models/Subject.h"
 #include "../Models/Population.h"
-#include "GeneralFitnessCalculator.h"
-#include "../Constants.h"
 
 class LifeLaboratory {
     Chromosome* selectChromosome(Chromosome*,Chromosome*);

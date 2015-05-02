@@ -7,7 +7,7 @@
 
 
 #include "Subject.h"
-#include "Chromosome.h"
+
 /** Clase movilObjectManager
  * @brief clase a la cual pertenecen todos los objetos
  * @caracteristicas: depende parametros de archivo xml

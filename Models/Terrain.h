@@ -7,17 +7,11 @@
 
 
 static char const *const MAP_NODE = "map";
-
 static char const *const LAYER_NODE = "layer";
-
 static char const *const HEIGHT = "height";
-
 static char const *const WIDTH = "width";
-
 static char const *const DATA_NODE = "data";
-
 static char const *const TILE_NODE = "tile";
-
 
 #include <math.h>
 #include "../libs/rapidxml/rapidxml.hpp"

@@ -13,7 +13,6 @@ set(HEADER_FILES Interface/Random.h
                  Models/Subject.h
                  Models/Chromosome.h
                  Models/Terrain.h
-                 Algorithms/Algorithms.h
                  Algorithms/lifeLaboratory.h
                  Algorithms/ChromosomeMixer.h
                  Generators/EvolutionGenerator.h
@@ -31,7 +30,6 @@ set(SOURCE_FILES main.cpp
                  Models/Chromosome.cpp
                  Models/Terrain.cpp
                  Generators/EvolutionGenerator.cpp
-                 Algorithms/Algorithms.cpp
                  Algorithms/ChromosomeMixer.cpp
                  Algorithms/printBinary.cpp
                  Algorithms/lifeLaboratory.cpp

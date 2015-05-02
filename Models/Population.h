@@ -1,10 +1,10 @@
 //
 // Created by Pablo Rodriguez Quesada on 4/25/15.
 //
+
 #include "../Data/Tree.h"
+#include "../Algorithms/GeneralFitnessCalculator.h"
 #include "Subject.h"
-#include <iostream>
-#include "../Constants.h"
 
 #ifndef PROJECTMIDGARD_POPULATION_H
 #define PROJECTMIDGARD_POPULATION_H
