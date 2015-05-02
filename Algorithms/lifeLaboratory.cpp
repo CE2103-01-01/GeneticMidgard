@@ -10,7 +10,7 @@
  * @param DoubleList<Subject*> toAnalyze: lista a analizar
  * @return bool
  */
-bool checkSeleccions(Subject* toSearch, DoubleList<Subject*> toAnalyze){
+bool LifeLaboratory::checkSeleccions(Subject* toSearch, DoubleList<Subject*> toAnalyze){
     //Evalua los elementos
     for(int i = 0; i<toAnalyze.len(); i++){
         //(*toAnalyze.get(i)) se desreferencia porque es un DoubleList<Subject*>
@@ -27,11 +27,14 @@ bool checkSeleccions(Subject* toSearch, DoubleList<Subject*> toAnalyze){
  */
 Chromosome* LifeLaboratory::selectChromosome(Chromosome* firstSon,Chromosome* secondSon){
     //Inicializa el calculador
-    GeneralFitnessCalculator::init();
+    GeneralFitnessCalculator* gfCalculator = static_cast<GeneralFitnessCalculator*>(malloc(sizeof(GeneralFitnessCalculator)));
+    new(gfCalculator) GeneralFitnessCalculator();
     //Calcula ambos fitness y retorna el cromosoma ganador, de ser iguales retorna el primero
-    if(GeneralFitnessCalculator::calculateFitness(firstSon) >= GeneralFitnessCalculator::calculateFitness(secondSon)){
+    if(gfCalculator->calculateFitness(firstSon) >= gfCalculator->calculateFitness(secondSon)){
+        free(gfCalculator);
         return firstSon;
     }else{
+        free(gfCalculator);
         return secondSon;
     }
 }

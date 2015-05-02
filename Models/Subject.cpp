@@ -117,8 +117,10 @@ float Subject::getFitness(){
  *
  */
 void Subject::calculateFitness() {
-    GeneralFitnessCalculator::init();
-    (*fitness) = GeneralFitnessCalculator::calculateFitness(geneticInformation);
+    GeneralFitnessCalculator* gfCalculator = static_cast<GeneralFitnessCalculator*>(malloc(sizeof(GeneralFitnessCalculator)));
+    new(gfCalculator) GeneralFitnessCalculator();
+    (*fitness) = gfCalculator->calculateFitness(geneticInformation);
+    free(gfCalculator);
 };
 
 /** @brief Accede al armadura
