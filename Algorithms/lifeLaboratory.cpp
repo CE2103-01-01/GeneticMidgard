@@ -4,15 +4,65 @@
 
 #include "lifeLaboratory.h"
 
-Chromosome* LifeLaboratory::selectChromosome(Chromosome* firstSon,Chromosome* secondSon){
-    //TODO: implementar
+/**@brief: Analiza una lista de sujetos para encontrar coincidencias.
+ *         Si el parametro se encuentra en la lista retorna true
+ * @param Subject* toSearch: sujeto a buscar en la lista
+ * @param DoubleList<Subject*> toAnalyze: lista a analizar
+ * @return bool
+ */
+bool checkSeleccions(Subject* toSearch, DoubleList<Subject*> toAnalyze){
+    //Evalua los elementos
+    for(int i = 0; i<toAnalyze.len(); i++){
+        //(*toAnalyze.get(i)) se desreferencia porque es un DoubleList<Subject*>
+        //y el metodo get(int) devuelve T*, es decir, devolvera Subject**
+        if((*toAnalyze.get(i)) == toSearch) return true;
+    }
+    return false;
 }
 
-/**
- *
+/**@brief: analiza dos cromosomas y retorna el mas fuerte
+ * @param Chromosome* firstSon: primer cromosoma
+ * @param Chromosome* secondSon: segundo cromosoma
+ * @return Chromosome*
  */
-Subject* LifeLaboratory::selectParents(Population* population){
-    //TODO: implementar
+Chromosome* LifeLaboratory::selectChromosome(Chromosome* firstSon,Chromosome* secondSon){
+    //Inicializa el calculador
+    GeneralFitnessCalculator::init();
+    //Calcula ambos fitness y retorna el cromosoma ganador, de ser iguales retorna el primero
+    if(GeneralFitnessCalculator::calculateFitness(firstSon) >= GeneralFitnessCalculator::calculateFitness(secondSon)){
+        return firstSon;
+    }else{
+        return secondSon;
+    }
+}
+
+/** @brief: selecciona dos padres random que superen el fitness medio
+ * @param Population* population: poblacion en la cual se realiza la busqueda
+ * @param
+ * @return Subject*: puntero al espacio de memoria con los dos padres
+ */
+void LifeLaboratory::selectParents(Population* population, DoubleList<Subject*> parents){
+    //Accede al arbol de poblacion y al fitness promedio
+    trueRandom::init();
+    Tree<Subject>* populationTree = population->getPopulationTree();
+    float averageFitness = population->getPopulationFitness() / population->getPopulationSize();
+
+    //Selecciona dos padres
+    for(int i = 0; i < 2; i++){
+        //Busca hasta que encuentra un sujeto
+        for(Subject* toEvaluate = populationTree->searchElement(trueRandom::getRandom()%population->getPopulationSize());
+            toEvaluate != 0;
+            toEvaluate = populationTree->searchElement(trueRandom::getRandom()%population->getPopulationSize()))
+        {
+            //Revisa que el individuo este vivo, supere la media de fitness y no haya sido elegido en esta reproduccion
+            if(toEvaluate->isAlive() && toEvaluate->getFitness() >= averageFitness
+               && !checkSeleccions(toEvaluate, parents))
+            {
+                parents.append(toEvaluate);
+                break;
+            }
+        }
+    }
 }
 
 /**@brief: genera un arbol de poblacion
@@ -57,21 +107,23 @@ Population* LifeLaboratory::createLife(int populationSize, int populationNumber)
  * @param int generationNumber: numero de la generacion a crear
  */
 void LifeLaboratory::createGeneration(Population* population, int numberOfNewSubjects, int generationNumber){
-    //Reserva espacio para N sujetos segun parametro
+    //Reserva espacio para N sujetos hijos y crea una lista de punteros a los padres, N = numberOfNewSubjects
     Subject* newGeneration = static_cast<Subject*> (malloc(sizeof(Subject)*numberOfNewSubjects));
+    DoubleList<Subject*> parents = DoubleList<Subject*>();
     //Llena la nueva generacion
-    for (int i = 0; i < numberOfNewSubjects; ++i) {
+    for (int i = 0; i < numberOfNewSubjects; i++) {
         //Busca padres
-        Subject* parents = selectParents(population);
+        selectParents(population, parents);
         //Reserva espacio para los cromosomas resultantes
         Chromosome* optionsToReproduce = static_cast<Chromosome*>(malloc(2*sizeof(Chromosome)));
+        //Toma los padres
+        Chromosome* father = (*parents.get(2*i))->getGeneticInformation();
+        Chromosome* mother = (*parents.get(2*i+1))->getGeneticInformation();
         //Mezcla cromosomas
-        ChromosomeMixer::mix(parents->getGeneticInformation(),
-                             (parents+sizeof(Subject))->getGeneticInformation(),
-                             optionsToReproduce);
+        ChromosomeMixer::mix(father,mother, optionsToReproduce);
         //Evalua cromosomas
         Chromosome* luckyChromosome = selectChromosome(optionsToReproduce,optionsToReproduce+sizeof(Chromosome));
         //Crea el nuevo sujeto
-        population->insertNewMember(parents,luckyChromosome);
+        //population->insertNewMember(parents,luckyChromosome);
     }
 }

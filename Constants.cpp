@@ -14,7 +14,7 @@ namespace constants {
 }
 
 namespace constantsSubjectXML {
-    extern const char* CONSTANT_XML_PATH = "/home/alex/Documents/Proyect/GeneticMidgard/res/constant.xml";
+    extern const char* CONSTANT_XML_PATH = "../res/constant.xml";
     extern const char* CONSTANT_XML_ROOT = "CONSTANTS";
     extern const char* GENES_XML_PATH = "../res/genes.xml";
     extern const char* GENES_XML_ROOT = "GENES";

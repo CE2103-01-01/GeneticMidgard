@@ -12,7 +12,7 @@
 class Population {
 private:
     int* populationSize;
-    int* populationFitness;
+    float* populationFitness;
     char* populationType;// tipo de la poblacion
     Tree<Subject>* peopleTree; //lista de los individuos de la poblacion
     void calculateFitness();
@@ -23,8 +23,7 @@ public:
     Tree<Subject>* getPopulationTree();
     Subject* getIndividual(int);// obtiene un individuo por medio de indice
     int getPopulationSize();// obtiene la cantidad de personas en la poblacion
-    int getFitness();
-    int getPopulationFitness();
+    float getPopulationFitness();
     char getPopulationType();
 };
 

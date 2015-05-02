@@ -6,6 +6,7 @@
 #define PROJECTMIDGARD_SUBJECT_H
 
 #include "Chromosome.h"
+#include "../Algorithms/GeneralFitnessCalculator.h"
 
 /** Clase Subject
  * @brief clase a la cual pertenecen todos los individuos vivos
@@ -16,23 +17,24 @@
 class Subject {
     int* id;
     int* generation;
-    int* fitness;
+    float* fitness;
     const char* profession; //TODO: mejor usar un char que gasta menos espacio
     unsigned char* characteristics;//lista de caracteristicas
     const char* race;
+    bool* alive;
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
     Chromosome* geneticInformation;
+    void calculateFitness();//funcion de calcular fitness y set fitness
 public:
     Subject(int);
     Subject(Subject*,Subject*,Chromosome*,int,int);
     int calculateDamage();  // TODO: implementar
     int calculateDefense(); // TODO: implementar
-    void calculateFitness();//funcion de calcular fitness y set fitness
     Chromosome* getGeneticInformation();
     Subject* getFather(); // Obtiene padre 1
     Subject* getMother(); // Obtiene padre 2
-    int getFitness();
+    float getFitness();
     int getGeneration();
     unsigned char getWeapon();
     unsigned char  getArmor();
@@ -40,7 +42,8 @@ public:
     unsigned char getAge();
     unsigned char getExperience();
     void setCharacteristic(int,char);
-
+    bool isAlive();
+    void kill();
 };
 
 
