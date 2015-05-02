@@ -33,10 +33,12 @@ private:
     std::string type;
     int object;
     bool use;
+    int id;
 public:
-    movilObject(movilObjectManager*,std::string,int,int);
+    movilObject(movilObjectManager*,std::string,int,int,int);
     ~movilObject();
     void applyEffect(Subject* person);
+    int getId();
     std::string getType();
 
 };

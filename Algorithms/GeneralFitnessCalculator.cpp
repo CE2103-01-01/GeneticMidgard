@@ -6,16 +6,20 @@
 
 using namespace pugi;
 using namespace constantsSubjectXML;
+xml_document* GeneralFitnessCalculator::constantXml=new xml_document();
 
-GeneralFitnessCalculator::GeneralFitnessCalculator(){
-    constantXml.load_file(CONSTANT_XML_PATH);
+
+GeneralFitnessCalculator::GeneralFitnessCalculator() {
+    if(!constantXml->empty()){
+        constantXml->load_file(CONSTANT_XML_PATH);
+    }
 }
 
 float GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
     float fitness = 0;
     int forIteratorIndex = 0;
 
-    for(xml_attribute attributeIterator = constantXml.child(CONSTANT_XML_ROOT).child("Fitness").first_attribute();
+    for(xml_attribute attributeIterator = constantXml->child(CONSTANT_XML_ROOT).child("Fitness").first_attribute();
         attributeIterator && (forIteratorIndex < chromosome->getNumberOfGenes());
         attributeIterator = attributeIterator.next_attribute(), forIteratorIndex++)
     {

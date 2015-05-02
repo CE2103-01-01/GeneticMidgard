@@ -59,7 +59,7 @@ void LifeLaboratory::selectParents(Population* population, DoubleList<Subject*> 
         {
             //Revisa que el individuo este vivo, supere la media de fitness y no haya sido elegido en esta reproduccion
             if(toEvaluate->isAlive() && toEvaluate->getFitness() >= averageFitness
-               && !checkSeleccions(toEvaluate, parents))
+               && ! checkSeleccions(toEvaluate, parents))
             {
                 parents.append(toEvaluate);
                 break;
@@ -130,3 +130,4 @@ void LifeLaboratory::createGeneration(Population* population, int numberOfNewSub
         //population->insertNewMember(parents,luckyChromosome);
     }
 }
+

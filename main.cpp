@@ -21,6 +21,7 @@ int main()
 
     GeneralFitnessCalculator* calculatorProof = static_cast<GeneralFitnessCalculator*>(malloc(sizeof(GeneralFitnessCalculator)));
     new(calculatorProof) GeneralFitnessCalculator();
+
     std::cout << calculatorProof->calculateFitness(chromosomeProof) << std::endl;
     return 0;
 

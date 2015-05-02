@@ -5,7 +5,7 @@
         <object name="meat" caracteristic="0" value="20"/>
     </MOVILOBJECT>
 
-    <Fitness  Enum_system="0.3" intelligence="0.5" attack="0.1" defense="0.1" vital_energy="0.1" blot="0.1" runes="0.1" superstition="0.1"/>
+    <Fitness  Enum_system="0.03" intelligence="0.05" attack="0.01" defense="0.01" vital_energy="0.01" blot="0.01" runes="0.01" superstition="0.01"/>
 
     <Dwarves>
         <warrior age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
@@ -40,3 +40,7 @@
     </Giants>
 
 </CONSTANTS>
+
+
+
+ID: 0(crear) 1(actualizar) 2(borrar)

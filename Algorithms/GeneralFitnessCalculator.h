@@ -12,7 +12,7 @@
 using namespace pugi;
 
 class GeneralFitnessCalculator {
-    xml_document constantXml;
+    static xml_document* constantXml;
 public:
     GeneralFitnessCalculator();
     float calculateFitness(Chromosome* chromosome);
