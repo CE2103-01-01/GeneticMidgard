@@ -38,6 +38,7 @@ void Terrain::initArray() {
 };
 
 void Terrain::printArray() {
+    map--;
     for (int i = 1; i < width * height+1; ++i)
     {
         cout<<*(map +i)<<"|";
