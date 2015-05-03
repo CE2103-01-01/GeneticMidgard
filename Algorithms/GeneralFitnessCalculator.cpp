@@ -38,10 +38,10 @@ void GeneralFitnessCalculator::readXML() {
 }
 
 
-float GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
+float GeneralFitnessCalculator::calculateFitness(Chromosome chromosome) {
     float fitness = 0;
     for(int i = 0; i<*numberOfGenes; i++){
-        fitness += (*(constants+i*sizeof(float))) * (*static_cast<unsigned char*>(chromosome->getGene(i)));
+        fitness += (*(constants+i*sizeof(float))) * (*static_cast<unsigned char*>(chromosome.getGene(i)));
     }
     return fitness;
 

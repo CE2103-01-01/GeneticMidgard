@@ -37,13 +37,14 @@ Subject::Subject(int idParam){
 /** Constructor
  * @brief genera un individuo de generacion N
  */
-Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* geneticInformationParam,
+Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticInformationParam,
                  int generationParam, int idParam){
     id = static_cast<int*>(malloc(sizeof(int)));
     *id = idParam;
     alive = static_cast<bool*>(malloc(sizeof(bool)));
     *alive = true;
-    geneticInformation = geneticInformationParam;
+    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
+    *geneticInformation = geneticInformationParam;
     fitness = static_cast<float*>(malloc(sizeof(float)));
     calculateFitness();
     generation = static_cast<int*>(malloc(sizeof(int)));
@@ -132,7 +133,7 @@ int Subject::getID(){
  */
 void Subject::calculateFitness() {
     GeneralFitnessCalculator calculator = GeneralFitnessCalculator();
-    (*fitness) = calculator.calculateFitness(geneticInformation);
+    (*fitness) = calculator.calculateFitness(*geneticInformation);
 }
 
 /** @brief Accede al armadura

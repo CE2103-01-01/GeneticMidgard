@@ -30,7 +30,7 @@ class Subject {
     void calculateFitness();//funcion de calcular fitness y set fitness
 public:
     Subject(int);
-    Subject(Subject*,Subject*,Chromosome*,int,int);
+    Subject(Subject*,Subject*,Chromosome,int,int);
     int calculateDamage();  // TODO: implementar
     int calculateDefense(); // TODO: implementar
     Chromosome* getGeneticInformation();

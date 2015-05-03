@@ -8,20 +8,19 @@
  * @param Tree<Subject>* peopleTreeParam: primera generacion
  * @param char populationTypeParam: tipo de poblacion
  */
-Population::Population(Tree<Subject> populationTreeParam, char populationTypeParam,
-                       int populationSizeParam){
+Population::Population(char populationTypeParam){
     //Reserva espacios
     populationType = static_cast<char*>(malloc(sizeof(char)));
     populationFitness = static_cast<float*>(malloc(sizeof(float)));
     populationSize = static_cast<int*>(malloc(sizeof(int)));
     actualGeneration = static_cast<int*>(malloc(sizeof(int)));
-    populationTree  = static_cast<Tree<Subject>*>(malloc(sizeof(Tree<Subject>)));
+    populationTree = static_cast<Tree<Subject>*>(malloc(sizeof(Tree<Subject>)));
     //Llena espacios
     *populationType = populationTypeParam;
-    *populationSize = populationSizeParam;
+    *populationSize = 0;
     *actualGeneration = 1;
-    *populationTree = populationTreeParam;
-    calculateFitness();
+    *populationFitness = 0;
+    new(populationTree) Tree<Subject>(TREE_SIZE);
 }
 
 /**@brief: libera el espacio utilizado
@@ -43,11 +42,23 @@ void Population::calculateFitness(){
  * @param Subject* mother: madre del individuo
  * @param Chromosome* chromosome: cromosoma del individuo
  */
-void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* chromosome) {
+void Population::insertNewMember(Subject* father, Subject* mother, Chromosome chromosome) {
+    populationTree->insertElement(
+            Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + 1 + (*populationType)),
+            (*populationSize));
     (*populationSize)++;
     GeneralFitnessCalculator gfCalculator =  GeneralFitnessCalculator();
     (*populationFitness) += gfCalculator.calculateFitness(chromosome);
-    populationTree->insertElement(Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType)));
+}
+
+/**@brief: inserta un nuevo miembro random
+ */
+void Population::createNewRandomMember() {
+    populationTree->insertElement(Subject((*populationSize)*10 + 1 + (*populationType)),(*populationSize));
+    Subject* newMember = populationTree->searchElement(*populationSize);
+    (*populationSize)++;
+    GeneralFitnessCalculator gfCalculator =  GeneralFitnessCalculator();
+    (*populationFitness) += gfCalculator.calculateFitness(*(newMember->getGeneticInformation()));
 }
 
 /**@brief: permite acceder a un individuo mediante su id

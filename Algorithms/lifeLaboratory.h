@@ -11,15 +11,14 @@
 
 class LifeLaboratory {
     pthread_mutex_t* mutex;
-    void fillGeneration(Population*, int, DoubleList<Subject>*);
-    DoubleList<Subject>* selectParents(Population*, int);
-    bool checkSeleccions(Subject*, DoubleList<Subject>*);
-    Chromosome* selectChromosome(Chromosome*,Chromosome*);
-    Tree<Subject> createPopulation(int,int);
+    void fillGeneration(Population*, int, int*);
+    void selectParents(Population*, int, int*);
+    bool checkSeleccions(Subject*, int*, int);
+    void createPopulation(int,Population*);
 public:
     LifeLaboratory(pthread_mutex_t*);
     void createGeneration(Population*,int);
-    DoubleList<Population> createLife(int,int);
+    void createLife(int,int, Population*);
 };
 
 

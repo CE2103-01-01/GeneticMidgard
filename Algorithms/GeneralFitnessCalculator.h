@@ -19,7 +19,7 @@ class GeneralFitnessCalculator {
 public:
     GeneralFitnessCalculator();
     ~GeneralFitnessCalculator();
-    float calculateFitness(Chromosome* chromosome);
+    float calculateFitness(Chromosome chromosome);
 
 };
 

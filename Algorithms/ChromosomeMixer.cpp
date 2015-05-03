@@ -12,8 +12,8 @@
  * @param: Chromosome* motherGeneticInformation: cromosoma de la madre
  * @return Chromosome*: dos cromosomas hijos, (return) & (return + sizeof(Chromosome))
  */
-Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation,
-                                 Chromosome* motherGeneticInformation){
+Chromosome ChromosomeMixer::mix(Chromosome* fatherGeneticInformation,
+                          Chromosome* motherGeneticInformation){
     //Mezcla cromosomas
     int numOfGenes = fatherGeneticInformation->getNumberOfGenes();
     unsigned char* newGeneticMaterialOne = static_cast<unsigned char*>(malloc(numOfGenes));
@@ -28,17 +28,13 @@ Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation,
         *(newGeneticMaterialTwo + i) = (~tmpMask & *(fatherGene))|(tmpMask & *(motherGene));
     }
 
-    Chromosome* optionOne = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
-    Chromosome* optionTwo = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
-    new(optionOne) Chromosome(newGeneticMaterialOne);
-    new(optionTwo) Chromosome(newGeneticMaterialTwo);
+    Chromosome optionOne =  Chromosome(newGeneticMaterialOne);
+    Chromosome optionTwo = Chromosome(newGeneticMaterialTwo);;
 
     GeneralFitnessCalculator calculator =  GeneralFitnessCalculator();
     if(calculator.calculateFitness(optionOne) >= calculator.calculateFitness(optionTwo)){
-        free(optionTwo);
         return optionOne;
     }else{
-        free(optionOne);
         return optionTwo;
     }
 };

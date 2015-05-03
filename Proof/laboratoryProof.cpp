@@ -27,18 +27,17 @@ void* reproduction(void* parameter){
     //Se crea el controlador de iteraciones
     int x = 0;
     //Crea cinco poblaciones de 100 habitantes
-    DoubleList<Population> population = laboratory->createLife(NUMBER_OF_SUBJECTS,NUMBER_OF_POPULATIONS);
-    pthread_mutex_lock(mutex);
+    Population* population = static_cast<Population*>(malloc(sizeof(Population) * NUMBER_OF_POPULATIONS));
+    laboratory->createLife(NUMBER_OF_SUBJECTS,NUMBER_OF_POPULATIONS, population);
     while(x<10){
-        DoubleListIterator<Population>* iter = population.getIterator();
-        while(iter){
+        for(int i = 0; i<NUMBER_OF_POPULATIONS; i++){
             //Se crea una generacion de cada poblacion
-            laboratory->createGeneration(iter->next(),NUMBER_OF_SUBJECTS/4);
+            //laboratory->createGeneration((population+i*sizeof(Population)),NUMBER_OF_SUBJECTS/4);
         }
         std::cout<< "x: " << x << std::endl;
         x++;
         nanosleep(&timeControler, NULL);
     }
-    pthread_mutex_unlock(mutex);
+    free(laboratory);
     return 0;
 };
