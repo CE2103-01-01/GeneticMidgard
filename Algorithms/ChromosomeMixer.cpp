@@ -15,7 +15,7 @@ Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation,
                                  Chromosome* toReturn)
 {
     int numOfGenes = fatherGeneticInformation->getNumberOfGenes();
-    void* newGeneticMaterial = malloc(2*numOfGenes*GENE_LEN_ON_BYTES);
+    void* newGeneticMaterial = malloc(2*numOfGenes);
     for(int i=0; i < numOfGenes; i++){
         //Se toma el gen del padre, la madre y los hijos
         unsigned char* fatherGene =
@@ -23,19 +23,16 @@ Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation,
         unsigned char* motherGene =
                 static_cast<unsigned char*>(motherGeneticInformation->getGene(i));
         unsigned char* firstSonGene =
-                static_cast<unsigned char*>(newGeneticMaterial + i*GENE_LEN_ON_BYTES);
+                static_cast<unsigned char*>(newGeneticMaterial + i);
         unsigned char* secondSonGene =
-                static_cast<unsigned char*>(newGeneticMaterial + (i+numOfGenes)*GENE_LEN_ON_BYTES);
-        //Se recorre el gen byte por byte
-        for(int j=0; j < GENE_LEN_ON_BYTES; j++){
+                static_cast<unsigned char*>(newGeneticMaterial + numOfGenes + i);
             //Se crea mascara y el pedazo de gen temporal
-            unsigned char tmpMask = (unsigned char)(rand()%256);
-            //Se aplican y asignan las mascaras
-            *(firstSonGene+j) = (tmpMask & *(fatherGene + j))|(~tmpMask & *(motherGene + j));
-            *(secondSonGene+j) = (~tmpMask & *(fatherGene + j))|(tmpMask & *(motherGene + j));
-        }
+        unsigned char tmpMask = (unsigned char)(rand()%256);
+        //Se aplican y asignan las mascaras
+        *(firstSonGene) = (tmpMask & *(fatherGene))|(~tmpMask & *(motherGene));
+        *(secondSonGene) = (~tmpMask & *(fatherGene))|(tmpMask & *(motherGene));
     }
-    new(toReturn) Chromosome(newGeneticMaterial);
-    new(toReturn+sizeof(Chromosome)) Chromosome(newGeneticMaterial + (numOfGenes)*GENE_LEN_ON_BYTES);
+    *(toReturn) = Chromosome(newGeneticMaterial);
+    *(toReturn+sizeof(Chromosome)) = Chromosome(newGeneticMaterial + numOfGenes);
     return toReturn;
 };

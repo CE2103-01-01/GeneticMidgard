@@ -10,8 +10,8 @@ Leaf::Leaf(int sizeOfContainerParam, int* numberOfSonsParam){
     numberOfSons = numberOfSonsParam;
     sizeOfContainer = static_cast<int*>(malloc(sizeof(int)));
     *sizeOfContainer = sizeOfContainerParam;
-    terminal = static_cast<bool*>(malloc(sizeof(bool)));
-    *terminal = true;
+    terminal = static_cast<int*>(malloc(sizeof(int)));
+    *terminal = 1;
     containers = malloc((*sizeOfContainer) * (*numberOfSons));
 }
 
@@ -27,8 +27,8 @@ Leaf::~Leaf(){
 
 /** @brief crea n hojas hijas, tal que n=(*(*numberOfSons))
  */
-bool Leaf::isTerminal(){
-    return *terminal;
+int Leaf::isTerminal(){
+    return (*terminal);
 }
 
 /** @brief divide la hoja creando hijos
@@ -38,7 +38,7 @@ void Leaf::split(){
     for(int i=0; i<((*numberOfSons)); i++){
         new(static_cast<Leaf*>(sons + i*sizeof(Leaf))) Leaf(*sizeOfContainer, numberOfSons);
     }
-    *terminal = false;
+    *terminal = 0;
 }
 
 /** @brief devuelve los hijos

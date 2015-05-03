@@ -17,13 +17,13 @@ class Leaf{
     int* sizeOfContainer;
     void* containers;
     void* sons;
-    bool* terminal;                 //Bandera que indica si es terminal: true=sin hijos
+    int* terminal;                 //Bandera que indica si es terminal: true=sin hijos
 public:
     Leaf(int,int*);
     ~Leaf();
     void* getSons();
     void* getContainers();
-    bool isTerminal();
+    int isTerminal();
     void split();
 };
 

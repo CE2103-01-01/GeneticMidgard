@@ -10,7 +10,7 @@ using namespace constantsSubjectXML;
 /** Constructor
  * @brief genera un individuo de primera generacion
  */
-Subject::Subject(int idParam) {
+Subject::Subject(int idParam){
     id = static_cast<int*>(malloc(sizeof(int)));
     *id = idParam;
     alive = static_cast<bool*>(malloc(sizeof(bool)));
@@ -29,16 +29,20 @@ Subject::Subject(int idParam) {
     }
     father = 0;
     mother = 0;
+    void* parameters = malloc(sizeof(PThreadParam));
+    new(static_cast<PThreadParam*>(parameters)) PThreadParam(static_cast<void*>(this),0);
+    //pthread_create(&lifeThread,0,subjectLife,parameters);
 }
 
 /** Constructor
  * @brief genera un individuo de generacion N
  */
-Subject::Subject(Subject* fatherParam, Subject* motherParam,
-                 Chromosome* geneticInformationParam, int generationParam, int idParam){
-
+Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* geneticInformationParam,
+                 int generationParam, int idParam){
     id = static_cast<int*>(malloc(sizeof(int)));
     *id = idParam;
+    alive = static_cast<bool*>(malloc(sizeof(bool)));
+    *alive = true;
     geneticInformation = geneticInformationParam;
     fitness = static_cast<float*>(malloc(sizeof(float)));
     calculateFitness();
@@ -52,6 +56,9 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam,
     }
     father = fatherParam;
     mother = motherParam;
+    void* parameters = malloc(sizeof(PThreadParam));
+    new(static_cast<PThreadParam*>(parameters)) PThreadParam(static_cast<void*>(this),0);
+    //pthread_create(&lifeThread,0,subjectLife,parameters);
 }
 
 /** @brief Accede al padre
@@ -111,7 +118,14 @@ unsigned char Subject::getExperience(){
  */
 float Subject::getFitness(){
     return *fitness;
-};
+}
+
+/** @brief Accede al ID
+ * @return float
+ */
+int Subject::getID(){
+    return *id;
+}
 
 /** @brief calcular  fitness
  *
@@ -121,32 +135,58 @@ void Subject::calculateFitness() {
     new(gfCalculator) GeneralFitnessCalculator();
     (*fitness) = gfCalculator->calculateFitness(geneticInformation);
     free(gfCalculator);
-};
+}
 
 /** @brief Accede al armadura
  * @return unsigned char*
  */
 unsigned char Subject::getArmor(){
     return  *(characteristics + POSITION_OF_ARMOR);
-};
+}
 
 /** @brief Accede al arma
  * @return unsigned char*
  */
 unsigned char Subject::getWeapon(){
     return *(characteristics + POSITION_OF_WEAPON);
-};
+}
 
 /** @brief Retorna true si el jugador esta vivo
  * @return bool
  */
 bool Subject::isAlive(){
     return (*alive);
-};
+}
 
 /** @brief Mata al jugador colocando en false la bander
  */
 void Subject::kill(){
     (*alive) = false;
-    //TODO: mejorar cuando se implemente pthread
-};
+}
+
+/** @brief Mata al jugador colocando en false la bander
+ */
+void Subject::life(){
+    std::cout << "Hello, i am "<< (*id) <<std::endl;
+}
+
+/**@brief metodo ejecutado por el pthread
+ * @param void* parameter: es el PThreadParam que contiene los datos necesarios para la ejecucion
+ * @return 0
+ */
+void* subjectLife(void* parameter){
+    //Castea el parametro y extrae el sujeto
+    Subject* excecutioner = static_cast<Subject*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
+    //Crea estructura para tiempo
+    struct timespec timeControler;
+    timeControler.tv_nsec=0;
+    timeControler.tv_sec=1;
+    //Este while corre hasta que se llame al metodo kill()
+    while(excecutioner->isAlive()){
+        //Llama al metodo de vida del sujeto
+        excecutioner->life();
+        //Espera un segundo
+        nanosleep(&timeControler, 0);
+    }
+    return 0;
+}

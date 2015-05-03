@@ -62,7 +62,6 @@ public:
     virtual DoubleListIterator<T> *getIterator();
 
     DoubleList(); //Constructor
-    ~DoubleList(); //Destructor
     void add(T); //Inserta nodo al inicio
     void append(T); //Inserta nodo al final
     void append(T*); //Inserta nodo al final
@@ -90,7 +89,7 @@ Node<T>::Node(T* v) {
     data = v;
     next = 0;
     prev = 0;
-};
+}
 /** @brief Constructor
 *
 */
@@ -197,13 +196,6 @@ template<class T>
 DoubleList<T>::DoubleList() {
     _head=0;
     _tail=0;
-};
-/** @brief Destruye la lista
-*
-*/
-template<class T>
-DoubleList<T>::~DoubleList() {
-    deleteAll();
 };
 /** @brief Inserta un nodo al inicio
 *

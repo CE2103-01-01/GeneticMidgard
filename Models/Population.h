@@ -10,21 +10,23 @@
 #define PROJECTMIDGARD_POPULATION_H
 
 class Population {
-private:
+    pthread_mutex_t* mutex;
+    int* actualGeneration;
     int* populationSize;
     float* populationFitness;
     char* populationType;// tipo de la poblacion
-    Tree<Subject>* peopleTree; //lista de los individuos de la poblacion
+    Tree<Subject>* populationTree; //lista de los individuos de la poblacion
     void calculateFitness();
 public:
-    Population(Tree<Subject>*,char,int); //constructor de la poblacion
+    Population(Tree<Subject>,char,int); //constructor de la poblacion
     ~Population();// destructor por defecto
-    void insertNewMember(Subject*, Chromosome*);
+    void insertNewMember(Subject*, Subject*, Chromosome*);
     Tree<Subject>* getPopulationTree();
     Subject* getIndividual(int);// obtiene un individuo por medio de indice
     int getPopulationSize();// obtiene la cantidad de personas en la poblacion
     float getPopulationFitness();
     char getPopulationType();
+    void updateGeneration();
 };
 
 #endif //PROJECTMIDGARD_POPULATION_H

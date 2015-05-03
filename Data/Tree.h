@@ -17,7 +17,6 @@ template <class T> class Tree{
     void createPath(int,int,int*);
 public:
     Tree(int);
-    ~Tree();
     T* searchElement(int);
     void searchAndDo(int, void(T*, void*), void*);
     void insertElement(T,int);
@@ -40,16 +39,6 @@ template <class T> Tree<T>::Tree(int leafSizeParam){
     *floors= 1;
     root = static_cast<Leaf*>(malloc(sizeof(Leaf)));
     new(root) Leaf(sizeof(T), leafSize);
-}
-
-/** Destructor
- * @brief: Libera las variables ocupadas
- */
-template <class T> Tree<T>::~Tree(){
-    free(len);
-    free(leafSize);
-    free(root);
-    free(floors);
 }
 
 /* Maximo

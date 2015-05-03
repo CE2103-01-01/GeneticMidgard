@@ -2,11 +2,11 @@
 // Created by roberto on 27/04/15.
 //
 
-#ifndef PROJECTMIDGARD_PROOFBINARY_H
-#define PROJECTMIDGARD_PROOFBINARY_H
+#ifndef PROJECTMIDGARD_PRINTBINARY_H
+#define PROJECTMIDGARD_PRINTBINARY_H
 
-#include "../Algorithms/printBinary.h"
+#include "../Algorithms/BinaryReader.h"
 
-void proofBinary();
+void proofBinaryReader();
 
-#endif //PROJECTMIDGARD_PROOFBINARY_H
+#endif //PROJECTMIDGARD_PRINTBINARY_H

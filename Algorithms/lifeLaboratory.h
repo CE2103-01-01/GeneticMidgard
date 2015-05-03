@@ -10,12 +10,15 @@
 #include "../Data/DoubleList.h"
 
 class LifeLaboratory {
-    Chromosome* selectChromosome(Chromosome*,Chromosome*);
-    void selectParents(Population*, DoubleList<Subject*>);
-    Tree<Subject> *createPopulation(int,int);
-    bool checkSeleccions(Subject*, DoubleList<Subject*>);
+    pthread_mutex_t* mutex;
+    void fillGeneration(Population*, int, DoubleList<Subject>*);
+    DoubleList<Subject>* selectParents(Population*, int);
+    bool checkSeleccions(Subject*, DoubleList<Subject>*);
+    Chromosome* selectChromosome(Chromosome*);
+    Tree<Subject> createPopulation(int,int);
 public:
-    void createGeneration(Population*,int,int);
+    LifeLaboratory(pthread_mutex_t*);
+    void createGeneration(Population*,int);
     Population* createLife(int,int);
 };
 

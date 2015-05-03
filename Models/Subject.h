@@ -7,6 +7,7 @@
 
 #include "Chromosome.h"
 #include "../Algorithms/GeneralFitnessCalculator.h"
+#include "../Data/PThreadParam.h"
 
 /** Clase Subject
  * @brief clase a la cual pertenecen todos los individuos vivos
@@ -15,6 +16,7 @@
  *                   arma, armadura
 */
 class Subject {
+    pthread_t lifeThread;
     int* id;
     int* generation;
     float* fitness;
@@ -25,13 +27,12 @@ class Subject {
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
     Chromosome* geneticInformation;
-
+    void calculateFitness();//funcion de calcular fitness y set fitness
 public:
     Subject(int);
     Subject(Subject*,Subject*,Chromosome*,int,int);
     int calculateDamage();  // TODO: implementar
     int calculateDefense(); // TODO: implementar
-    void calculateFitness();//funcion de calcular fitness y set fitness
     Chromosome* getGeneticInformation();
     Subject* getFather(); // Obtiene padre 1
     Subject* getMother(); // Obtiene padre 2
@@ -45,7 +46,10 @@ public:
     void setCharacteristic(int,char);
     bool isAlive();
     void kill();
+    void life(void);
+    int getID();
 };
 
+void* subjectLife(void*);
 
 #endif //PROJECTMIDGARD_SUBJECT_H
