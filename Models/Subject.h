@@ -45,7 +45,7 @@ public:
     unsigned char getAge();
     unsigned char getExperience();
     void setCharacteristic(int,char);
-    bool isAlive();
+    bool* isAlive();
     void kill();
     void life(void);
     int getID();

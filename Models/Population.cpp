@@ -107,7 +107,7 @@ void Population::updateGeneration() {
 }
 
 void Population::killEveryone() {
-    for(int i = 1; 1 <= *populationSize; i++){
+    for(int i = 1; i <= *populationSize; i++){
         populationTree->searchElement(i)->kill();
     }
 }

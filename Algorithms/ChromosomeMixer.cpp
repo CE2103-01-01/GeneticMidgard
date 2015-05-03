@@ -3,7 +3,11 @@
 //
 
 #include "ChromosomeMixer.h"
-#include "GeneralFitnessCalculator.h"
+
+GeneralFitnessCalculator* ChromosomeMixer::calculator = 0;
+ChromosomeMixer* ChromosomeMixer::instance = 0;
+
+ChromosomeMixer::ChromosomeMixer(){}
 
 /* Mezclador de cromosomas
  * @brief: Recibe la informacion genetica de dos individuos, la mezcla y retorna dos
@@ -31,10 +35,25 @@ Chromosome ChromosomeMixer::mix(Chromosome* fatherGeneticInformation,
     Chromosome optionOne =  Chromosome(newGeneticMaterialOne);
     Chromosome optionTwo = Chromosome(newGeneticMaterialTwo);;
 
-    GeneralFitnessCalculator calculator =  GeneralFitnessCalculator();
-    if(calculator.calculateFitness(optionOne) >= calculator.calculateFitness(optionTwo)){
+    if(calculator->calculateFitness(optionOne) >= calculator->calculateFitness(optionTwo)){
         return optionOne;
     }else{
         return optionTwo;
     }
 };
+
+ChromosomeMixer* ChromosomeMixer::getInstance(){
+    if(!calculator){
+        calculator = static_cast<GeneralFitnessCalculator*>(malloc(sizeof(GeneralFitnessCalculator)));
+        *calculator = GeneralFitnessCalculator();
+    }
+    if(!instance){
+        instance = static_cast<ChromosomeMixer*>(malloc(sizeof(ChromosomeMixer)));
+        new(instance) ChromosomeMixer();
+    }
+    return instance;
+};
+
+GeneralFitnessCalculator *ChromosomeMixer::getCalculator() {
+    return calculator;
+}

@@ -5,7 +5,6 @@
 
 #include "Chromosome.h"
 
-using namespace pugi;
 using namespace constantsSubjectXML;
 
 /**Constructor
@@ -13,7 +12,7 @@ using namespace constantsSubjectXML;
  */
 Chromosome::Chromosome() {
     numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
-    *numberOfGenes = readLenghtFromXML();
+    *numberOfGenes = NUMBER_OF_GENES;
     trueRandom::init();
     geneticData = static_cast<unsigned char*>(malloc((*numberOfGenes) * GENE_LEN_ON_BYTES));
     for (int i = 0; i < (*numberOfGenes)*(GENE_LEN_ON_BYTES); i+=GENE_LEN_ON_BYTES) {
@@ -28,14 +27,8 @@ Chromosome::Chromosome() {
  */
 Chromosome::Chromosome(unsigned char* genes) {
     numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
-    *numberOfGenes = readLenghtFromXML();
+    *numberOfGenes = NUMBER_OF_GENES;
     geneticData = genes;
-};
-
-int Chromosome::readLenghtFromXML(){
-    xml_document genesXML;
-    genesXML.load_file(GENES_XML_PATH);
-    return genesXML.child(GENES_XML_ROOT).child(GENES_XML_LENGHT).attribute(GENES_XML_LENGHT_INFO).as_int();
 };
 
 /**Buscador de gen

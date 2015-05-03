@@ -3,6 +3,7 @@
 //
 
 #include "Subject.h"
+#include "../Algorithms/ChromosomeMixer.h"
 
 using namespace pugi;
 using namespace constantsSubjectXML;
@@ -132,8 +133,8 @@ int Subject::getID(){
  *
  */
 void Subject::calculateFitness() {
-    GeneralFitnessCalculator calculator = GeneralFitnessCalculator();
-    (*fitness) = calculator.calculateFitness(*geneticInformation);
+    GeneralFitnessCalculator* calculator = ChromosomeMixer::getInstance()->getCalculator();
+    (*fitness) = calculator->calculateFitness(*geneticInformation);
 }
 
 /** @brief Accede al armadura
@@ -153,14 +154,14 @@ unsigned char Subject::getWeapon(){
 /** @brief Retorna true si el jugador esta vivo
  * @return bool
  */
-bool Subject::isAlive(){
-    return (*alive);
+bool* Subject::isAlive(){
+    return (alive);
 }
 
 /** @brief Mata al jugador colocando en false la bander
  */
 void Subject::kill(){
-    (*alive) = false;
+    (alive) = 0;
 }
 
 /** @brief Mata al jugador colocando en false la bander
@@ -197,11 +198,12 @@ void* subjectLife(void* parameter){
     timeControler.tv_nsec=0;
     timeControler.tv_sec=1;
     //Este while corre hasta que se llame al metodo kill()
-    while(excecutioner->isAlive()){
+    while(0 != excecutioner->isAlive()){
         //Llama al metodo de vida del sujeto
         excecutioner->life();
         //Espera un segundo
         nanosleep(&timeControler, 0);
     }
+    std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
     return 0;
 }

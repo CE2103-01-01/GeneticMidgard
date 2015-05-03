@@ -75,7 +75,8 @@ void LifeLaboratory::fillGeneration(Population *population, int numberOfNewSubje
         //Crea el nuevo cromosoma
         Subject* father = population->getIndividual(*(parents+2*i));
         Subject* mother = population->getIndividual(*(parents+2*i+1));
-        Chromosome luckyChromosome = ChromosomeMixer::mix(father->getGeneticInformation(), mother->getGeneticInformation());
+        ChromosomeMixer* mixer = ChromosomeMixer::getInstance();
+        Chromosome luckyChromosome = mixer->mix(father->getGeneticInformation(), mother->getGeneticInformation());
         //Crea el nuevo sujeto
         population->insertNewMember(father,mother,luckyChromosome);
     }
@@ -107,5 +108,4 @@ void LifeLaboratory::createLife(int populationSize, int populationNumber, Popula
         new(newPopulations + i) Population(i);
         createPopulation(populationSize,newPopulations + i);
     }
-    std::cout << "POPULATION CREATED" << std::endl;
 }

@@ -7,7 +7,6 @@
 
 #include "../Constants.h"
 #include "../Interface/Random.h"
-#include "../libs/pugixml/pugixml.hpp"
 
 class Chromosome {
     unsigned char* geneticData;
@@ -17,7 +16,6 @@ public:
     Chromosome(unsigned char*);
     unsigned char* getGene(int);
     int getNumberOfGenes();
-    static int readLenghtFromXML();
 };
 
 

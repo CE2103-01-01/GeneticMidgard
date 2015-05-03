@@ -20,6 +20,7 @@ void chromosomeMixerProof(){
     Chromosome* mother = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
     new(mother) Chromosome();
     printChromosome(mother);
-    Chromosome chromosomeMix = ChromosomeMixer::mix(father,mother);
+    ChromosomeMixer* mixer = ChromosomeMixer::getInstance();
+    Chromosome chromosomeMix = mixer->mix(father,mother);
     printChromosome(&chromosomeMix);
 };
