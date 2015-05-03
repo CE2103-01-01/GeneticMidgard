@@ -8,9 +8,6 @@
 
 int main()
 {
-    Terrain::initArray();
-    Terrain::printArray();
-    DoubleList<Vector2D> a = Terrain::findPathAS(Vector2D(0,0), Vector2D(5,5));
     laboratoryProof();
     return 0;
 

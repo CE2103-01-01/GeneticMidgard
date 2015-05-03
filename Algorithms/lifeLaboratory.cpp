@@ -43,17 +43,19 @@ bool LifeLaboratory::checkSeleccions(Subject* toSearch, DoubleList<Subject>* toA
  * @param Chromosome* secondSon: segundo cromosoma
  * @return Chromosome*
  */
-Chromosome* LifeLaboratory::selectChromosome(Chromosome* sons){
+Chromosome* LifeLaboratory::selectChromosome(Chromosome* sonOne,Chromosome* sonTwo){
     //Inicializa el calculador
     GeneralFitnessCalculator* gfCalculator = static_cast<GeneralFitnessCalculator*>(malloc(sizeof(GeneralFitnessCalculator)));
     new(gfCalculator) GeneralFitnessCalculator();
     //Calcula ambos fitness y retorna el cromosoma ganador, de ser iguales retorna el primero
-    if(gfCalculator->calculateFitness(sons) >= gfCalculator->calculateFitness(sons+sizeof(Chromosome))){
+    float fitnessOne = gfCalculator->calculateFitness(sonOne);
+    float fitnessTwo = gfCalculator->calculateFitness(sonTwo);
+    if(fitnessOne >= fitnessTwo){
         free(gfCalculator);
-        return sons;
+        return sonOne;
     }else{
         free(gfCalculator);
-        return sons+sizeof(Chromosome);
+        return sonTwo;
     }
 }
 
@@ -110,7 +112,7 @@ void LifeLaboratory::fillGeneration(Population *population, int numberOfNewSubje
         std::cout<< "CANTIDAD DE GENES CROMOSOMA 1: " << (newChromosomes)->getNumberOfGenes()  <<std::endl;
         std::cout<< "CANTIDAD DE GENES CROMOSOMA 2: " << (newChromosomes + sizeof(Chromosome))->getNumberOfGenes() <<std::endl;
         //Evalua cromosomas
-        Chromosome* luckyChromosome = selectChromosome(newChromosomes);
+        Chromosome* luckyChromosome = selectChromosome(newChromosomes, newChromosomes + sizeof(Chromosome));
         //Crea el nuevo sujeto
         population->insertNewMember((parents->get(2*i)),(parents->get(2*i+1)),luckyChromosome);
     }

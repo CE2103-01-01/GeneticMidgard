@@ -17,6 +17,7 @@ float GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
     int forIteratorIndex = 0;
     std::cout<< "INICIA GENERAL FITNESS CALCULATOR: " <<std::endl;
     std::cout<< "CANTIDAD DE GENES CROMOSOMA: " << chromosome->getNumberOfGenes()  <<std::endl;
+    //TODO: agregar a constante
     for(xml_attribute attributeIterator = constantXml.child(CONSTANT_XML_ROOT).child("Fitness").first_attribute();
         attributeIterator && (forIteratorIndex < chromosome->getNumberOfGenes());
         attributeIterator = attributeIterator.next_attribute(), forIteratorIndex++)

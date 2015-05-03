@@ -14,7 +14,7 @@ class LifeLaboratory {
     void fillGeneration(Population*, int, DoubleList<Subject>*);
     DoubleList<Subject>* selectParents(Population*, int);
     bool checkSeleccions(Subject*, DoubleList<Subject>*);
-    Chromosome* selectChromosome(Chromosome*);
+    Chromosome* selectChromosome(Chromosome*,Chromosome*);
     Tree<Subject> createPopulation(int,int);
 public:
     LifeLaboratory(pthread_mutex_t*);
