@@ -45,16 +45,13 @@ bool LifeLaboratory::checkSeleccions(Subject* toSearch, DoubleList<Subject>* toA
  */
 Chromosome* LifeLaboratory::selectChromosome(Chromosome* sonOne,Chromosome* sonTwo){
     //Inicializa el calculador
-    GeneralFitnessCalculator* gfCalculator = static_cast<GeneralFitnessCalculator*>(malloc(sizeof(GeneralFitnessCalculator)));
-    new(gfCalculator) GeneralFitnessCalculator();
     //Calcula ambos fitness y retorna el cromosoma ganador, de ser iguales retorna el primero
-    float fitnessOne = gfCalculator->calculateFitness(sonOne);
-    float fitnessTwo = gfCalculator->calculateFitness(sonTwo);
+    GeneralFitnessCalculator calculator =  GeneralFitnessCalculator();
+    float fitnessOne = calculator.calculateFitness(sonOne);
+    float fitnessTwo = calculator.calculateFitness(sonTwo);
     if(fitnessOne >= fitnessTwo){
-        free(gfCalculator);
         return sonOne;
     }else{
-        free(gfCalculator);
         return sonTwo;
     }
 }

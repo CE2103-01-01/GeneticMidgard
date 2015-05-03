@@ -131,10 +131,8 @@ int Subject::getID(){
  *
  */
 void Subject::calculateFitness() {
-    GeneralFitnessCalculator* gfCalculator = static_cast<GeneralFitnessCalculator*>(malloc(sizeof(GeneralFitnessCalculator)));
-    new(gfCalculator) GeneralFitnessCalculator();
-    (*fitness) = gfCalculator->calculateFitness(geneticInformation);
-    free(gfCalculator);
+    GeneralFitnessCalculator calculator = GeneralFitnessCalculator();
+    (*fitness) = calculator.calculateFitness(geneticInformation);
 }
 
 /** @brief Accede al armadura

@@ -12,12 +12,12 @@
 class Chromosome {
     void* geneticData;
     int* numberOfGenes;
-    int readLenghtFromXML();
 public:
     Chromosome();
     Chromosome(void*);
     void* getGene(int);
     int getNumberOfGenes();
+    static int readLenghtFromXML();
 };
 
 

@@ -8,14 +8,19 @@
 #include "../libs/pugixml/pugixml.hpp"
 #include "../Models/Chromosome.h"
 #include "BinaryReader.h"
+#include "../Data/DoubleList.h"
 
 using namespace pugi;
 
 class GeneralFitnessCalculator {
-    xml_document constantXml;
+    float* constants;
+    int* numberOfGenes;
+    void readXML();
 public:
     GeneralFitnessCalculator();
+    ~GeneralFitnessCalculator();
     float calculateFitness(Chromosome* chromosome);
+
 };
 
 
