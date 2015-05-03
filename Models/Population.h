@@ -28,6 +28,8 @@ public:
     char getPopulationType();
     void updateGeneration();
     void createNewRandomMember();
+
+    void killEveryone();
 };
 
 #endif //PROJECTMIDGARD_POPULATION_H

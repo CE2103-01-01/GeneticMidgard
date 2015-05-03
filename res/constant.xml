@@ -6,14 +6,17 @@
     </MOVILOBJECT>
 
     <Fitness>
-        <Inmune_system>0.03</Inmune_system>
-        <Intelligence>0.05</Intelligence>
-        <Attack>0.01</Attack>
-        <Defense>0.01</Defense>
-        <Vital_Energy>0.01</Vital_Energy>
-        <Blot>0.01</Blot>
-        <Runes>0.01</Runes>
-        <Superstition>0.01</Superstition>
+        <Inmune_system>0.3</Inmune_system>
+        <Intelligence>0.5</Intelligence>
+        <Attack>0.1</Attack>
+        <Defense>0.1</Defense>
+        <Vital_Energy>0.1</Vital_Energy>
+        <Blot>0.1</Blot>
+        <Runes>0.1</Runes>
+        <Superstition>0.1</Superstition>
+        <Red>0.1</Red>
+        <Green>0.1</Green>
+        <Blue>0.1</Blue>
     </Fitness>
 
     <Dwarves>

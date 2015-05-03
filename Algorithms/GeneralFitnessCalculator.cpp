@@ -3,26 +3,46 @@
 //
 
 #include "GeneralFitnessCalculator.h"
+#include "../libs/rapidxml/rapidxml_utils.hpp"
 
 using namespace pugi;
 using namespace constantsSubjectXML;
 
-
-GeneralFitnessCalculator::GeneralFitnessCalculator() {
-    //constantXml.load_file(CONSTANT_XML_PATH);
+GeneralFitnessCalculator::GeneralFitnessCalculator(){
+    readXML();
 }
 
-float GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
-    float fitness = 0;
+GeneralFitnessCalculator::~GeneralFitnessCalculator(){
+    free(constants);
+}
+
+void GeneralFitnessCalculator::readXML() {
+    constants = static_cast<float*>(malloc(sizeof(float)*Chromosome::readLenghtFromXML()));
+    numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
+    *numberOfGenes = Chromosome::readLenghtFromXML();
+
+    rapidxml::xml_node<>* root_node;
+    rapidxml::xml_document<> doc;
+    rapidxml::file<> file( CONSTANT_XML_PATH );
+    doc.parse<0>( file.data() );
+    root_node = doc.first_node("CONSTANTS")->first_node("Fitness");
     int forIteratorIndex = 0;
-    std::cout<< "INICIA GENERAL FITNESS CALCULATOR: " <<std::endl;
-    std::cout<< "CANTIDAD DE GENES CROMOSOMA: " << chromosome->getNumberOfGenes()  <<std::endl;
     //TODO: agregar a constante
-    for(xml_attribute attributeIterator = constantXml.child(CONSTANT_XML_ROOT).child("Fitness").first_attribute();
-        attributeIterator && (forIteratorIndex < chromosome->getNumberOfGenes());
-        attributeIterator = attributeIterator.next_attribute(), forIteratorIndex++)
+    rapidxml::xml_node<>*node = root_node->first_node();
+
+    while(node)
     {
-        fitness += attributeIterator.as_float() * (*static_cast<unsigned char*>(chromosome->getGene(forIteratorIndex)));
+        *(constants + forIteratorIndex++) = std::atof(node->value());
+        node = node->next_sibling();
+    }
+}
+
+
+float GeneralFitnessCalculator::calculateFitness(Chromosome chromosome) {
+    float fitness = 0;
+    for(int i = 0; i < *numberOfGenes; i++){
+        fitness += *(constants+i) * (*static_cast<unsigned char*>(chromosome.getGene(i)));
     }
     return fitness;
+
 }

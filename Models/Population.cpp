@@ -43,22 +43,24 @@ void Population::calculateFitness(){
  * @param Chromosome* chromosome: cromosoma del individuo
  */
 void Population::insertNewMember(Subject* father, Subject* mother, Chromosome chromosome) {
-    populationTree->insertElement(
-            Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + 1 + (*populationType)),
-            (*populationSize));
     (*populationSize)++;
-    GeneralFitnessCalculator gfCalculator =  GeneralFitnessCalculator();
-    (*populationFitness) += gfCalculator.calculateFitness(chromosome);
+    populationTree->insertElement(
+            Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType)),
+            (*populationSize));
+    Subject* newMember = populationTree->searchElement(*populationSize);
+    (*populationFitness) += newMember->getFitness();
+    newMember->start_p_thread();
 }
 
 /**@brief: inserta un nuevo miembro random
  */
 void Population::createNewRandomMember() {
-    populationTree->insertElement(Subject((*populationSize)*10 + 1 + (*populationType)),(*populationSize));
-    Subject* newMember = populationTree->searchElement(*populationSize);
     (*populationSize)++;
-    GeneralFitnessCalculator gfCalculator =  GeneralFitnessCalculator();
-    (*populationFitness) += gfCalculator.calculateFitness(*(newMember->getGeneticInformation()));
+    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType)),(*populationSize));
+    Subject* newMember = populationTree->searchElement(*populationSize);
+    (*populationFitness) += newMember->getFitness();
+    std::cout << "Se crea: " << newMember << " con ID: " << newMember->getID() <<std::endl;
+    newMember->start_p_thread();
 }
 
 /**@brief: permite acceder a un individuo mediante su id
@@ -66,7 +68,7 @@ void Population::createNewRandomMember() {
  * @return Subject*
  */
 Subject* Population::getIndividual(int id) {
-    return populationTree->searchElement((id/10) - 1);
+    return populationTree->searchElement((id/10));
 }
 
 /**@brief devuelve el arbol de poblacion
@@ -102,4 +104,10 @@ char Population::getPopulationType() {
  */
 void Population::updateGeneration() {
     (*actualGeneration)++;
+}
+
+void Population::killEveryone() {
+    for(int i = 1; 1 <= *populationSize; i++){
+        populationTree->searchElement(i)->kill();
+    }
 }

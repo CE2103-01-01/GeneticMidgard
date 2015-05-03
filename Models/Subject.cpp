@@ -11,8 +11,7 @@ using namespace constantsSubjectXML;
  * @brief genera un individuo de primera generacion
  */
 Subject::Subject(int idParam){
-    id = static_cast<int*>(malloc(sizeof(int)));
-    *id = idParam;
+    id = idParam;
     alive = static_cast<bool*>(malloc(sizeof(bool)));
     *alive = true;
     geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
@@ -29,9 +28,6 @@ Subject::Subject(int idParam){
     }
     father = 0;
     mother = 0;
-    void* parameters = malloc(sizeof(PThreadParam));
-    new(static_cast<PThreadParam*>(parameters)) PThreadParam(static_cast<void*>(this),0);
-    pthread_create(&lifeThread,0,subjectLife,parameters);
 }
 
 /** Constructor
@@ -39,8 +35,7 @@ Subject::Subject(int idParam){
  */
 Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticInformationParam,
                  int generationParam, int idParam){
-    id = static_cast<int*>(malloc(sizeof(int)));
-    *id = idParam;
+    id = idParam;
     alive = static_cast<bool*>(malloc(sizeof(bool)));
     *alive = true;
     geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
@@ -57,9 +52,14 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticI
     }
     father = fatherParam;
     mother = motherParam;
-    void* parameters = malloc(sizeof(PThreadParam));
-    new(static_cast<PThreadParam*>(parameters)) PThreadParam(static_cast<void*>(this),0);
-    pthread_create(&lifeThread,0,subjectLife,parameters);
+}
+
+Subject::~Subject(){
+    alive = false;
+    free(alive);
+    free(geneticInformation);
+    free(generation);
+    free(characteristics);
 }
 
 /** @brief Accede al padre
@@ -125,7 +125,7 @@ float Subject::getFitness(){
  * @return float
  */
 int Subject::getID(){
-    return *id;
+    return id;
 }
 
 /** @brief calcular  fitness
@@ -166,7 +166,23 @@ void Subject::kill(){
 /** @brief Mata al jugador colocando en false la bander
  */
 void Subject::life(){
-    std::cout << "Hello, i am "<< (*id) <<std::endl;
+    std::cout << "Hello, my ID is: "<< (id) <<std::endl;
+}
+
+/**@brief: accede al pthread
+ * @return pthread_t*
+ */
+pthread_t* Subject::get_p_thread(){
+    return &lifeThread;
+}
+
+/**@brief Metodo que inicia el pthread
+ * @param Subject* subject: sujeto sobre el que se ejecuta
+ */
+void Subject::start_p_thread(){
+    void* parameters = malloc(sizeof(PThreadParam));
+    new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,0);
+    pthread_create(&lifeThread,0,subjectLife,parameters);
 }
 
 /**@brief metodo ejecutado por el pthread
