@@ -18,11 +18,6 @@ Leaf::Leaf(int sizeOfContainerParam, int* numberOfSonsParam){
 /** @brief recorre los containers eliminando cada uno
  */
 Leaf::~Leaf(){
-    free(numberOfSons);
-    free(terminal);
-    free(sons);
-    free(sizeOfContainer);
-    free(containers);
 }
 
 /** @brief crea n hojas hijas, tal que n=(*(*numberOfSons))

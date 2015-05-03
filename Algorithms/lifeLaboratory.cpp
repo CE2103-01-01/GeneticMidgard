@@ -38,24 +38,6 @@ bool LifeLaboratory::checkSeleccions(Subject* toSearch, DoubleList<Subject>* toA
     return false;
 }
 
-/**@brief: analiza dos cromosomas y retorna el mas fuerte
- * @param Chromosome* firstSon: primer cromosoma
- * @param Chromosome* secondSon: segundo cromosoma
- * @return Chromosome*
- */
-Chromosome* LifeLaboratory::selectChromosome(Chromosome* sonOne,Chromosome* sonTwo){
-    //Inicializa el calculador
-    //Calcula ambos fitness y retorna el cromosoma ganador, de ser iguales retorna el primero
-    GeneralFitnessCalculator calculator =  GeneralFitnessCalculator();
-    float fitnessOne = calculator.calculateFitness(sonOne);
-    float fitnessTwo = calculator.calculateFitness(sonTwo);
-    if(fitnessOne >= fitnessTwo){
-        return sonOne;
-    }else{
-        return sonTwo;
-    }
-}
-
 /** @brief: selecciona dos padres random que superen el fitness medio
  * @param Population* population: poblacion en la cual se realiza la busqueda
  * @param DoubleList<Subject> parents: lista de punteros para retornar por argumento
@@ -99,17 +81,8 @@ DoubleList<Subject>* LifeLaboratory::selectParents(Population* population, int n
 void LifeLaboratory::fillGeneration(Population *population, int numberOfNewSubjects, DoubleList<Subject>* parents) {
     //Itera creando los sujetos
     for (int i = 0; i < numberOfNewSubjects; i++) {
-        std::cout << "INDICE DEL METODO FILL GENERATION: " << i << std::endl;
-        //Reserva espacio para los cromosomas resultantes
-        Chromosome* newChromosomes = static_cast<Chromosome*>(malloc(2*sizeof(Chromosome)));
-        //Mezcla cromosomas
-        ChromosomeMixer::mix(parents->get(2*i)->getGeneticInformation(),
-                             parents->get(2*i+1)->getGeneticInformation(),
-                             newChromosomes);
-        std::cout<< "CANTIDAD DE GENES CROMOSOMA 1: " << (newChromosomes)->getNumberOfGenes()  <<std::endl;
-        std::cout<< "CANTIDAD DE GENES CROMOSOMA 2: " << (newChromosomes + sizeof(Chromosome))->getNumberOfGenes() <<std::endl;
-        //Evalua cromosomas
-        Chromosome* luckyChromosome = selectChromosome(newChromosomes, newChromosomes + sizeof(Chromosome));
+        //Crea el nuevo cromosoma
+        Chromosome* luckyChromosome = ChromosomeMixer::mix(parents->get(2*i)->getGeneticInformation(), parents->get(2*i+1)->getGeneticInformation());
         //Crea el nuevo sujeto
         population->insertNewMember((parents->get(2*i)),(parents->get(2*i+1)),luckyChromosome);
     }
@@ -134,14 +107,14 @@ void LifeLaboratory::createGeneration(Population* population, int numberOfNewSub
  * @param int populationNumber: numero de poblaciones
  * @return Population*
  */
-Population* LifeLaboratory::createLife(int populationSize, int populationNumber){
+DoubleList<Population> LifeLaboratory::createLife(int populationSize, int populationNumber){
     //Reserva el espacio de las poblaciones
-    Population* toReturn = static_cast<Population*>(malloc(sizeof(Population)*populationNumber));
+    DoubleList<Population> toReturn = DoubleList<Population>();
     for (int i = 0; i < populationNumber; i++) {
         //Crea un arbol de poblacion
         Tree<Subject> people = createPopulation(populationSize,i);
         //Llena una poblacion
-        new (toReturn + i*sizeof(Population)) Population(people, static_cast<char>(i), populationSize);
+        toReturn.append(Population(people, static_cast<unsigned char>(i), populationSize));
     }
     std::cout << "POPULATION CREATED" << std::endl;
     return toReturn;

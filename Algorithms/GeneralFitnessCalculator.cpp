@@ -18,7 +18,6 @@ GeneralFitnessCalculator::~GeneralFitnessCalculator(){
 
 void GeneralFitnessCalculator::readXML() {
     constants = static_cast<float*>(malloc(sizeof(float)*Chromosome::readLenghtFromXML()));
-
     numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
     *numberOfGenes = Chromosome::readLenghtFromXML();
 

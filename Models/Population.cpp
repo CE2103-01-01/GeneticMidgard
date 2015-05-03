@@ -27,11 +27,6 @@ Population::Population(Tree<Subject> populationTreeParam, char populationTypePar
 /**@brief: libera el espacio utilizado
  */
 Population::~Population() {
-    free(populationType);
-    free(populationSize);
-    free(populationFitness);
-    free(actualGeneration);
-    free(populationTree);
 }
 
 /**@brief: calcula el fitness
@@ -50,11 +45,9 @@ void Population::calculateFitness(){
  */
 void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* chromosome) {
     (*populationSize)++;
-    GeneralFitnessCalculator* gfCalculator = static_cast<GeneralFitnessCalculator*>(malloc(sizeof(GeneralFitnessCalculator)));
-    new(gfCalculator) GeneralFitnessCalculator();
-    (*populationFitness) += gfCalculator->calculateFitness(chromosome);
+    GeneralFitnessCalculator gfCalculator =  GeneralFitnessCalculator();
+    (*populationFitness) += gfCalculator.calculateFitness(chromosome);
     populationTree->insertElement(Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType)));
-    free(gfCalculator);
 }
 
 /**@brief: permite acceder a un individuo mediante su id

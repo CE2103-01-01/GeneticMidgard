@@ -31,7 +31,7 @@ Subject::Subject(int idParam){
     mother = 0;
     void* parameters = malloc(sizeof(PThreadParam));
     new(static_cast<PThreadParam*>(parameters)) PThreadParam(static_cast<void*>(this),0);
-    //pthread_create(&lifeThread,0,subjectLife,parameters);
+    pthread_create(&lifeThread,0,subjectLife,parameters);
 }
 
 /** Constructor
@@ -58,7 +58,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     mother = motherParam;
     void* parameters = malloc(sizeof(PThreadParam));
     new(static_cast<PThreadParam*>(parameters)) PThreadParam(static_cast<void*>(this),0);
-    //pthread_create(&lifeThread,0,subjectLife,parameters);
+    pthread_create(&lifeThread,0,subjectLife,parameters);
 }
 
 /** @brief Accede al padre

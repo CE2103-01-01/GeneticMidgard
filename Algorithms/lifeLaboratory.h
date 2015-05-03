@@ -19,7 +19,7 @@ class LifeLaboratory {
 public:
     LifeLaboratory(pthread_mutex_t*);
     void createGeneration(Population*,int);
-    Population* createLife(int,int);
+    DoubleList<Population> createLife(int,int);
 };
 
 

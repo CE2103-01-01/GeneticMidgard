@@ -3,6 +3,8 @@
 //
 
 #include "ChromosomeMixer.h"
+#include "GeneralFitnessCalculator.h"
+
 /* Mezclador de cromosomas
  * @brief: Recibe la informacion genetica de dos individuos, la mezcla y retorna dos
  *         individuos que se accesan mediante aritmetica de punteros
@@ -11,25 +13,32 @@
  * @return Chromosome*: dos cromosomas hijos, (return) & (return + sizeof(Chromosome))
  */
 Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation,
-                                 Chromosome* motherGeneticInformation,
-                                 Chromosome* toReturn)
-{
+                                 Chromosome* motherGeneticInformation){
+    //Mezcla cromosomas
     int numOfGenes = fatherGeneticInformation->getNumberOfGenes();
-    unsigned char* newGeneticMaterial = static_cast<unsigned char*>(malloc(2*numOfGenes));
+    unsigned char* newGeneticMaterialOne = static_cast<unsigned char*>(malloc(numOfGenes));
+    unsigned char* newGeneticMaterialTwo = static_cast<unsigned char*>(malloc(numOfGenes));
     for(int i=0; i < numOfGenes; i++){
-        //Se toma el gen del padre, la madre y los hijos
+        //Se toma el gen del padre y madre
         unsigned char* fatherGene = fatherGeneticInformation->getGene(i);
         unsigned char* motherGene = motherGeneticInformation->getGene(i);
-        unsigned char* firstSonGene = newGeneticMaterial + i;
-        unsigned char* secondSonGene = newGeneticMaterial + numOfGenes + i;
-            //Se crea mascara y el pedazo de gen temporal
         unsigned char tmpMask = (unsigned char)(rand()%256);
         //Se aplican y asignan las mascaras
-        *(firstSonGene) = (tmpMask & *(fatherGene))|(~tmpMask & *(motherGene));
-        *(secondSonGene) = (~tmpMask & *(fatherGene))|(tmpMask & *(motherGene));
+        *(newGeneticMaterialOne + i) = (tmpMask & *(fatherGene))|(~tmpMask & *(motherGene));
+        *(newGeneticMaterialTwo + i) = (~tmpMask & *(fatherGene))|(tmpMask & *(motherGene));
     }
-    new(toReturn) Chromosome(newGeneticMaterial);
-    new(toReturn+sizeof(Chromosome)) Chromosome(newGeneticMaterial + numOfGenes);
-    free(newGeneticMaterial);
-    return toReturn;
+
+    Chromosome* optionOne = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
+    Chromosome* optionTwo = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
+    new(optionOne) Chromosome(newGeneticMaterialOne);
+    new(optionTwo) Chromosome(newGeneticMaterialTwo);
+
+    GeneralFitnessCalculator calculator =  GeneralFitnessCalculator();
+    if(calculator.calculateFitness(optionOne) >= calculator.calculateFitness(optionTwo)){
+        free(optionTwo);
+        return optionOne;
+    }else{
+        free(optionOne);
+        return optionTwo;
+    }
 };

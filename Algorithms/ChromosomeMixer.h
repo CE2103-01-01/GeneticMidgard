@@ -9,7 +9,7 @@
 
 class ChromosomeMixer {
     public:
-        static Chromosome* mix(Chromosome*,Chromosome*,Chromosome*);
+        static Chromosome* mix(Chromosome*,Chromosome*);
 };
 
 

@@ -29,10 +29,7 @@ Chromosome::Chromosome() {
 Chromosome::Chromosome(unsigned char* genes) {
     numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
     *numberOfGenes = readLenghtFromXML();
-    geneticData = static_cast<unsigned char*>(malloc(*numberOfGenes));
-    for(int i = 0; i<*numberOfGenes; i++){
-        *(geneticData + i) = *(genes+i);
-    }
+    geneticData = genes;
 };
 
 int Chromosome::readLenghtFromXML(){
