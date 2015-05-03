@@ -29,7 +29,7 @@ void LifeLaboratory::createPopulation(int populationSize, Population* population
 bool LifeLaboratory::checkSeleccions(Subject* toSearch, int* toAnalyze, int numberOfParents){
     //Evalua los elementos
     for(int i = 0; i<numberOfParents; i++){
-        if(*(toAnalyze + i*sizeof(int)) == toSearch->getID()) return true;
+        if(*(toAnalyze + i) == toSearch->getID()) return true;
     }
     return false;
 }
@@ -50,12 +50,12 @@ void LifeLaboratory::selectParents(Population* population, int numberOfParents, 
         bool found = false;
         //Busca hasta que encuentra un sujeto
         while(!found){
-            int random = trueRandom::getRandom()%population->getPopulationSize();
-            if(random < population->getPopulationSize()){
+            int random = trueRandom::getRandom()%population->getPopulationSize()+1;
+            if(random <= population->getPopulationSize()){
                 Subject* toEvaluate = populationTree->searchElement(random);
                 //Revisa que el individuo este vivo, supere la media de fitness y no haya sido elegido en esta reproduccion
                 if(toEvaluate!=0 && toEvaluate->isAlive() && !checkSeleccions(toEvaluate, parents, i)) {
-                    *(parents + i*sizeof(int))= toEvaluate->getID();
+                    *(parents + i)= toEvaluate->getID();
                     found = true;
                 }
             }
@@ -73,8 +73,8 @@ void LifeLaboratory::fillGeneration(Population *population, int numberOfNewSubje
     //Itera creando los sujetos
     for (int i = 0; i < numberOfNewSubjects; i++) {
         //Crea el nuevo cromosoma
-        Subject* father = population->getIndividual(*(parents+2*i*sizeof(int)));
-        Subject* mother = population->getIndividual(*(parents+2*(i+1)*sizeof(int)));
+        Subject* father = population->getIndividual(*(parents+2*i));
+        Subject* mother = population->getIndividual(*(parents+2*i+1));
         Chromosome luckyChromosome = ChromosomeMixer::mix(father->getGeneticInformation(), mother->getGeneticInformation());
         //Crea el nuevo sujeto
         population->insertNewMember(father,mother,luckyChromosome);
@@ -104,8 +104,8 @@ void LifeLaboratory::createGeneration(Population* population, int numberOfNewSub
 void LifeLaboratory::createLife(int populationSize, int populationNumber, Population* newPopulations){
     for (int i = 0; i < populationNumber; i++) {
         //Llena una poblacion
-        new(newPopulations + i*sizeof(Population)) Population(i);
-        createPopulation(populationSize,newPopulations + i*sizeof(Population));
+        new(newPopulations + i) Population(i);
+        createPopulation(populationSize,newPopulations + i);
     }
     std::cout << "POPULATION CREATED" << std::endl;
 }

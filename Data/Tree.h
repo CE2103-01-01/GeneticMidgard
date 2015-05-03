@@ -18,7 +18,7 @@ template <class T> class Tree{
 public:
     Tree(int);
     T* searchElement(int);
-    void searchAndDo(int, void(T*, void*), void*);
+    T* searchAndDo(int, void(T*, void*), void*);
     void insertElement(T,int);
     void insertElement(T);
     void deleteElement(int, void(T*, void*), void*);
@@ -120,8 +120,10 @@ template <class T> T* Tree<T>::searchElement(int indexToSearch){
  * @param: void* methodParam: parametro del metodo a ejecutar
  * @brief: calcula la ruta al indice recibido
  */
-template <class T> void Tree<T>::searchAndDo(int indexToSearch, void method(T*, void*), void* methodParam){
-    method(searchElement(indexToSearch), methodParam);
+template <class T> T* Tree<T>::searchAndDo(int indexToSearch, void method(T*, void*), void* methodParam){
+    T* toReturn = searchElement(indexToSearch);
+    method(toReturn, methodParam);
+    return toReturn;
 }
 
 /** Inserta

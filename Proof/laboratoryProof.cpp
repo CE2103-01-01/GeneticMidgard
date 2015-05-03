@@ -29,15 +29,20 @@ void* reproduction(void* parameter){
     //Crea cinco poblaciones de 100 habitantes
     Population* population = static_cast<Population*>(malloc(sizeof(Population) * NUMBER_OF_POPULATIONS));
     laboratory->createLife(NUMBER_OF_SUBJECTS,NUMBER_OF_POPULATIONS, population);
+    pthread_mutex_lock(mutex);
     while(x<10){
         for(int i = 0; i<NUMBER_OF_POPULATIONS; i++){
             //Se crea una generacion de cada poblacion
-            //laboratory->createGeneration((population+i*sizeof(Population)),NUMBER_OF_SUBJECTS/4);
+            laboratory->createGeneration(population+i,NUMBER_OF_SUBJECTS/2);
         }
-        std::cout<< "x: " << x << std::endl;
-        x++;
         nanosleep(&timeControler, NULL);
     }
+    for(int i = 0; i<NUMBER_OF_POPULATIONS; i++){
+        //Se crea una generacion de cada poblacion
+        (population+i)->killEveryone();
+    }
+    nanosleep(&timeControler, NULL);
+    pthread_mutex_unlock(mutex);
     free(laboratory);
     return 0;
 };

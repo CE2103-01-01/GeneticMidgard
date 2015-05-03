@@ -17,7 +17,7 @@
 */
 class Subject {
     pthread_t lifeThread;
-    int* id;
+    int id;
     int* generation;
     float* fitness;
     const char* profession; //TODO: mejor usar un char que gasta menos espacio
@@ -31,6 +31,7 @@ class Subject {
 public:
     Subject(int);
     Subject(Subject*,Subject*,Chromosome,int,int);
+    ~Subject();
     int calculateDamage();  // TODO: implementar
     int calculateDefense(); // TODO: implementar
     Chromosome* getGeneticInformation();
@@ -48,6 +49,8 @@ public:
     void kill();
     void life(void);
     int getID();
+    pthread_t *get_p_thread();
+    void start_p_thread();
 };
 
 void* subjectLife(void*);

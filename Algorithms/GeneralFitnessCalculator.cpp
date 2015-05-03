@@ -28,20 +28,20 @@ void GeneralFitnessCalculator::readXML() {
     root_node = doc.first_node("CONSTANTS")->first_node("Fitness");
     int forIteratorIndex = 0;
     //TODO: agregar a constante
-    for( rapidxml::xml_node<>*node = root_node->first_node();
-         node;
-         node = node->next_sibling() ) {
-        {
-            *(constants + forIteratorIndex * sizeof(float)) = std::atof(node->value());
-        }
+    rapidxml::xml_node<>*node = root_node->first_node();
+
+    while(node)
+    {
+        *(constants + forIteratorIndex++) = std::atof(node->value());
+        node = node->next_sibling();
     }
 }
 
 
 float GeneralFitnessCalculator::calculateFitness(Chromosome chromosome) {
     float fitness = 0;
-    for(int i = 0; i<*numberOfGenes; i++){
-        fitness += (*(constants+i*sizeof(float))) * (*static_cast<unsigned char*>(chromosome.getGene(i)));
+    for(int i = 0; i < *numberOfGenes; i++){
+        fitness += *(constants+i) * (*static_cast<unsigned char*>(chromosome.getGene(i)));
     }
     return fitness;
 
