@@ -60,7 +60,7 @@ public:
     string getTilesetPath();
     int getWidth();
     int getHeight();
-    void renderMap(RenderWindow*);
+    void renderMap(RenderTarget&);
     IntRect getTitleRect(unsigned int gid);
 };
 

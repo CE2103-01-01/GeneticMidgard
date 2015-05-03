@@ -86,10 +86,10 @@ int *Map::getTerrain(int i) {
     return terrain[i];
 }
 
-void Map::renderMap(RenderWindow *renderArea) {
+void Map::renderMap(RenderTarget &renderArea) {
         Texture texture;
         if(!texture.loadFromFile(tilesetPath)) abort();
-        View theView = renderArea->getView();
+        View theView = renderArea.getView();
         for (int layer = 0; layer < 2; ++layer) {
             int *layerData = (terrain[layer]);
             for (int i = 0; i < width; ++i) {
@@ -102,17 +102,10 @@ void Map::renderMap(RenderWindow *renderArea) {
                     sprite.setTexture(texture);
                     sprite.setTextureRect(getTitleRect(gid));
                     sprite.setPosition(sf::Vector2f(tileWidth * i, tileHeight * j));
-                    renderArea->draw(sprite);
+                    renderArea.draw(sprite);
                 }
             }
         }
-
-
-
-
-
-
-
 }
 
     IntRect Map::getTitleRect(unsigned int i) {
