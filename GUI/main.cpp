@@ -13,7 +13,6 @@ int main()
 {
     Map mapa = Map();
     mapa.loadTerrain();
-    //mapa.printArray(mapa.getTerrain(1));
     RenderWindow window(sf::VideoMode::getDesktopMode(), WINDOW_NAME);
     unsigned int heightScreen = window.getSize().y;
     unsigned int widthScreen = window.getSize().x;

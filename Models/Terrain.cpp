@@ -5,8 +5,10 @@
 
 
 
+
 #include "Terrain.h"
-#include "../Data/PriorityQueue.h"
+
+
 
 using namespace std;
 int Terrain::width = 0;
@@ -41,29 +43,31 @@ void Terrain::printArray() {
     map--;
     for (int i = 1; i < width * height+1; ++i)
     {
-        cout<<*(map +i)<<"|";
+        const char separator    = ' ';
+        const int numWidth      = 6;
+        cout << left << setw(numWidth) << setfill(separator) <<*(map +i);
         //if(*(map+i)!=0)cout<<i%80<<","<<i/80<<endl;print objects
         if(i%width==0)cout<<endl;
     }
 };
 
-void Terrain::findPathAS(const int &xStart, const int &yStart, const int &xFinish, const int &yFinish) {
+DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &finish) {
     int closed_Nodes_map[width][height]; // map of closed (tried-out) Nodes
     int open_Nodes_map[width][height]; // map of open (not-yet-tried) Nodes
     int dir_map[width][height]; // map of directions
-    const int dir=8; // number of possible directions to go at any position
-    static int dx[dir]={1, 1, 0, -1, -1, -1, 0, 1};
-    static int dy[dir]={0, 1, 1, 1, 0, -1, -1, -1};
+    const int dir=4; // number of possible directions to go at any position
+    int dx[dir]={1, 0, -1, 0};
+    int dy[dir]={0, 1, 0, -1};
 
-    static PriorityQueue<Node> priorityQueue[2]; // list of open (not-yet-tried) Nodes
+    static PriorityQueue<NodeAS> priorityQueue[2]; // list of open (not-yet-tried) Nodes
     static int pqi; // pq index
-    static Node* n0;
-    static Node* m0;
+    static NodeAS* n0;
+    static NodeAS* m0;
     static int i, j, x, y, xdx, ydy;
     static char c;
     pqi=0;
 
-    // reset the Node maps
+    // reset the NodeAS maps
     for(y=0;y< height;y++)
     {
         for(x=0;x< width;x++)
@@ -73,50 +77,58 @@ void Terrain::findPathAS(const int &xStart, const int &yStart, const int &xFinis
         }
     }
 
-    // create the start Node and push into list of open Nodes
-    n0=new Node(xStart, yStart, 0, 0);
-    n0->updatePriority(xFinish, yFinish);
+    // create the start NodeAS and push into list of open Nodes
+    n0=new NodeAS(start.x, start.y, 0, 0);
+    n0->updatePriority(finish.x, finish.y);
     priorityQueue[pqi].push(*n0);
-    open_Nodes_map[xStart][yStart]=n0->getPriority(); // mark it on the open Nodes map
+    open_Nodes_map[start.x][start.y]=n0->getPriority(); // mark it on the open Nodes map
     delete n0;
     // A* search
     while(!priorityQueue[pqi].empty())
     {
-        // get the current Node w/ the highest priority
+        // get the current NodeAS w/ the highest priority
         // from the list of open Nodes
-        Node const &top = priorityQueue[pqi].top();
-        n0=new Node( top.getxPos(), top.getyPos(),
+        NodeAS const &top = priorityQueue[pqi].top();
+        n0=new NodeAS( top.getxPos(), top.getyPos(),
                      top.getLevel(), top.getPriority());
 
         x=n0->getxPos(); y=n0->getyPos();
 
-        priorityQueue[pqi].pop(); // remove the Node from the open list
+        priorityQueue[pqi].pop(); // remove the NodeAS from the open list
         open_Nodes_map[x][y]=0;
         // mark it on the closed Nodes map
         closed_Nodes_map[x][y]=1;
 
         // quit searching when the goal state is reached
-        //if((*n0).estimate(xFinish, yFinish) == 0)
-        if(x==xFinish && y==yFinish)
+        //if((*n0).estimate(finish.x, finish.y) == 0)
+        if(x==finish.x && y==finish.y)
         {
             // generate the path from finish to start
             // by following the directions
-            string path="";
-            while(!(x==xStart && y==yStart))
+            DoubleList<Vector2D> path = DoubleList<Vector2D>();
+            Vector2D startmp(start.x,start.y);
+            Vector2D *tmp = &startmp;
+            while(!(x==start.x && y==start.y))
             {
+                Vector2D step(*tmp);
+
                 j=dir_map[x][y];
-                c='0'+(j+dir/2)%dir;
-                path=c+path;
+                if (j==0) step.x-=1;
+                else if(j==1) step.y-=1;
+                else if(j==2) step.x +=1;
+                else if(j==3) step.y +=1;
+                cout<<step.x<<", "<<step.y<<endl;
+                path.append(step);
                 x+=dx[j];
                 y+=dy[j];
+                tmp = &step;
             }
 
             // garbage collection
             delete n0;
             // empty the leftover Nodes
             while(!priorityQueue[pqi].empty()) priorityQueue[pqi].pop();
-            cout<<path<< " found";
-            return;
+            return path;
         }
 
         // generate moves (child Nodes) in all possible directions
@@ -127,11 +139,11 @@ void Terrain::findPathAS(const int &xStart, const int &yStart, const int &xFinis
             if(!(xdx<0 || xdx> width -1 || ydy<0 || ydy> height -1 || *(map+xdx+(ydy*width))!=0
                  || closed_Nodes_map[xdx][ydy]==1))
             {
-                // generate a child Node
-                m0=new Node( xdx, ydy, n0->getLevel(),
+                // generate a child NodeAS
+                m0=new NodeAS( xdx, ydy, n0->getLevel(),
                              n0->getPriority());
                 m0->nextLevel(i);
-                m0->updatePriority(xFinish, yFinish);
+                m0->updatePriority(finish.x, finish.y);
 
                 // if it is not in the open list then add into that
 
@@ -140,7 +152,7 @@ void Terrain::findPathAS(const int &xStart, const int &yStart, const int &xFinis
                     open_Nodes_map[xdx][ydy]=m0->getPriority();
                     priorityQueue[pqi].push(*m0);
                     delete m0;
-                    // mark its parent Node direction
+                    // mark its parent NodeAS direction
                     dir_map[xdx][ydy]=(i+dir/2)%dir;
                 }
                 else if(open_Nodes_map[xdx][ydy]>m0->getPriority())
@@ -150,17 +162,17 @@ void Terrain::findPathAS(const int &xStart, const int &yStart, const int &xFinis
                     // update the parent direction info
                     dir_map[xdx][ydy]=(i+dir/2)%dir;
 
-                    // replace the Node
+                    // replace the NodeAS
                     // by emptying one pq to the other one
-                    // except the Node to be replaced will be ignored
-                    // and the new Node will be pushed in instead
+                    // except the NodeAS to be replaced will be ignored
+                    // and the new NodeAS will be pushed in instead
                     while(!(priorityQueue[pqi].top().getxPos()==xdx &&
                             priorityQueue[pqi].top().getyPos()==ydy))
                     {
                         priorityQueue[1-pqi].push(priorityQueue[pqi].top());
                         priorityQueue[pqi].pop();
                     }
-                    priorityQueue[pqi].pop(); // remove the wanted Node
+                    priorityQueue[pqi].pop(); // remove the wanted NodeAS
 
                     // empty the larger size pq to the smaller one
                     if(priorityQueue[pqi].size()> priorityQueue[1-pqi].size()) pqi=1-pqi;
@@ -170,19 +182,19 @@ void Terrain::findPathAS(const int &xStart, const int &yStart, const int &xFinis
                         priorityQueue[pqi].pop();
                     }
                     pqi=1-pqi;
-                    priorityQueue[pqi].push(*m0); // add the better Node instead
+                    priorityQueue[pqi].push(*m0); // add the better NodeAS instead
                 }
                 else delete m0; // garbage collection
             }
         }
         delete n0; // garbage collection
     }
-    cout<<"no route found";
+    return DoubleList<Vector2D>();
 
 
 };
 
- const int &Node::estimate(const int &xDest, const int &yDest) const {
+ const int &NodeAS::estimate(const int &xDest, const int &yDest) const {
     static int xd, yd, d;
     xd=xDest-xPos;
     yd=yDest-yPos;
@@ -196,33 +208,34 @@ void Terrain::findPathAS(const int &xStart, const int &yStart, const int &xFinis
 
     return(d);
 }
-Node::Node(int xPos, int yPos, int level, int priority) : xPos(xPos), yPos(yPos), level(level), priority(priority) { }
+NodeAS::NodeAS(int xPos, int yPos, int level, int priority) : xPos(xPos), yPos(yPos), level(level), priority(priority) { }
 
-bool Node::operator<(Node node) {
+bool NodeAS::operator<(NodeAS node) {
     return priority > node.getPriority();
 }
 
-void Node::updatePriority(const int &xDest, const int &yDest) {
+void NodeAS::updatePriority(const int &xDest, const int &yDest) {
     priority=level+estimate(xDest, yDest)*10; //A*
+    //cout<< priority<<endl;
 };
 
-void Node::nextLevel(const int &i) {
-    level+=(i%2==0?10:14);//Priority going straight
+void NodeAS::nextLevel(const int &i) {
+    level+=10;//Priority going straight
 };
 
-int Node::getxPos() const {
+int NodeAS::getxPos() const {
     return xPos;
 };
 
-int Node::getyPos() const {
+int NodeAS::getyPos() const {
     return yPos;
 };
 
-int Node::getLevel() const {
+int NodeAS::getLevel() const {
     return level;
 };
 
-int Node::getPriority() const {
+int NodeAS::getPriority() const {
     return priority;
 }
 

@@ -60,7 +60,7 @@ private:
     unsigned long l = 0; //longitud
 public:
     virtual DoubleListIterator<T> *getIterator();
-
+    //DoubleList(const DoubleList<T>&); //Constructor
     DoubleList(); //Constructor
     void add(T); //Inserta nodo al inicio
     void append(T); //Inserta nodo al final
@@ -488,4 +488,6 @@ bool DoubleList<T>::has(T *data) {
     return false;
 }
 
+
 #endif //PROJECTMIDGARD_DOUBLELIST_H
+

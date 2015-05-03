@@ -14,10 +14,21 @@ static char const *const DATA_NODE = "data";
 static char const *const TILE_NODE = "tile";
 
 #include <math.h>
+#include <iomanip>
 #include "../libs/rapidxml/rapidxml.hpp"
 #include "../libs/rapidxml/rapidxml_utils.hpp"
 #include "../Constants.h"
+#include "../Data/PriorityQueue.h"
+#include "../Data/DoubleList.h"
 
+class Vector2D
+{
+public:
+    Vector2D(const Vector2D& v) :x(v.x), y(v.y){ }
+    Vector2D(int x, int y) : x(x), y(y) { }
+    int x;
+    int y;
+};
 class Terrain {
 public:
     static int width;
@@ -25,12 +36,11 @@ public:
     static int *map;
     static void initArray();
     static void printArray();
-    static void findPathAS(const int & xStart, const int & yStart,
-                           const int & xFinish, const int & yFinish);
+    static DoubleList<Vector2D> findPathAS(const Vector2D &start, const Vector2D &finish);
 
 };
 
-class Node {
+class NodeAS {
 private:
     int xPos;
     int yPos;
@@ -39,8 +49,8 @@ private:
     // priority=level+remaining distance estimate
     int priority;  // 1 / realPriority
 public:
-    Node(int xPos, int yPos, int level, int priority);
-    bool operator<(Node node);
+    NodeAS(int xPos, int yPos, int level, int priority);
+    bool operator<(NodeAS node);
     void updatePriority(const int & xDest, const int & yDest);
     void nextLevel(const int & i);
     int const &estimate(const int & xDest, const int & yDest) const;
