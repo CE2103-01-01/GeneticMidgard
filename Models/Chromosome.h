@@ -10,12 +10,12 @@
 #include "../libs/pugixml/pugixml.hpp"
 
 class Chromosome {
-    void* geneticData;
+    unsigned char* geneticData;
     int* numberOfGenes;
 public:
     Chromosome();
-    Chromosome(void*);
-    void* getGene(int);
+    Chromosome(unsigned char*);
+    unsigned char* getGene(int);
     int getNumberOfGenes();
     static int readLenghtFromXML();
 };

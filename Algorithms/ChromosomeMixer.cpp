@@ -15,24 +15,21 @@ Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation,
                                  Chromosome* toReturn)
 {
     int numOfGenes = fatherGeneticInformation->getNumberOfGenes();
-    void* newGeneticMaterial = malloc(2*numOfGenes);
+    unsigned char* newGeneticMaterial = static_cast<unsigned char*>(malloc(2*numOfGenes));
     for(int i=0; i < numOfGenes; i++){
         //Se toma el gen del padre, la madre y los hijos
-        unsigned char* fatherGene =
-                static_cast<unsigned char*>(fatherGeneticInformation->getGene(i));
-        unsigned char* motherGene =
-                static_cast<unsigned char*>(motherGeneticInformation->getGene(i));
-        unsigned char* firstSonGene =
-                static_cast<unsigned char*>(newGeneticMaterial + i);
-        unsigned char* secondSonGene =
-                static_cast<unsigned char*>(newGeneticMaterial + numOfGenes + i);
+        unsigned char* fatherGene = fatherGeneticInformation->getGene(i);
+        unsigned char* motherGene = motherGeneticInformation->getGene(i);
+        unsigned char* firstSonGene = newGeneticMaterial + i;
+        unsigned char* secondSonGene = newGeneticMaterial + numOfGenes + i;
             //Se crea mascara y el pedazo de gen temporal
         unsigned char tmpMask = (unsigned char)(rand()%256);
         //Se aplican y asignan las mascaras
         *(firstSonGene) = (tmpMask & *(fatherGene))|(~tmpMask & *(motherGene));
         *(secondSonGene) = (~tmpMask & *(fatherGene))|(tmpMask & *(motherGene));
     }
-    *(toReturn) = Chromosome(newGeneticMaterial);
-    *(toReturn+sizeof(Chromosome)) = Chromosome(newGeneticMaterial + numOfGenes);
+    new(toReturn) Chromosome(newGeneticMaterial);
+    new(toReturn+sizeof(Chromosome)) Chromosome(newGeneticMaterial + numOfGenes);
+    free(newGeneticMaterial);
     return toReturn;
 };
