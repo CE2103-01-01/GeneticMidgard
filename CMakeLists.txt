@@ -51,18 +51,10 @@ set (DATA_STRUCTS   Data/BitVector.cpp
                     Data/TreeProof.cpp
                     Data/Leaf.cpp
                     Data/PThreadParam.cpp)
-                    
-set(TMX_FILES   libs/TMXParser.cpp
-                libs/base64.cpp
-                libs/TMXParser.h
-                libs/base64.h)
-                
-set(XML libs/rapidxml/rapidxml.hpp
-        libs/rapidxml/rapidxml_iterators.hpp
-        libs/rapidxml/rapidxml_print.hpp
-        libs/rapidxml/rapidxml_utils.hpp
-        libs/pugixml/pugiconfig.hpp
-        libs/pugixml/pugixml.hpp
+
+
+
+set(XML
         libs/pugixml/pugixml.cpp)
 
 
@@ -75,11 +67,10 @@ find_package (Threads)
 
 add_executable(ProjectMidgardLogic  ${SOURCE_FILES}
                                     ${HEADER_FILES}
-                                    ${TMX_FILES}
                                     ${XML}
                                     ${DATA_STRUCTS}
                                     ${RES_FILES} Proof/laboratoryProof.h Proof/laboratoryProof.cpp)
-
+include_directories(../libs)
 target_link_libraries (ProjectMidgardLogic ${CMAKE_THREAD_LIBS_INIT})
 
 add_subdirectory(GUI)
