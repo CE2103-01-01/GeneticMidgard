@@ -12,6 +12,8 @@ static const float RECONNECT_TIME = 0.5f;
 
 #include <iostream>
 #include <SFML/Network.hpp>
+#include "../libs/rapidjson/document.h"
+using namespace rapidjson;
 using namespace sf;
 class SocketGUI {
     TcpSocket socket;
@@ -19,6 +21,8 @@ class SocketGUI {
     static bool initialized;
     SocketGUI();
     void init();
+    void receiving();
+    static void manageMessage(std::string);
 public:
     static SocketGUI* getInstance();
 

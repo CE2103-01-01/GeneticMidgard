@@ -18,7 +18,7 @@ using namespace sf;
 using namespace gui_constants;
 int main()
 {
-    sf::Thread thread(&SocketGUI::getInstance);//Init Connection
+    Thread thread(&SocketGUI::getInstance);//Init Connection
     thread.launch();
 
     cout<<"GUI:..."<<endl;
