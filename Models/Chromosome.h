@@ -10,7 +10,7 @@
 
 class Chromosome {
     unsigned char* geneticData;
-    int* numberOfGenes;
+    int numberOfGenes;
 public:
     Chromosome();
     Chromosome(unsigned char*);

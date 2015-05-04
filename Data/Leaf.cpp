@@ -13,6 +13,7 @@ Leaf::Leaf(int sizeOfContainerParam, int* numberOfSonsParam){
     terminal = static_cast<int*>(malloc(sizeof(int)));
     *terminal = 1;
     containers = malloc((*sizeOfContainer) * (*numberOfSons));
+    sons = 0;
 }
 
 /** @brief recorre los containers eliminando cada uno

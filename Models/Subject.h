@@ -23,7 +23,7 @@ class Subject {
     const char* profession; //TODO: mejor usar un char que gasta menos espacio
     unsigned char* characteristics;//lista de caracteristicas
     const char* race;
-    bool* alive;
+    bool alive;
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
     Chromosome geneticInformation;
@@ -45,7 +45,7 @@ public:
     unsigned char getAge();
     unsigned char getExperience();
     void setCharacteristic(int,char);
-    bool* isAlive();
+    bool isAlive();
     void kill();
     void life(void);
     int getID();

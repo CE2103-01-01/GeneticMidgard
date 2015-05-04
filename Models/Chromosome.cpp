@@ -11,11 +11,10 @@ using namespace constantsSubjectXML;
  * @brief Crea la cantidad de genes del archivo genes.xml con tamaño definido en Constants.h
  */
 Chromosome::Chromosome() {
-    numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
-    *numberOfGenes = NUMBER_OF_GENES;
+    numberOfGenes = NUMBER_OF_GENES;
     trueRandom::init();
-    geneticData = static_cast<unsigned char*>(malloc((*numberOfGenes) * GENE_LEN_ON_BYTES));
-    for (int i = 0; i < (*numberOfGenes)*(GENE_LEN_ON_BYTES); i+=GENE_LEN_ON_BYTES) {
+    geneticData = static_cast<unsigned char*>(malloc(NUMBER_OF_GENES * GENE_LEN_ON_BYTES));
+    for (int i = 0; i < (numberOfGenes)*(GENE_LEN_ON_BYTES); i+=GENE_LEN_ON_BYTES) {
         for(int j = 0; j < GENE_LEN_ON_BYTES; j++){
             *static_cast<unsigned char*>(geneticData + i + j) = trueRandom::getRandom()%256;
         }
@@ -26,8 +25,7 @@ Chromosome::Chromosome() {
  * @brief Crea la cantidad de genes del archivo genes.xml con tamaño definido en Constants.h
  */
 Chromosome::Chromosome(unsigned char* genes) {
-    numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
-    *numberOfGenes = NUMBER_OF_GENES;
+    numberOfGenes = NUMBER_OF_GENES;
     geneticData = genes;
 };
 
@@ -37,7 +35,7 @@ Chromosome::Chromosome(unsigned char* genes) {
  * @return void*: espacio de memoria que ocupa el gen
  */
 unsigned char* Chromosome::getGene(int geneNumber) {
-    if(geneNumber < *numberOfGenes){
+    if(geneNumber < numberOfGenes){
         return geneticData + geneNumber*GENE_LEN_ON_BYTES;
     }else{
         return 0;
@@ -48,5 +46,5 @@ unsigned char* Chromosome::getGene(int geneNumber) {
  * @return int: *numberOfGenes
  */
 int Chromosome::getNumberOfGenes(){
-    return *numberOfGenes;
+    return numberOfGenes;
 };

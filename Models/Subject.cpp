@@ -13,8 +13,7 @@ using namespace constantsSubjectXML;
  */
 Subject::Subject(int idParam){
     id = idParam;
-    alive = static_cast<bool*>(malloc(sizeof(bool)));
-    *alive = true;
+    alive = true;
     geneticInformation = Chromosome();
     generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = 0;
@@ -36,8 +35,7 @@ Subject::Subject(int idParam){
 Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticInformationParam,
                  int generationParam, int idParam){
     id = idParam;
-    alive = static_cast<bool*>(malloc(sizeof(bool)));
-    *alive = true;
+    alive = true;
     geneticInformation = geneticInformationParam;
     fitness = static_cast<float*>(malloc(sizeof(float)));
     calculateFitness();
@@ -150,8 +148,8 @@ unsigned char Subject::getWeapon(){
 /** @brief Retorna true si el jugador esta vivo
  * @return bool
  */
-bool* Subject::isAlive(){
-    return (alive);
+bool Subject::isAlive(){
+    return alive;
 }
 
 /** @brief Mata al jugador colocando en false la bander
@@ -193,12 +191,14 @@ void* subjectLife(void* parameter){
     struct timespec timeControler;
     timeControler.tv_nsec=0;
     timeControler.tv_sec=1;
+    int life = 100;
     //Este while corre hasta que se llame al metodo kill()
-    while(0 != excecutioner->isAlive()){
+    while(life > 0){
         //Llama al metodo de vida del sujeto
-        excecutioner->life();
+        //excecutioner->life();
         //Espera un segundo
         nanosleep(&timeControler, 0);
+        life--;
     }
     std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
     return 0;
