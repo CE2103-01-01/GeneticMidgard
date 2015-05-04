@@ -6,8 +6,9 @@
 #define VH2015_TREE_H
 
 #include "Leaf.h"
-#include <cstdlib>
+#include <malloc.h>
 #include "../Constants.h"
+#include "../Models/Subject.h"
 
 template <class T> class Tree{
     int* len;
@@ -31,12 +32,13 @@ public:
  * @brief: Reserva el espacio de las variables y la primera hoja
  */
 template <class T> Tree<T>::Tree(){
-    root = (Leaf*)(malloc(sizeof(Leaf)));
-    new(root) Leaf(TREE_SIZE, sizeof(T));
+
     len = (int*)(malloc(sizeof(int)));
     *len = 0;
     floors = (int*)(malloc(sizeof(int)));
     *floors= 1;
+    root = (Leaf*)(malloc(sizeof(Leaf)));
+    new(root) Leaf(TREE_SIZE, sizeof(T));
 }
 
 /** Destructor
@@ -128,7 +130,7 @@ template <class T> void* Tree<T>::searchElement(int index){
 template <class T> void Tree<T>::insertElement(T param, int index){
     if((*len) < max(*floors)){
         void* container = searchElement(index);
-        *(T*)(container) = param;
+        *static_cast<T*>(container) = param;
         (*len)++;
     }else{
         split(root);

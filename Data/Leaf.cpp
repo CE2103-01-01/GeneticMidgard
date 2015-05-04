@@ -11,13 +11,12 @@ Leaf::Leaf(int treeSizeParam,int sizeofTypeParam){
     *sizeofType = sizeofTypeParam;
     terminal = (bool*)(malloc(sizeof(bool)));
     *terminal = true;
-    containers = malloc((treeSizeParam)*sizeof(sizeofType));
+    containers = malloc((treeSizeParam)*sizeofTypeParam);
 }
 
 /** @brief recorre los containers eliminando cada uno
  */
 Leaf::~Leaf(){
-    free(terminal);
     free(sons);
     free(containers);
 }

@@ -1,11 +1,11 @@
 #include "Proof/laboratoryProof.h"
-#include "libs/rapidjson/reader.h"
+#include "libs/rapidjson/reader.h"2
 #include "Network/SocketLogic.h"
 
 int main()
 {
-    sf::Thread thread(&SocketLogic::getInstance);// Inicializar el socket
-    thread.launch();//NO QUITAR O MOVER
+   // sf::Thread thread(&SocketLogic::getInstance);// Inicializar el socket
+    //thread.launch();//NO QUITAR O MOVER
 
     Tree<Subject>* proof = static_cast<Tree<Subject>*>(malloc(sizeof(Tree<Subject>)));
     new(proof) Tree<Subject>();
@@ -23,12 +23,12 @@ int main()
 
     std::cout << "FINISH WITH INTEGERS" << std::endl;
 
-    for(int i =0; i<3000; i++){
+    for(int i =0; i<1000; i++){
         proof->insertElement(Subject(i+1),i);
     }
 
-    for(int i =0; i<3000; i++){
-        std::cout << "ID " << ((Subject*)proof2->searchElement(i))->getID() << std::endl;
+    for(int i =0; i<1000; i++){
+        std::cout << "ID " << ((Subject*)proof->searchElement(i))->getID() << std::endl;
     }
 
     //laboratoryProof();

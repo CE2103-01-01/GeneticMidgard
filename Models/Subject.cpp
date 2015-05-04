@@ -169,7 +169,7 @@ pthread_t* Subject::get_p_thread(){
 void Subject::start_p_thread(){
     void* parameters = malloc(sizeof(PThreadParam));
     new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,0);
-    pthread_create(&lifeThread,0,subjectLife,parameters);
+    //pthread_create(&lifeThread,0,subjectLife,parameters);
 }
 
 /**@brief metodo ejecutado por el pthread
