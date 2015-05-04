@@ -52,7 +52,7 @@ void LifeLaboratory::selectParents(Population* population, int numberOfParents, 
         while(!found){
             int random = trueRandom::getRandom()%population->getPopulationSize()+1;
             if(random <= population->getPopulationSize()){
-                Subject* toEvaluate = populationTree->searchElement(random);
+                Subject* toEvaluate = (Subject*)populationTree->searchElement(random);
                 //Revisa que el individuo este vivo, supere la media de fitness y no haya sido elegido en esta reproduccion
                 if(toEvaluate!=0 && toEvaluate->isAlive() && !checkSeleccions(toEvaluate, parents, i)) {
                     *(parents + i)= toEvaluate->getID();

@@ -6,7 +6,7 @@
 #define PROJECTMIDGARDLOGIC_LABORATORYPROOF_H
 
 #define NUMBER_OF_POPULATIONS 1
-#define NUMBER_OF_SUBJECTS 6
+#define NUMBER_OF_SUBJECTS 50
 
 #include "../Algorithms/lifeLaboratory.h"
 

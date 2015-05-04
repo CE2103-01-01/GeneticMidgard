@@ -4,6 +4,7 @@
 
 #include "TreeProof.h"
 
+/**
 void print(int* toPrint, void* position){
     std::cout << *static_cast<int*>(position) << " : " << *toPrint <<std::endl;
 }
@@ -44,4 +45,4 @@ void treeProof(){
     for(int i=0; i<10000; i++){
         tree->searchAndDo(i,print,static_cast<void*>(&i));
     }
-}
+}*/

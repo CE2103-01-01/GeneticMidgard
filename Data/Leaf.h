@@ -2,10 +2,10 @@
 // Created by roberto on 20/04/15.
 //
 
-#ifndef PROJECTMIDGARD_LEAF_H
-#define PROJECTMIDGARD_LEAF_H
+#ifndef VH2015_LEAF_H
+#define VH2015_LEAF_H
 
-#include <malloc.h>
+#include <cstdlib>
 #include <iostream>
 
 /** @brief miembro del arbol
@@ -13,18 +13,20 @@
  * Numero de containers: n-1
  */
 class Leaf{
-    int numberOfSons;
-    int sizeOfContainer;
-    bool terminal;
+    int* sizeofType;
     void* containers;
-    Leaf* sons;                //Bandera que indica si es terminal: true=sin hijos
+    void* sons;
+    bool* terminal;                 //Bandera que indica si es terminal: true=sin hijos
 public:
-    Leaf(int,int);
+    Leaf(int, int);
     ~Leaf();
-    Leaf* getSons();
+    void* getSons();
     void* getContainers();
     bool isTerminal();
-    void split();
+    bool isFull(int);
+    void split(int);
+    Leaf* getFather();
+    int len();
 };
 
-#endif //PROJECTMIDGARD_LEAF_H
+#endif //VH2015_LEAF_H

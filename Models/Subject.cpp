@@ -47,7 +47,6 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticI
 
 Subject::~Subject(){
     alive = false;
-    //free(characteristics);
 }
 
 /** @brief Accede al padre

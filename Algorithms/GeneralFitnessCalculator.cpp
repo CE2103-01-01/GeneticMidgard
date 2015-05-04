@@ -12,14 +12,8 @@ GeneralFitnessCalculator::GeneralFitnessCalculator(){
     readXML();
 }
 
-GeneralFitnessCalculator::~GeneralFitnessCalculator(){
-    free(constants);
-}
-
 void GeneralFitnessCalculator::readXML() {
     constants = static_cast<float*>(malloc(sizeof(float)*NUMBER_OF_GENES));
-    numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
-    *numberOfGenes = NUMBER_OF_GENES;
 
     rapidxml::xml_node<>* root_node;
     rapidxml::xml_document<> doc;
@@ -40,7 +34,7 @@ void GeneralFitnessCalculator::readXML() {
 
 float GeneralFitnessCalculator::calculateFitness(Chromosome chromosome) {
     float fitness = 0;
-    for(int i = 0; i < *numberOfGenes; i++){
+    for(int i = 0; i < NUMBER_OF_GENES; i++){
         fitness += *(constants+i) * (*chromosome.getGene(i));
     }
     return fitness;

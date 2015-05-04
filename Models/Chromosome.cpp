@@ -37,7 +37,7 @@ Chromosome::Chromosome(unsigned char* genes) {
  */
 unsigned char* Chromosome::getGene(int geneNumber) {
     if(geneNumber < NUMBER_OF_GENES){
-        return geneticData + geneNumber*GENE_LEN_ON_BYTES;
+        return geneticData + geneNumber;
     }else{
         return 0;
     }

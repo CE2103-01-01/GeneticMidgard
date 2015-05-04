@@ -20,7 +20,7 @@ Population::Population(char populationTypeParam){
     *populationSize = 0;
     *actualGeneration = 1;
     *populationFitness = 0;
-    new(populationTree) Tree<Subject>(TREE_SIZE);
+    new(populationTree) Tree<Subject>();
 }
 
 /**@brief: libera el espacio utilizado
@@ -33,7 +33,7 @@ Population::~Population() {
 void Population::calculateFitness(){
     (*populationFitness) = 0;
     for (int i = 1; i <= (*populationSize); i++) {
-        (*populationFitness) += populationTree->searchElement(i-1)->getFitness();
+        (*populationFitness) += ((Subject*)populationTree->searchElement(i-1))->getFitness();
     }
 }
 
@@ -47,7 +47,7 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome ch
     populationTree->insertElement(
             Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType)),
             (*populationSize));
-    Subject* newMember = populationTree->searchElement(*populationSize);
+    Subject* newMember = (Subject*)populationTree->searchElement(*populationSize);
     (*populationFitness) += newMember->getFitness();
     newMember->start_p_thread();
 }
@@ -57,7 +57,7 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome ch
 void Population::createNewRandomMember() {
     (*populationSize)++;
     populationTree->insertElement(Subject((*populationSize)*10 + (*populationType)),(*populationSize));
-    Subject* newMember = populationTree->searchElement(*populationSize);
+    Subject* newMember = (Subject*)populationTree->searchElement(*populationSize);
     (*populationFitness) += newMember->getFitness();
     std::cout << "Se crea: " << newMember << " con ID: " << newMember->getID() <<std::endl;
     newMember->start_p_thread();
@@ -68,7 +68,7 @@ void Population::createNewRandomMember() {
  * @return Subject*
  */
 Subject* Population::getIndividual(int id) {
-    return populationTree->searchElement((id/10));
+    return (Subject*)populationTree->searchElement((id/10));
 }
 
 /**@brief devuelve el arbol de poblacion
@@ -108,6 +108,6 @@ void Population::updateGeneration() {
 
 void Population::killEveryone() {
     for(int i = 1; i <= *populationSize; i++){
-        populationTree->searchElement(i)->kill();
+        ((Subject*)populationTree->searchElement(i))->kill();
     }
 }

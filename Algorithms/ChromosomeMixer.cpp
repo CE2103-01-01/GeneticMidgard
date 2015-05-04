@@ -24,12 +24,12 @@ Chromosome ChromosomeMixer::mix(Chromosome fatherGeneticInformation,
     unsigned char* newGeneticMaterialTwo = static_cast<unsigned char*>(malloc(numOfGenes));
     for(int i=0; i < numOfGenes; i++){
         //Se toma el gen del padre y madre
-        unsigned char fatherGene = *fatherGeneticInformation.getGene(i);
-        unsigned char motherGene = *motherGeneticInformation.getGene(i);
+        unsigned char* fatherGene = fatherGeneticInformation.getGene(i);
+        unsigned char* motherGene = motherGeneticInformation.getGene(i);
         unsigned char tmpMask = (unsigned char)(rand()%256);
         //Se aplican y asignan las mascaras
-        *(newGeneticMaterialOne + i) = (tmpMask & fatherGene)|(~tmpMask & motherGene);
-        *(newGeneticMaterialTwo + i) = (~tmpMask & fatherGene)|(tmpMask & motherGene);
+        *(newGeneticMaterialOne + i) = (tmpMask & *fatherGene)|(~tmpMask & *motherGene);
+        *(newGeneticMaterialTwo + i) = (~tmpMask & *fatherGene)|(tmpMask & *motherGene);
     }
 
     Chromosome optionOne =  Chromosome(newGeneticMaterialOne);
