@@ -28,6 +28,7 @@ SocketLogic::SocketLogic() {
 
 void SocketLogic::updateSubject(unsigned int idSubject, unsigned int x, unsigned int y) {
     if(!initialized) return;
+    Packet packet;
     StringBuffer s;
     Writer<StringBuffer> writer(s);
     writer.StartObject();
@@ -36,14 +37,38 @@ void SocketLogic::updateSubject(unsigned int idSubject, unsigned int x, unsigned
     writer.String("x"); writer.Uint(x);
     writer.String("y"); writer.Uint(y);
     writer.EndObject();
-    client.send(s.GetString(),s.GetSize());
+    packet<<s.GetString();
+    client.send(packet);
 }
 
 void SocketLogic::createSubject(unsigned int idSubject, unsigned int x, unsigned int y, unsigned int r, unsigned int g,
                                 unsigned int b) {
     if(!initialized) return;
+    Packet packet;
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+    writer.StartObject();
+    writer.String("action"); writer.String("createSubject");
+    writer.String("id"); writer.Uint(idSubject);
+    writer.String("x"); writer.Uint(x);
+    writer.String("y"); writer.Uint(y);
+    writer.String("r"); writer.Uint(r);
+    writer.String("g"); writer.Uint(g);
+    writer.String("b"); writer.Uint(b);
+    writer.EndObject();
+    packet<<s.GetString();
+    client.send(packet);
 }
 
 void SocketLogic::changeEdda(std::string edda) {
     if(!initialized) return;
+    Packet packet;
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+    writer.StartObject();
+    writer.String("action"); writer.String("changeEdda");
+    writer.String("id"); writer.String(edda.c_str());
+    writer.EndObject();
+    packet<<s.GetString();
+    client.send(packet);
 }
