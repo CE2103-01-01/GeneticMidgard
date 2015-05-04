@@ -28,6 +28,8 @@ set(HEADER_FILES Interface/Random.h
                  Data/Leaf.h
                  Data/Tree.h
                  Data/TreeProof.h
+                 Proof/laboratoryProof.h
+                 Network/SocketLogic.h
                  )
 
 set(SOURCE_FILES main.cpp
@@ -45,6 +47,8 @@ set(SOURCE_FILES main.cpp
                  Algorithms/BinaryReader.cpp
                  Proof/chromosomeMixerProof.cpp
                  Proof/proofBinary.cpp
+                 Proof/laboratoryProof.cpp
+                 Network/SocketLogic.cpp
                  )
 
 set (DATA_STRUCTS   Data/BitVector.cpp
@@ -69,8 +73,18 @@ add_executable(ProjectMidgardLogic  ${SOURCE_FILES}
                                     ${HEADER_FILES}
                                     ${XML}
                                     ${DATA_STRUCTS}
-                                    ${RES_FILES} Proof/laboratoryProof.h Proof/laboratoryProof.cpp)
+                                    ${RES_FILES} )
 include_directories(../libs)
 target_link_libraries (ProjectMidgardLogic ${CMAKE_THREAD_LIBS_INIT})
+
+# Detect and add SFML
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+#Find any version 2.X of SFML
+#See the FindSFML.cmake file for additional details and instructions
+find_package(SFML REQUIRED system window graphics network)
+if(SFML_FOUND)
+  include_directories(${SFML_INCLUDE_DIR})
+  target_link_libraries(ProjectMidgardLogic ${SFML_LIBRARIES})
+endif()
 
 add_subdirectory(GUI)

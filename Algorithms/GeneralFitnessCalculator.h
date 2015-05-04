@@ -14,11 +14,9 @@ using namespace pugi;
 
 class GeneralFitnessCalculator {
     float* constants;
-    int* numberOfGenes;
     void readXML();
 public:
     GeneralFitnessCalculator();
-    ~GeneralFitnessCalculator();
     float calculateFitness(Chromosome chromosome);
 
 };

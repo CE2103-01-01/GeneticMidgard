@@ -52,14 +52,13 @@ void LifeLaboratory::selectParents(Population* population, int numberOfParents, 
         while(!found){
             int random = trueRandom::getRandom()%population->getPopulationSize()+1;
             if(random <= population->getPopulationSize()){
-                Subject* toEvaluate = populationTree->searchElement(random);
+                Subject* toEvaluate = (Subject*)populationTree->searchElement(random);
                 //Revisa que el individuo este vivo, supere la media de fitness y no haya sido elegido en esta reproduccion
                 if(toEvaluate!=0 && toEvaluate->isAlive() && !checkSeleccions(toEvaluate, parents, i)) {
                     *(parents + i)= toEvaluate->getID();
                     found = true;
                 }
             }
-            random = trueRandom::getRandom()%population->getPopulationSize();
         }
     }
 }
@@ -75,7 +74,8 @@ void LifeLaboratory::fillGeneration(Population *population, int numberOfNewSubje
         //Crea el nuevo cromosoma
         Subject* father = population->getIndividual(*(parents+2*i));
         Subject* mother = population->getIndividual(*(parents+2*i+1));
-        Chromosome luckyChromosome = ChromosomeMixer::mix(father->getGeneticInformation(), mother->getGeneticInformation());
+        ChromosomeMixer* mixer = ChromosomeMixer::getInstance();
+        Chromosome luckyChromosome = mixer->mix(father->getGeneticInformation(), mother->getGeneticInformation());
         //Crea el nuevo sujeto
         population->insertNewMember(father,mother,luckyChromosome);
     }
@@ -107,5 +107,4 @@ void LifeLaboratory::createLife(int populationSize, int populationNumber, Popula
         new(newPopulations + i) Population(i);
         createPopulation(populationSize,newPopulations + i);
     }
-    std::cout << "POPULATION CREATED" << std::endl;
 }

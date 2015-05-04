@@ -5,38 +5,30 @@
 
 #include "Chromosome.h"
 
-using namespace pugi;
 using namespace constantsSubjectXML;
 
 /**Constructor
  * @brief Crea la cantidad de genes del archivo genes.xml con tamaño definido en Constants.h
  */
 Chromosome::Chromosome() {
-    numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
-    *numberOfGenes = readLenghtFromXML();
     trueRandom::init();
-    geneticData = static_cast<unsigned char*>(malloc((*numberOfGenes) * GENE_LEN_ON_BYTES));
-    for (int i = 0; i < (*numberOfGenes)*(GENE_LEN_ON_BYTES); i+=GENE_LEN_ON_BYTES) {
-        for(int j = 0; j < GENE_LEN_ON_BYTES; j++){
-            *static_cast<unsigned char*>(geneticData + i + j) = trueRandom::getRandom()%256;
-        }
+    geneticData = static_cast<unsigned char*>(malloc(NUMBER_OF_GENES));
+    for (int i = 0; i < NUMBER_OF_GENES; i++) {
+            *(geneticData + i) = trueRandom::getRandom()%256;
     }
-};
+}
+
 
 /**Constructor
  * @brief Crea la cantidad de genes del archivo genes.xml con tamaño definido en Constants.h
  */
 Chromosome::Chromosome(unsigned char* genes) {
-    numberOfGenes = static_cast<int*>(malloc(sizeof(int)));
-    *numberOfGenes = readLenghtFromXML();
-    geneticData = genes;
-};
+    geneticData = static_cast<unsigned char*>(malloc(NUMBER_OF_GENES));
+    for (int i = 0; i < NUMBER_OF_GENES; i++) {
+        *(geneticData + i) = *(genes + i);
+    }
+}
 
-int Chromosome::readLenghtFromXML(){
-    xml_document genesXML;
-    genesXML.load_file(GENES_XML_PATH);
-    return genesXML.child(GENES_XML_ROOT).child(GENES_XML_LENGHT).attribute(GENES_XML_LENGHT_INFO).as_int();
-};
 
 /**Buscador de gen
  * @brief Realiza aritmetica de punteros con el numero  y tamaño del gen
@@ -44,16 +36,16 @@ int Chromosome::readLenghtFromXML(){
  * @return void*: espacio de memoria que ocupa el gen
  */
 unsigned char* Chromosome::getGene(int geneNumber) {
-    if(geneNumber < *numberOfGenes){
-        return geneticData + geneNumber*GENE_LEN_ON_BYTES;
+    if(geneNumber < NUMBER_OF_GENES){
+        return geneticData + geneNumber;
     }else{
         return 0;
     }
 }
 
 /**Accede al numero de genes
- * @return int: *numberOfGenes
+ * @return int: NUMBER_OF_GENES
  */
 int Chromosome::getNumberOfGenes(){
-    return *numberOfGenes;
+    return NUMBER_OF_GENES;
 };

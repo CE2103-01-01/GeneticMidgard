@@ -3,6 +3,7 @@
 //
 
 #include "Subject.h"
+#include "../Algorithms/ChromosomeMixer.h"
 
 using namespace pugi;
 using namespace constantsSubjectXML;
@@ -12,16 +13,11 @@ using namespace constantsSubjectXML;
  */
 Subject::Subject(int idParam){
     id = idParam;
-    alive = static_cast<bool*>(malloc(sizeof(bool)));
-    *alive = true;
-    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
-    new(geneticInformation) Chromosome();
-    generation = static_cast<int*>(malloc(sizeof(int)));
-    *generation = 0;
-    fitness = static_cast<float*>(malloc(sizeof(float)));
+    alive = true;
+    geneticInformation = Chromosome();
+    generation = generation = 0;
     calculateFitness();
-    profession = "";
-    race ="";
+    profession = 0;
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     for(int i = 0; i < NUMBER_OF_CHARACTERISTICS; i++){
         *(characteristics + i) = 0;    //TODO: MODIFICAR
@@ -36,16 +32,11 @@ Subject::Subject(int idParam){
 Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticInformationParam,
                  int generationParam, int idParam){
     id = idParam;
-    alive = static_cast<bool*>(malloc(sizeof(bool)));
-    *alive = true;
-    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
-    *geneticInformation = geneticInformationParam;
-    fitness = static_cast<float*>(malloc(sizeof(float)));
+    alive = true;
+    geneticInformation = geneticInformationParam;
     calculateFitness();
-    generation = static_cast<int*>(malloc(sizeof(int)));
-    *generation = generationParam;
-    profession = "";
-    race="";
+    generation = generationParam;
+    profession = 0;
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
         *(characteristics + i) = 0;    //TODO: MODIFICAR
@@ -56,10 +47,6 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticI
 
 Subject::~Subject(){
     alive = false;
-    free(alive);
-    free(geneticInformation);
-    free(generation);
-    free(characteristics);
 }
 
 /** @brief Accede al padre
@@ -79,7 +66,7 @@ Subject* Subject::getMother() {
 /** @brief Accede al cromosoma
  * @return Chromosome*
  */
-Chromosome* Subject::getGeneticInformation() {
+Chromosome Subject::getGeneticInformation() {
     return geneticInformation;
 }
 
@@ -97,7 +84,7 @@ void Subject::setCharacteristic(int value, char position) {
     *(characteristics+position)=*(characteristics+position)+(unsigned char)value;
 };
 int Subject::getGeneration(){
-    return *generation;
+    return generation;
 }
 
 /** @brief Accede a la edad
@@ -118,7 +105,7 @@ unsigned char Subject::getExperience(){
  * @return float
  */
 float Subject::getFitness(){
-    return *fitness;
+    return fitness;
 }
 
 /** @brief Accede al ID
@@ -132,8 +119,8 @@ int Subject::getID(){
  *
  */
 void Subject::calculateFitness() {
-    GeneralFitnessCalculator calculator = GeneralFitnessCalculator();
-    (*fitness) = calculator.calculateFitness(*geneticInformation);
+    GeneralFitnessCalculator* calculator = ChromosomeMixer::getInstance()->getCalculator();
+    fitness = calculator->calculateFitness(geneticInformation);
 }
 
 /** @brief Accede al armadura
@@ -154,13 +141,13 @@ unsigned char Subject::getWeapon(){
  * @return bool
  */
 bool Subject::isAlive(){
-    return (*alive);
+    return alive;
 }
 
 /** @brief Mata al jugador colocando en false la bander
  */
 void Subject::kill(){
-    (*alive) = false;
+    (alive) = 0;
 }
 
 /** @brief Mata al jugador colocando en false la bander
@@ -196,12 +183,15 @@ void* subjectLife(void* parameter){
     struct timespec timeControler;
     timeControler.tv_nsec=0;
     timeControler.tv_sec=1;
+    int life = 100;
     //Este while corre hasta que se llame al metodo kill()
-    while(excecutioner->isAlive()){
+    while(life > 0){
         //Llama al metodo de vida del sujeto
-        excecutioner->life();
+        //excecutioner->life();
         //Espera un segundo
         nanosleep(&timeControler, 0);
+        life--;
     }
+    std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
     return 0;
 }

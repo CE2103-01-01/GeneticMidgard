@@ -15,6 +15,7 @@ void laboratoryProof(){
 }
 
 void* reproduction(void* parameter){
+    ChromosomeMixer::getInstance();
     //Se obtiene el mutex
     pthread_mutex_t* mutex = static_cast<PThreadParam*>(parameter)->getMutex();
     //Instancia e inicializa el laboratorio
@@ -22,26 +23,25 @@ void* reproduction(void* parameter){
     new(laboratory) LifeLaboratory(mutex);
     //Se crea controlador de tiempo
     struct timespec timeControler;
-    timeControler.tv_nsec=0;
-    timeControler.tv_sec=5;
+    timeControler.tv_nsec=500;
+    timeControler.tv_sec=1;
     //Se crea el controlador de iteraciones
     int x = 0;
+    pthread_mutex_lock(mutex);
     //Crea cinco poblaciones de 100 habitantes
     Population* population = static_cast<Population*>(malloc(sizeof(Population) * NUMBER_OF_POPULATIONS));
     laboratory->createLife(NUMBER_OF_SUBJECTS,NUMBER_OF_POPULATIONS, population);
-    pthread_mutex_lock(mutex);
-    while(x<10){
+    std::cout << "PEOPLE CREATED" <<std::endl;
+    while(x<150){
+        std::cout << "REPRODUCING..." <<std::endl;
         for(int i = 0; i<NUMBER_OF_POPULATIONS; i++){
             //Se crea una generacion de cada poblacion
             laboratory->createGeneration(population+i,NUMBER_OF_SUBJECTS/2);
+            std::cout<< "SIZE OF: " << i << " = " << (population+i)->getPopulationSize() <<std::endl;
         }
         nanosleep(&timeControler, NULL);
+        x++;
     }
-    for(int i = 0; i<NUMBER_OF_POPULATIONS; i++){
-        //Se crea una generacion de cada poblacion
-        (population+i)->killEveryone();
-    }
-    nanosleep(&timeControler, NULL);
     pthread_mutex_unlock(mutex);
     free(laboratory);
     return 0;

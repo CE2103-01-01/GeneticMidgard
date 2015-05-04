@@ -16,17 +16,16 @@
  *                   arma, armadura
 */
 class Subject {
-    pthread_t lifeThread;
-    int id;
-    int* generation;
-    float* fitness;
-    const char* profession; //TODO: mejor usar un char que gasta menos espacio
-    unsigned char* characteristics;//lista de caracteristicas
-    const char* race;
-    bool* alive;
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
-    Chromosome* geneticInformation;
+    pthread_t lifeThread;
+    int id;
+    int generation;
+    float fitness;
+    char profession;
+    unsigned char* characteristics;//lista de caracteristicas
+    bool alive;
+    Chromosome geneticInformation;
     void calculateFitness();//funcion de calcular fitness y set fitness
 public:
     Subject(int);
@@ -34,7 +33,7 @@ public:
     ~Subject();
     int calculateDamage();  // TODO: implementar
     int calculateDefense(); // TODO: implementar
-    Chromosome* getGeneticInformation();
+    Chromosome getGeneticInformation();
     Subject* getFather(); // Obtiene padre 1
     Subject* getMother(); // Obtiene padre 2
     float getFitness();

@@ -7,7 +7,7 @@
 
 
 #include "Terrain.h"
-
+#include "../Interface/Random.h"
 
 
 using namespace std;
@@ -239,3 +239,48 @@ int NodeAS::getPriority() const {
     return priority;
 }
 
+Vector2D Terrain::getRandomFreePosition() {
+    unsigned int x = trueRandom::randRange(0,width-1);
+    unsigned int y = trueRandom::randRange(0,width-1);
+    if (get(x,y)==0) return Vector2D(x,y);
+    Vector2D primerIntento = getRandomFreePositionNear(Vector2D(x,y),6);
+    if(primerIntento.x<0||primerIntento.y<0){
+        int range = width;
+        if (width<height) range= height;
+        return getRandomFreePositionNear(Vector2D(width/2,height/2),range/2);
+    }
+    else
+    {
+        return primerIntento;
+    }
+
+}
+
+Vector2D Terrain::getRandomFreePositionNear(Vector2D vector, unsigned int range){
+    DoubleList<Vector2D> opciones = DoubleList<Vector2D>();
+    for (int i = -range; i <= range; ++i) {
+        for (int j = -range; j <= range; ++j) {
+            int x = vector.x+i;
+            int y = vector.y+j;
+            if (!(x<0||x>=width||y<0||y>=width||get(x,y)!=0))
+            {
+                opciones.append(Vector2D(x,y));
+            }
+        }
+    }
+    int largoLista = opciones.len();
+    if (largoLista==0) {
+        std::cout << "No se encontro campo disponible en el randomPosition" << std::endl;
+        return Vector2D(-1,-1);
+    }
+    return *opciones.get(trueRandom::randRange(0,largoLista-1));
+}
+
+int Terrain::get(Vector2D vector) {
+    return *(map+ vector.x+(vector.y*width));
+}
+
+int Terrain::get(int i, int j) {
+    if(width<i||height<j||i<0||j<0) abort();
+    return *(map+i+(j*width));
+}

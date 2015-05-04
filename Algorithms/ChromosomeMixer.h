@@ -6,10 +6,17 @@
 #define PROJECTMIDGARD_CHROMOSOMEMIXER_H
 
 #include "../Models/Chromosome.h"
+#include "GeneralFitnessCalculator.h"
 
 class ChromosomeMixer {
+    static GeneralFitnessCalculator* calculator;
+    static ChromosomeMixer* instance;
     public:
-        static Chromosome mix(Chromosome*,Chromosome*);
+        ChromosomeMixer();
+        static ChromosomeMixer* getInstance();
+        Chromosome mix(Chromosome,Chromosome);
+
+    GeneralFitnessCalculator *getCalculator();
 };
 
 

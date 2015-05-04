@@ -26,6 +26,7 @@
 //TODO: estas bibliotecas se estan incluyendo en muchos archivos donde no se ocupan y hacen el codigo mas pesado, se debe buscar su uso y separarlo...
 #include <fstream>
 #include <sys/stat.h>
+
 //TODO: estas bibliotecas se estan incluyendo en muchos archivos donde no se ocupan y hacen el codigo mas pesado, se debe buscar su uso y separarlo...
 
 namespace constants {
@@ -43,6 +44,9 @@ namespace constantsSubjectXML {
     extern const char* GENES_XML_LENGHT_INFO;
     extern const char* GENES_XML_CHILD;
     extern const char* GENES_XML_CHILD_INFO;
+    extern const int NUMBER_OF_GENES;
 }
+
+int loadNumberOfGenes();
 
 #endif //PROJECTMIDGARD_CONSTANTS_H

@@ -4,6 +4,9 @@
 
 
 #include "Constants.h"
+#include "libs/pugixml/pugixml.hpp"
+
+using namespace pugi;
 
 namespace constants {
 
@@ -22,5 +25,11 @@ namespace constantsSubjectXML {
     extern const char* GENES_XML_LENGHT_INFO = "CHR_LEN";
     extern const char* GENES_XML_CHILD = "GENE";
     extern const char* GENES_XML_CHILD_INFO = "GENE_NAME";
+    extern const int NUMBER_OF_GENES = loadNumberOfGenes();
+}
 
+int loadNumberOfGenes(){
+    xml_document genesXMLDoc;
+    genesXMLDoc.load_file(constantsSubjectXML::GENES_XML_PATH);
+    return genesXMLDoc.child(constantsSubjectXML::GENES_XML_ROOT).child(constantsSubjectXML::GENES_XML_LENGHT).attribute(constantsSubjectXML::GENES_XML_LENGHT_INFO).as_int();
 }
