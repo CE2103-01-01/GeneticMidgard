@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include "Constants.h"
 #include "Map.h"
+#include "../Network/SocketGUI.h"
 
 
 static const int SCROLL_SPEED = 10;
@@ -17,6 +18,12 @@ using namespace sf;
 using namespace gui_constants;
 int main()
 {
+    sf::Thread thread(&SocketGUI::getInstance);//Init Connection
+    thread.launch();
+
+    cout<<"GUI:..."<<endl;
+    string a;
+    cin>>a;
     Map mapa = Map();
     mapa.loadTerrain();
     RenderWindow window(sf::VideoMode::getDesktopMode(), WINDOW_NAME);
