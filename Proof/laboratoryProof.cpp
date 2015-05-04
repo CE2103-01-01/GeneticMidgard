@@ -32,11 +32,12 @@ void* reproduction(void* parameter){
     Population* population = static_cast<Population*>(malloc(sizeof(Population) * NUMBER_OF_POPULATIONS));
     laboratory->createLife(NUMBER_OF_SUBJECTS,NUMBER_OF_POPULATIONS, population);
     std::cout << "PEOPLE CREATED" <<std::endl;
-    while(x<10){
+    while(x<150){
         std::cout << "REPRODUCING..." <<std::endl;
         for(int i = 0; i<NUMBER_OF_POPULATIONS; i++){
             //Se crea una generacion de cada poblacion
             laboratory->createGeneration(population+i,NUMBER_OF_SUBJECTS/2);
+            std::cout<< "SIZE OF: " << i << " = " << (population+i)->getPopulationSize() <<std::endl;
         }
         nanosleep(&timeControler, NULL);
         x++;
