@@ -15,12 +15,9 @@ Subject::Subject(int idParam){
     id = idParam;
     alive = true;
     geneticInformation = Chromosome();
-    generation = static_cast<int*>(malloc(sizeof(int)));
-    *generation = 0;
-    fitness = static_cast<float*>(malloc(sizeof(float)));
+    generation = generation = 0;
     calculateFitness();
-    profession = "";
-    race ="";
+    profession = 0;
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     for(int i = 0; i < NUMBER_OF_CHARACTERISTICS; i++){
         *(characteristics + i) = 0;    //TODO: MODIFICAR
@@ -37,12 +34,9 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticI
     id = idParam;
     alive = true;
     geneticInformation = geneticInformationParam;
-    fitness = static_cast<float*>(malloc(sizeof(float)));
     calculateFitness();
-    generation = static_cast<int*>(malloc(sizeof(int)));
-    *generation = generationParam;
-    profession = "";
-    race="";
+    generation = generationParam;
+    profession = 0;
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
         *(characteristics + i) = 0;    //TODO: MODIFICAR
@@ -53,8 +47,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticI
 
 Subject::~Subject(){
     alive = false;
-    free(generation);
-    free(characteristics);
+    //free(characteristics);
 }
 
 /** @brief Accede al padre
@@ -92,7 +85,7 @@ void Subject::setCharacteristic(int value, char position) {
     *(characteristics+position)=*(characteristics+position)+(unsigned char)value;
 };
 int Subject::getGeneration(){
-    return *generation;
+    return generation;
 }
 
 /** @brief Accede a la edad
@@ -113,7 +106,7 @@ unsigned char Subject::getExperience(){
  * @return float
  */
 float Subject::getFitness(){
-    return *fitness;
+    return fitness;
 }
 
 /** @brief Accede al ID
@@ -128,7 +121,7 @@ int Subject::getID(){
  */
 void Subject::calculateFitness() {
     GeneralFitnessCalculator* calculator = ChromosomeMixer::getInstance()->getCalculator();
-    (*fitness) = calculator->calculateFitness(geneticInformation);
+    fitness = calculator->calculateFitness(geneticInformation);
 }
 
 /** @brief Accede al armadura

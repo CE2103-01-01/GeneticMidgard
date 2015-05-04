@@ -13,17 +13,17 @@
  * Numero de containers: n-1
  */
 class Leaf{
-    int* numberOfSons;
-    int* sizeOfContainer;
+    int numberOfSons;
+    int sizeOfContainer;
+    bool terminal;
     void* containers;
-    void* sons;
-    int* terminal;                 //Bandera que indica si es terminal: true=sin hijos
+    Leaf* sons;                //Bandera que indica si es terminal: true=sin hijos
 public:
-    Leaf(int,int*);
+    Leaf(int,int);
     ~Leaf();
-    void* getSons();
+    Leaf* getSons();
     void* getContainers();
-    int isTerminal();
+    bool isTerminal();
     void split();
 };
 

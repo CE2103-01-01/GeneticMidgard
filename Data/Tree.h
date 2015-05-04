@@ -8,15 +8,16 @@
 #include "Leaf.h"
 
 template <class T> class Tree{
-    int* len;
-    int* leafSize;
-    int* floors;
     Leaf* root;
+    int len;
+    int leafSize;
+    int floors;
     void split(Leaf*);
     int max(int);
     void createPath(int,int,int*);
 public:
     Tree(int);
+    ~Tree();
     T* searchElement(int);
     T* searchAndDo(int, void(T*, void*), void*);
     void insertElement(T,int);
@@ -31,14 +32,17 @@ public:
  * @param int leafSizeParam: numero de hijos y nodos por hoja
  */
 template <class T> Tree<T>::Tree(int leafSizeParam){
-    leafSize = static_cast<int*>(malloc(sizeof(int)));
-    *leafSize = leafSizeParam;
-    len = static_cast<int*>(malloc(sizeof(int)));
-    *len = 0;
-    floors = static_cast<int*>(malloc(sizeof(int)));
-    *floors= 1;
+    leafSize = leafSizeParam;
+    len = 0;
+    floors = 1;
     root = static_cast<Leaf*>(malloc(sizeof(Leaf)));
     new(root) Leaf(sizeof(T), leafSize);
+}
+
+/** Destructor
+ */
+template <class T> Tree<T>::~Tree(){
+    free(root);
 }
 
 /* Maximo
@@ -46,7 +50,7 @@ template <class T> Tree<T>::Tree(int leafSizeParam){
  */
 template <class T> int Tree<T>::max(int floor){
     if(floor > 0){
-        return (*leafSize) + (((floor-1) * floor) / 2) * (*leafSize) * (*leafSize);
+        return (leafSize) + (((floor-1) * floor) / 2) * (leafSize) * (leafSize);
     }else{
         return 0;
     }
@@ -58,9 +62,9 @@ template <class T> int Tree<T>::max(int floor){
  */
 template <class T> void Tree<T>::split(Leaf* toSplit){
     if(!(toSplit->isTerminal())){
-        void* sons = toSplit->getSons();
-        for(int i=0; i<(*leafSize); i++){
-            split((Leaf*)(sons+i*sizeof(Leaf)));
+        Leaf* sons = toSplit->getSons();
+        for(int i=0; i < leafSize; i++){
+            split(sons + i);
         };
     }else{
         toSplit->split();
@@ -73,15 +77,15 @@ template <class T> void Tree<T>::split(Leaf* toSplit){
  * @brief: Realiza los calculos necesarios para generar una serie de enteros con la ruta
  */
 template <class T> void Tree<T>::createPath(int indexToCreate, int floor, int* path){
-    *path = (indexToCreate-1)%(*leafSize);  //Container
-    indexToCreate=(indexToCreate-1-max((floor-1)))/(*leafSize);
+    *path = (indexToCreate-1)%(leafSize);  //Container
+    indexToCreate=(indexToCreate-1-max((floor-1)))/(leafSize);
     for(int i=1; i<floor; i++){
-        if(indexToCreate>=(*leafSize)){
-            indexToCreate=indexToCreate%(*leafSize);
+        if(indexToCreate>=(leafSize)){
+            indexToCreate=indexToCreate%(leafSize);
         }
         *(path+i*sizeof(int)) = indexToCreate;
         if(i<floor-1){
-            indexToCreate=indexToCreate/(*leafSize);
+            indexToCreate=indexToCreate/(leafSize);
         }
     }
 }
@@ -91,7 +95,7 @@ template <class T> void Tree<T>::createPath(int indexToCreate, int floor, int* p
  * @brief: calcula la ruta al indice recibido
  */
 template <class T> T* Tree<T>::searchElement(int indexToSearch){
-    int dataFloor=*floors;
+    int dataFloor=floors;
     if(indexToSearch <= max(dataFloor)){
         //Identifica el piso anterior
         while(max(dataFloor-1) > indexToSearch){
@@ -103,12 +107,12 @@ template <class T> T* Tree<T>::searchElement(int indexToSearch){
         //Recorre la ruta
         Leaf* tmpFather = root;
         for(int i=dataFloor-1; i>0; i--){
-            tmpFather = (Leaf*)(tmpFather->getSons() + (*(elementPath+i*sizeof(int)))*sizeof(Leaf));
+            tmpFather = tmpFather->getSons() + (*(elementPath+i));
         }
         //Borra la ruta y retorna el dato
-        int lastStep = (*elementPath) * sizeof(T);
+        void* element = tmpFather->getContainers() + (*elementPath)*sizeof(T);
         free(elementPath);
-        return static_cast<T*>(tmpFather->getContainers() + lastStep);
+        return static_cast<T*>(element);
     }else{
         return 0;
     }
@@ -132,13 +136,13 @@ template <class T> T* Tree<T>::searchAndDo(int indexToSearch, void method(T*, vo
  * @brief: calcula la ruta al indice recibido e inserta el dato
  */
 template <class T> void Tree<T>::insertElement(T newElement, int index){
-    if((*len) < max(*floors)){
+    if(len < max(floors)){
         T* container = searchElement(index);
         *container = newElement;
-        (*len)++;
+        len++;
     }else{
         split(root);
-        (*floors)++;
+        floors++;
         insertElement(newElement,index);
     }
 }
@@ -148,7 +152,7 @@ template <class T> void Tree<T>::insertElement(T newElement, int index){
  * @brief: calcula la ruta al indice recibido e inserta el dato
  */
 template <class T> void Tree<T>::insertElement(T newElement){
-    insertElement(newElement,*len);
+    insertElement(newElement,len);
 }
 
 /** Borrador con metodo
@@ -159,7 +163,7 @@ template <class T> void Tree<T>::insertElement(T newElement){
  */
 template <class T> void Tree<T>::deleteElement(int index, void method(T*, void*), void* methodParam){
     method(searchElement(index),methodParam);
-    (*len)--;
+    len--;
 }
 
 /** Longitud
@@ -167,7 +171,7 @@ template <class T> void Tree<T>::deleteElement(int index, void method(T*, void*)
  * @brief: devuelve la cantidad de nodos en uso
  */
 template <class T> int Tree<T>::lenght(){
-    return *len;
+    return len;
 }
 
 /** Maximo por piso
@@ -175,7 +179,7 @@ template <class T> int Tree<T>::lenght(){
  * @brief: devuelve la cantidad de nodos maxima
  */
 template <class T> int Tree<T>::max(){
-    return max(*floors);
+    return max(floors);
 }
 
 

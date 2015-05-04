@@ -41,7 +41,7 @@ void GeneralFitnessCalculator::readXML() {
 float GeneralFitnessCalculator::calculateFitness(Chromosome chromosome) {
     float fitness = 0;
     for(int i = 0; i < *numberOfGenes; i++){
-        fitness += *(constants+i) * (*static_cast<unsigned char*>(chromosome.getGene(i)));
+        fitness += *(constants+i) * (*chromosome.getGene(i));
     }
     return fitness;
 
