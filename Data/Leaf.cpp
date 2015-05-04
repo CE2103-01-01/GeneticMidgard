@@ -11,6 +11,7 @@ Leaf::Leaf(int treeSizeParam,int sizeofTypeParam){
     *sizeofType = sizeofTypeParam;
     terminal = (bool*)(malloc(sizeof(bool)));
     *terminal = true;
+    sons=0;
     containers = malloc((treeSizeParam)*sizeofTypeParam);
 }
 

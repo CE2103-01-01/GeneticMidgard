@@ -13,15 +13,16 @@ int main()
     Tree<int>* proof2 = static_cast<Tree<int>*>(malloc(sizeof(Tree<int>)));
     new(proof2) Tree<int>();
 
-    for(int i =0; i<3000; i++){
+    for(int i =0; i<11000; i++){
         proof2->insertElement(i,i);
     }
 
-    for(int i =0; i<3000; i++){
+    for(int i =0; i<11000; i++){
         std::cout << "Element " <<*(int*)(proof2->searchElement(i)) << " is on "<< (int*)(proof2->searchElement(i))  <<std::endl;
     }
 
     std::cout << "FINISH WITH INTEGERS" << std::endl;
+
 
     for(int i =0; i<1000; i++){
         proof->insertElement(Subject(i+1),i);

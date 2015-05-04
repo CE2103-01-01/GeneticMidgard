@@ -37,10 +37,10 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticI
     calculateFitness();
     generation = generationParam;
     profession = 0;
-    characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
-    for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
-        *(characteristics + i) = 0;    //TODO: MODIFICAR
-    }
+    //characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
+    //for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
+      //  *(characteristics + i) = 0;    //TODO: MODIFICAR
+    //}
     father = fatherParam;
     mother = motherParam;
 }
