@@ -59,7 +59,6 @@ void LifeLaboratory::selectParents(Population* population, int numberOfParents, 
                     found = true;
                 }
             }
-            random = trueRandom::getRandom()%population->getPopulationSize();
         }
     }
 }

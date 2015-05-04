@@ -14,7 +14,7 @@ class ChromosomeMixer {
     public:
         ChromosomeMixer();
         static ChromosomeMixer* getInstance();
-        Chromosome mix(Chromosome*,Chromosome*);
+        Chromosome mix(Chromosome,Chromosome);
 
     GeneralFitnessCalculator *getCalculator();
 };

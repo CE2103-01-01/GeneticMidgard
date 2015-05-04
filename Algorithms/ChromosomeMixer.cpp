@@ -16,16 +16,16 @@ ChromosomeMixer::ChromosomeMixer(){}
  * @param: Chromosome* motherGeneticInformation: cromosoma de la madre
  * @return Chromosome*: dos cromosomas hijos, (return) & (return + sizeof(Chromosome))
  */
-Chromosome ChromosomeMixer::mix(Chromosome* fatherGeneticInformation,
-                          Chromosome* motherGeneticInformation){
+Chromosome ChromosomeMixer::mix(Chromosome fatherGeneticInformation,
+                          Chromosome motherGeneticInformation){
     //Mezcla cromosomas
-    int numOfGenes = fatherGeneticInformation->getNumberOfGenes();
+    int numOfGenes = fatherGeneticInformation.getNumberOfGenes();
     unsigned char* newGeneticMaterialOne = static_cast<unsigned char*>(malloc(numOfGenes));
     unsigned char* newGeneticMaterialTwo = static_cast<unsigned char*>(malloc(numOfGenes));
     for(int i=0; i < numOfGenes; i++){
         //Se toma el gen del padre y madre
-        unsigned char* fatherGene = fatherGeneticInformation->getGene(i);
-        unsigned char* motherGene = motherGeneticInformation->getGene(i);
+        unsigned char* fatherGene = fatherGeneticInformation.getGene(i);
+        unsigned char* motherGene = motherGeneticInformation.getGene(i);
         unsigned char tmpMask = (unsigned char)(rand()%256);
         //Se aplican y asignan las mascaras
         *(newGeneticMaterialOne + i) = (tmpMask & *(fatherGene))|(~tmpMask & *(motherGene));

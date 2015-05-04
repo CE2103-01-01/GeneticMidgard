@@ -26,7 +26,7 @@ class Subject {
     bool* alive;
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
-    Chromosome* geneticInformation;
+    Chromosome geneticInformation;
     void calculateFitness();//funcion de calcular fitness y set fitness
 public:
     Subject(int);
@@ -34,7 +34,7 @@ public:
     ~Subject();
     int calculateDamage();  // TODO: implementar
     int calculateDefense(); // TODO: implementar
-    Chromosome* getGeneticInformation();
+    Chromosome getGeneticInformation();
     Subject* getFather(); // Obtiene padre 1
     Subject* getMother(); // Obtiene padre 2
     float getFitness();

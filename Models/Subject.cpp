@@ -15,8 +15,7 @@ Subject::Subject(int idParam){
     id = idParam;
     alive = static_cast<bool*>(malloc(sizeof(bool)));
     *alive = true;
-    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
-    new(geneticInformation) Chromosome();
+    geneticInformation = Chromosome();
     generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = 0;
     fitness = static_cast<float*>(malloc(sizeof(float)));
@@ -39,8 +38,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticI
     id = idParam;
     alive = static_cast<bool*>(malloc(sizeof(bool)));
     *alive = true;
-    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
-    *geneticInformation = geneticInformationParam;
+    geneticInformation = geneticInformationParam;
     fitness = static_cast<float*>(malloc(sizeof(float)));
     calculateFitness();
     generation = static_cast<int*>(malloc(sizeof(int)));
@@ -57,8 +55,6 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticI
 
 Subject::~Subject(){
     alive = false;
-    free(alive);
-    free(geneticInformation);
     free(generation);
     free(characteristics);
 }
@@ -80,7 +76,7 @@ Subject* Subject::getMother() {
 /** @brief Accede al cromosoma
  * @return Chromosome*
  */
-Chromosome* Subject::getGeneticInformation() {
+Chromosome Subject::getGeneticInformation() {
     return geneticInformation;
 }
 
@@ -134,7 +130,7 @@ int Subject::getID(){
  */
 void Subject::calculateFitness() {
     GeneralFitnessCalculator* calculator = ChromosomeMixer::getInstance()->getCalculator();
-    (*fitness) = calculator->calculateFitness(*geneticInformation);
+    (*fitness) = calculator->calculateFitness(geneticInformation);
 }
 
 /** @brief Accede al armadura
