@@ -41,6 +41,8 @@ public:
     static Vector2D getRandomFreePositionNear(Vector2D, unsigned int);
     static int get(Vector2D);
     static int get(int,int);
+    static void set(Vector2D, int);
+    static void set(int, int, int);
 
 };
 

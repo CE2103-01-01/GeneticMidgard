@@ -161,6 +161,7 @@ void Subject::life(){
  */
 pthread_t* Subject::get_p_thread(){
     return &lifeThread;
+
 }
 
 /**@brief Metodo que inicia el pthread

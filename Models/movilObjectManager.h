@@ -7,6 +7,7 @@
 
 
 #include "Subject.h"
+#include "Terrain.h"
 
 /** Clase movilObjectManager
  * @brief clase a la cual pertenecen todos los objetos

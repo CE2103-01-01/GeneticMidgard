@@ -284,3 +284,12 @@ int Terrain::get(int i, int j) {
     if(width<i||height<j||i<0||j<0) abort();
     return *(map+i+(j*width));
 }
+
+void Terrain::set(Vector2D vector, int dato) {
+    *(map+ vector.x+(vector.y*width)) = dato;
+}
+
+void Terrain::set(int i, int j, int dato) {
+    if(width<i||height<j||i<0||j<0) abort();
+    *(map+i+(j*width)) = dato;
+}
