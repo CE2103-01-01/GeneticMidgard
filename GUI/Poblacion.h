@@ -42,8 +42,10 @@ class Poblacion {
 private:
     DoubleList<Person> poblacion;
     Texture texturePerson;
+    Texture textureLayer;
+
 public:
-    Poblacion(Texture&);
+    Poblacion(Texture, Texture);
     void drawPoblacion(RenderTarget&);
     void addPerson(Person&);
     void deletePerson(unsigned int id);

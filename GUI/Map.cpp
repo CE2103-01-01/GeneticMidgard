@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <string.h>
 #include "Map.h"
 
 int Map::width = 0;
@@ -56,17 +57,20 @@ Map::Map() {
             TERRAIN_NODE);
     while (terrain_node)
     {
-        if(terrain_node->first_attribute(NAME)->value()== PERSONA_TERRAIN)
-            personGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value());
+        if(!strcmp(terrain_node->first_attribute(NAME)->value(), PERSONA_TERRAIN))
+            personGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value())+1;// Ojo el mas 1 para pasar de id a gid
             terrain_node = terrain_node->next_sibling();
     }
     Texture texturePerson;
     if (!texturePerson.loadFromFile(tilesetPath,getTileRect(personGid))) abort();
+    Texture texturePersonLayer;
+    if (!texturePersonLayer.loadFromFile(tilesetPath,getTileRect(1852))) abort();
 
-    poblacion = new Poblacion(texturePerson);
+    poblacion = new Poblacion(texturePerson,texturePersonLayer);
     Person prson(12,10,10,0,0,255);
     poblacion->addPerson(prson);
-
+    Person prson2(12,10,14,0,255,255);
+    poblacion->addPerson(prson2);
 }
 
 
@@ -105,14 +109,14 @@ int *Map::getTerrain(int i) {
 }
 
 void Map::renderMap(RenderTarget &renderArea) {
-
-        View theView = renderArea.getView();
         for (int layer = 0; layer < 2; ++layer) {
             int *layerData = (terrain[layer]);
             for (int i = 0; i < width; ++i) {
                 //cout<<theView.getSize().y<<endl;
                 for (int j = 0; j < height; ++j) {
+
                     int gid = *(layerData + i + (width * j));
+
                     if (!gid) continue;
                     Sprite sprite;
                     sprite.setTexture(texture);
@@ -122,11 +126,12 @@ void Map::renderMap(RenderTarget &renderArea) {
                 }
             }
         }
+
     poblacion->drawPoblacion(renderArea);
 }
 
     IntRect Map::getTileRect(unsigned int i) {
-    i--;
+    i--;//start on 0 not in 1
 
     int x=0;
     int y=0;

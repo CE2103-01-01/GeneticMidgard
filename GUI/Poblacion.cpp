@@ -15,6 +15,9 @@ void Poblacion::drawPoblacion(RenderTarget &target) {
         sprite.setTexture(texturePerson);
         sprite.setPosition(sf::Vector2f(Map::tileWidth * next->x, Map::tileHeight * next->y));
         target.draw(sprite);
+        sprite.setTexture(textureLayer);
+        sprite.setColor(sf::Color(next->r,next->g,next->b));
+        target.draw(sprite);
     }
 }
 
@@ -77,6 +80,7 @@ void Person::setLifeUpdate(LifeUpdate update) {
     new(lifeUpdate) LifeUpdate(update);
 }
 
-Poblacion::Poblacion(Texture &texture) {
+Poblacion::Poblacion(Texture texture, Texture pTextureLayer) {
     texturePerson = texture;
+    textureLayer = pTextureLayer;
 }

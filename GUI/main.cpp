@@ -12,6 +12,8 @@ static const int SCROLL_SPEED = 10;
 
 static const float STEPMOVE = 35.f;
 
+static const int FPS_LIMIT = 20;
+
 void checkViewLimits(View &mapView, View &minimap, float yMax, float yMin, float xMax, float xMin);
 
 using namespace sf;
@@ -21,12 +23,11 @@ int main()
     Thread thread(&SocketGUI::getInstance);//Init Connection
     thread.launch();
 
-    cout<<"GUI:..."<<endl;
-    string a;
-    cin>>a;
+    cout<<"Press Enter to begin..."<<endl;
+    cin.ignore();
     Map mapa = Map();
     RenderWindow window(sf::VideoMode::getDesktopMode(), WINDOW_NAME);
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(FPS_LIMIT);
     unsigned int heightScreen = window.getSize().y;
     unsigned int widthScreen = window.getSize().x;
     //Original View
