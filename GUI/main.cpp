@@ -25,7 +25,6 @@ int main()
     string a;
     cin>>a;
     Map mapa = Map();
-    mapa.loadTerrain();
     RenderWindow window(sf::VideoMode::getDesktopMode(), WINDOW_NAME);
     window.setFramerateLimit(60);
     unsigned int heightScreen = window.getSize().y;

@@ -27,6 +27,8 @@ static const char *const IMAGE_NODE = "image";
 
 static const char *const TILE_NODE = "tile";
 
+static const char *const TILESET_PATH = "../res/";
+
 #include <SFML/Graphics.hpp>
 #include <iosfwd>
 #include <string>
@@ -34,6 +36,7 @@ static const char *const TILE_NODE = "tile";
 #include "../libs/rapidxml/rapidxml.hpp"
 #include "../libs/rapidxml/rapidxml_utils.hpp"
 #include "../Data/DoubleList.h"
+#include "Poblacion.h"
 
 using namespace sf;
 using namespace std;
@@ -41,16 +44,18 @@ using namespace gui_constants;
 class Map {
 private:
     int *terrain[2];
-    int width;
-    int height;
-    int tileWidth;
-    int tileHeight;
-    int tilesetWidth;
-    int tilesetHeight;
-    string tilesetPath = "../res/";
+    string tilesetPath = TILESET_PATH;
     unsigned int lastGid;
+    Texture texture;
+    Poblacion *poblacion;
 public:
-    void loadTerrain();
+    Map();
+    static int width;
+    static int height;
+    static int tileWidth;
+    static int tileHeight;
+    static int tilesetWidth;
+    static int tilesetHeight;
     void printArray(int* array);
     int *getTerrain(int i);
     int getTileWidth();
@@ -60,8 +65,9 @@ public:
     string getTilesetPath();
     int getWidth();
     int getHeight();
+    Texture getTexture();
     void renderMap(RenderTarget&);
-    IntRect getTitleRect(unsigned int gid);
+    IntRect getTileRect(unsigned int gid);
 };
 
 

@@ -5,7 +5,16 @@
 #include <iostream>
 #include "Map.h"
 
-void Map::loadTerrain() {
+int Map::width = 0;
+int Map::height = 0;
+int Map::tileWidth = 0;
+int Map::tileHeight = 0;
+int Map::tilesetWidth = 0;
+int Map::tilesetHeight = 0;
+
+
+
+Map::Map() {
     rapidxml::xml_node<> *root_node;
     rapidxml::xml_document<> doc;
     rapidxml::file<> file(MAP_LOCATION);
@@ -37,19 +46,28 @@ void Map::loadTerrain() {
 
             *(terrain[pos] + i) = std::atoi(tile_node->first_attribute("gid")->value());
             i++;// contador para el puntero
-
         }
-
         pos++;
-
     }
+    //create Poblacion
+    if(!texture.loadFromFile(tilesetPath)) abort();
+    unsigned int personGid;
+    rapidxml::xml_node<> *terrain_node = root_node->first_node(TILESET_NODE)->first_node(TERRAINS)->first_node(
+            TERRAIN_NODE);
+    while (terrain_node)
+    {
+        if(terrain_node->first_attribute(NAME)->value()== PERSONA_TERRAIN)
+            personGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value());
+            terrain_node = terrain_node->next_sibling();
+    }
+    Texture texturePerson;
+    if (!texturePerson.loadFromFile(tilesetPath,getTileRect(personGid))) abort();
 
-
+    poblacion = new Poblacion(texturePerson);
+    Person prson(12,10,10,0,0,255);
+    poblacion->addPerson(prson);
 
 }
-
-
-
 
 
 
@@ -87,8 +105,7 @@ int *Map::getTerrain(int i) {
 }
 
 void Map::renderMap(RenderTarget &renderArea) {
-        Texture texture;
-        if(!texture.loadFromFile(tilesetPath)) abort();
+
         View theView = renderArea.getView();
         for (int layer = 0; layer < 2; ++layer) {
             int *layerData = (terrain[layer]);
@@ -97,18 +114,18 @@ void Map::renderMap(RenderTarget &renderArea) {
                 for (int j = 0; j < height; ++j) {
                     int gid = *(layerData + i + (width * j));
                     if (!gid) continue;
-                    //Texture texture = getTitleRect(gid);
-                    sf::Sprite sprite;
+                    Sprite sprite;
                     sprite.setTexture(texture);
-                    sprite.setTextureRect(getTitleRect(gid));
+                    sprite.setTextureRect(getTileRect(gid));
                     sprite.setPosition(sf::Vector2f(tileWidth * i, tileHeight * j));
                     renderArea.draw(sprite);
                 }
             }
         }
+    poblacion->drawPoblacion(renderArea);
 }
 
-    IntRect Map::getTitleRect(unsigned int i) {
+    IntRect Map::getTileRect(unsigned int i) {
     i--;
 
     int x=0;
@@ -131,4 +148,8 @@ int Map::getHeight() {
 
 int Map::getWidth() {
     return width;
+}
+
+Texture Map::getTexture() {
+    return texture;
 }

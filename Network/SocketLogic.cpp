@@ -72,3 +72,32 @@ void SocketLogic::changeEdda(std::string edda) {
     packet<<s.GetString();
     client.send(packet);
 }
+
+void SocketLogic::createObject(unsigned int idObject, std::string type, unsigned int x, unsigned int y) {
+    if(!initialized) return;
+    Packet packet;
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+    writer.StartObject();
+    writer.String("action"); writer.String("createObject");
+    writer.String("id"); writer.Uint(idObject);
+    writer.String("type"); writer.String(type.c_str());
+    writer.String("x"); writer.Uint(x);
+    writer.String("y"); writer.Uint(y);
+    writer.EndObject();
+    packet<<s.GetString();
+    client.send(packet);
+}
+
+void SocketLogic::deleteObject(unsigned int idObject) {
+    if(!initialized) return;
+    Packet packet;
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+    writer.StartObject();
+    writer.String("action"); writer.String("deleteObject");
+    writer.String("id"); writer.Uint(idObject);
+    writer.EndObject();
+    packet<<s.GetString();
+    client.send(packet);
+}

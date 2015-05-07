@@ -25,6 +25,8 @@ public:
     void updateSubject(unsigned int idSubject, unsigned int x, unsigned int y);
     void createSubject(unsigned int idSubject, unsigned int x, unsigned int y,
                        unsigned int r, unsigned int g, unsigned int b);
+    void createObject(unsigned int idObject, std::string tipo, unsigned int x, unsigned int y);
+    void deleteObject(unsigned int idObject);
     void changeEdda(std::string edda);
     void battleDetails(unsigned int idBattle, char* somedata);//TODO-roberto definir info de peleas
 

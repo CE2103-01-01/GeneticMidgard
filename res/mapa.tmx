@@ -6,6 +6,7 @@
    <terrain name="Tierra" tile="97"/>
    <terrain name="Zacate" tile="148"/>
    <terrain name="Arbusto" tile="145"/>
+   <terrain name="Persona" tile="1835"/>
   </terraintypes>
   <tile id="80" terrain=",,,0"/>
   <tile id="81" terrain=",,0,0"/>
@@ -46,6 +47,7 @@
   <tile id="167" terrain="1,,1,1"/>
   <tile id="182" terrain="1,1,,1"/>
   <tile id="183" terrain="1,1,1,"/>
+  <tile id="1835" terrain="3,3,3,3"/>
  </tileset>
  <layer name="Terreno" width="170" height="170">
   <data>
