@@ -11,12 +11,15 @@
 
 class Population {
     pthread_mutex_t* mutex;
+    pthread_t* reproduction_pthread;
     int* actualGeneration;
     int* populationSize;
     float* populationFitness;
     char* populationType;// tipo de la poblacion
     Tree<Subject>* populationTree; //lista de los individuos de la poblacion
+    bool* defunct;
     void calculateFitness();
+    void killEmAll();
 public:
     Population(char); //constructor de la poblacion
     ~Population();// destructor por defecto
@@ -28,8 +31,12 @@ public:
     char getPopulationType();
     void updateGeneration();
     void createNewRandomMember();
-
-    void killEveryone();
+    bool isDefunct();
+    void exterminate();
+    void init_pthread();
+    pthread_t* get_pthread();
 };
+
+void* reproductionThread(void*);
 
 #endif //PROJECTMIDGARD_POPULATION_H

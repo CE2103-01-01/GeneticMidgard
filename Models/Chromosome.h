@@ -13,9 +13,9 @@ class Chromosome {
 public:
     Chromosome();
     Chromosome(unsigned char*);
-    unsigned char* getGene(int);
-    int getNumberOfGenes();
+    Chromosome(const Chromosome&);
+    ~Chromosome();
+    unsigned char getGene(int);
 };
-
 
 #endif //PROJECTMIDGARD_GENES_H

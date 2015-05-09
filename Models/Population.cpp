@@ -3,6 +3,7 @@
 //
 
 #include "Population.h"
+#include "../Algorithms/lifeLaboratory.h"
 
 /** Construye una poblacion
  * @param Tree<Subject>* peopleTreeParam: primera generacion
@@ -15,17 +16,29 @@ Population::Population(char populationTypeParam){
     populationSize = static_cast<int*>(malloc(sizeof(int)));
     actualGeneration = static_cast<int*>(malloc(sizeof(int)));
     populationTree = static_cast<Tree<Subject>*>(malloc(sizeof(Tree<Subject>)));
+    defunct = static_cast<bool*>(malloc(sizeof(bool)));
+    reproduction_pthread = 0;
+    mutex = 0;
     //Llena espacios
     *populationType = populationTypeParam;
     *populationSize = 0;
     *actualGeneration = 1;
     *populationFitness = 0;
+    *defunct = false;
     new(populationTree) Tree<Subject>();
 }
 
 /**@brief: libera el espacio utilizado
  */
 Population::~Population() {
+    free(populationTree);
+    free(defunct);
+    free(mutex);
+    free(reproduction_pthread);
+    free(actualGeneration);
+    free(populationSize);
+    free(populationFitness);
+    free(populationType);// tipo de la poblacion
 }
 
 /**@brief: calcula el fitness
@@ -35,6 +48,17 @@ void Population::calculateFitness(){
     for (int i = 1; i <= (*populationSize); i++) {
         (*populationFitness) += ((Subject*)populationTree->searchElement(i-1))->getFitness();
     }
+}
+
+/**@brief: inicia el pthread
+ */
+void Population::init_pthread(){
+    mutex = static_cast<pthread_mutex_t*>(malloc(sizeof(pthread_mutex_t)));
+    pthread_mutex_init(mutex,NULL);
+    reproduction_pthread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
+    void* parameter = malloc(sizeof(PThreadParam));
+    new(static_cast<PThreadParam*>(parameter)) PThreadParam(this,mutex);
+    pthread_create(reproduction_pthread,NULL,reproductionThread,parameter);
 }
 
 /**@brief: inserta un nuevo miembro
@@ -59,7 +83,6 @@ void Population::createNewRandomMember() {
     populationTree->insertElement(Subject((*populationSize)*10 + (*populationType)),(*populationSize));
     Subject* newMember = (Subject*)populationTree->searchElement(*populationSize);
     (*populationFitness) += newMember->getFitness();
-    std::cout << "Se crea: " << newMember << " con ID: " << newMember->getID() <<std::endl;
     newMember->start_p_thread();
 }
 
@@ -106,8 +129,63 @@ void Population::updateGeneration() {
     (*actualGeneration)++;
 }
 
-void Population::killEveryone() {
+/**@brief mata a todos los sujetos
+ */
+void Population::killEmAll() {
     for(int i = 1; i <= *populationSize; i++){
         ((Subject*)populationTree->searchElement(i))->kill();
     }
+}
+
+/**@brief bandera de extincion
+ * @return bool
+ */
+bool Population::isDefunct() {
+    return *defunct;
+}
+
+/**@brief bandera de extincion
+ * @return bool
+ */
+void Population::exterminate(){
+    killEmAll();
+    *defunct = true;
+}
+
+/**Accede al pthread
+ * return pthread_t*
+ */
+pthread_t* Population::get_pthread(){
+    return reproduction_pthread;
+}
+
+/**@brief Metodo del pthread
+ * @param void* populationParameter: poblacion
+ */
+void* reproductionThread(void* parameter){
+    //Se obtiene el mutex y la poblacion
+    pthread_mutex_t* mutex = static_cast<PThreadParam*>(parameter)->getMutex();
+    Population* population = static_cast<Population*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
+    //Se crea el laboratorio
+    LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
+    new(laboratory) LifeLaboratory(population);
+    //Se crea controlador de tiempo
+    struct timespec timeControler;
+    timeControler.tv_nsec=0;
+    timeControler.tv_sec=5;
+    //Primera generacion
+    laboratory->createPopulation(100);
+    //Se bloquea mutex
+    pthread_mutex_lock(mutex);
+    //Loop que se ejecutara mientras la poblacion viva
+    while(!population->isDefunct()){
+        laboratory->createGeneration(SUBJECTS_BY_GENERATION);
+        if(population->getPopulationSize()>=400){
+            population->exterminate();//TODO: cambiar, es prueba
+        }
+        nanosleep(&timeControler, NULL);
+    }
+    //Se desbloquea mutex
+    pthread_mutex_unlock(mutex);
+    return 0;
 }

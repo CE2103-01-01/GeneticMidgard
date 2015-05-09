@@ -9,14 +9,8 @@
 #include "GeneralFitnessCalculator.h"
 
 class ChromosomeMixer {
-    static GeneralFitnessCalculator* calculator;
-    static ChromosomeMixer* instance;
-    public:
-        ChromosomeMixer();
-        static ChromosomeMixer* getInstance();
-        Chromosome mix(Chromosome,Chromosome);
-
-    GeneralFitnessCalculator *getCalculator();
+public:
+    static Chromosome mix(Chromosome,Chromosome);
 };
 
 

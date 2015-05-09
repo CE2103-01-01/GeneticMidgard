@@ -14,11 +14,11 @@ using namespace pugi;
 
 class GeneralFitnessCalculator {
     float* constants;
-    void readXML();
+    static GeneralFitnessCalculator* instance;
 public:
     GeneralFitnessCalculator();
-    float calculateFitness(Chromosome chromosome);
-
+    float calculateFitness(Chromosome* chromosome);
+    static GeneralFitnessCalculator* getInstance();
 };
 
 

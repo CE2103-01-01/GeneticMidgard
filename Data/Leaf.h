@@ -5,8 +5,8 @@
 #ifndef VH2015_LEAF_H
 #define VH2015_LEAF_H
 
-#include <cstdlib>
-#include <iostream>
+#include <malloc.h>
+#include "../Constants.h"
 
 /** @brief miembro del arbol
  * Numero de hijos: n, tal que n=treeSize 
@@ -15,18 +15,15 @@
 class Leaf{
     int* sizeofType;
     void* containers;
-    void* sons;
+    Leaf* sons;
     bool* terminal;                 //Bandera que indica si es terminal: true=sin hijos
 public:
     Leaf(int, int);
     ~Leaf();
-    void* getSons();
+    Leaf* getSons();
     void* getContainers();
     bool isTerminal();
-    bool isFull(int);
-    void split(int);
-    Leaf* getFather();
-    int len();
+    void split();
 };
 
 #endif //VH2015_LEAF_H

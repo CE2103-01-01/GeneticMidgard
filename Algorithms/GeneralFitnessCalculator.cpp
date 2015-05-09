@@ -8,35 +8,47 @@
 using namespace pugi;
 using namespace constantsSubjectXML;
 
+GeneralFitnessCalculator* GeneralFitnessCalculator::instance = 0;
+
+/**@brief constructor, lee el XML. No se debe llamar explicitamente
+ */
 GeneralFitnessCalculator::GeneralFitnessCalculator(){
-    readXML();
-}
-
-void GeneralFitnessCalculator::readXML() {
     constants = static_cast<float*>(malloc(sizeof(float)*NUMBER_OF_GENES));
-
     rapidxml::xml_node<>* root_node;
     rapidxml::xml_document<> doc;
     rapidxml::file<> file( CONSTANT_XML_PATH );
     doc.parse<0>( file.data() );
     root_node = doc.first_node("CONSTANTS")->first_node("Fitness");
     int forIteratorIndex = 0;
-    //TODO: agregar a constante
     rapidxml::xml_node<>*node = root_node->first_node();
-
-    while(node)
-    {
+    while(node) {
         *(constants + forIteratorIndex++) = std::atof(node->value());
         node = node->next_sibling();
     }
 }
 
-
-float GeneralFitnessCalculator::calculateFitness(Chromosome chromosome) {
+/**@brief calcula el fitness de un cromosoma
+ * @param cromosoma
+ * @return float
+ */
+float GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
     float fitness = 0;
     for(int i = 0; i < NUMBER_OF_GENES; i++){
-        fitness += *(constants+i) * (*chromosome.getGene(i));
+        fitness += *(constants+i) * (*chromosome).getGene(i);
     }
     return fitness;
 
+}
+
+/**@brief metodo que accede a la unica instancia
+ * @return GeneralFitnessCalculator*
+ */
+GeneralFitnessCalculator* GeneralFitnessCalculator::getInstance(){
+    if(!instance){
+        //Si no hay instancia reserva el espacio correspondiente e inicializa
+        instance = static_cast<GeneralFitnessCalculator*>(malloc(sizeof(GeneralFitnessCalculator)));
+        new(instance) GeneralFitnessCalculator();
+    }
+    //Retorna la instancia, ya sea guardada o recien creada
+    return instance;
 }

@@ -3,7 +3,6 @@
 //
 
 #include "Subject.h"
-#include "../Algorithms/ChromosomeMixer.h"
 
 using namespace pugi;
 using namespace constantsSubjectXML;
@@ -11,42 +10,90 @@ using namespace constantsSubjectXML;
 /** Constructor
  * @brief genera un individuo de primera generacion
  */
-Subject::Subject(int idParam){
-    id = idParam;
-    alive = true;
-    geneticInformation = Chromosome();
-    generation = generation = 0;
-    calculateFitness();
-    profession = 0;
+Subject::Subject(long idParam){
+    id = static_cast<long*>(malloc(sizeof(long)));
+    generation = static_cast<long*>(malloc(sizeof(long)));
+    alive = static_cast<bool*>(malloc(sizeof(bool)));
+    profession = static_cast<char*>(malloc(sizeof(char)));
+    fitness = static_cast<float*>(malloc(sizeof(float)));
+    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
+    *id = idParam;
+    *alive = true;
+    *geneticInformation = Chromosome();
+    *generation = 0;
+    *profession = 0;
     for(int i = 0; i < NUMBER_OF_CHARACTERISTICS; i++){
         *(characteristics + i) = 0;    //TODO: MODIFICAR
     }
+    calculateFitness();
     father = 0;
     mother = 0;
+    lifeThread = 0;
 }
 
 /** Constructor
  * @brief genera un individuo de generacion N
  */
 Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticInformationParam,
-                 int generationParam, int idParam){
-    id = idParam;
-    alive = true;
-    geneticInformation = geneticInformationParam;
-    calculateFitness();
-    generation = generationParam;
-    profession = 0;
-    //characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
-    //for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
-      //  *(characteristics + i) = 0;    //TODO: MODIFICAR
-    //}
+                 long generationParam, long idParam){
+    id = static_cast<long*>(malloc(sizeof(long)));
+    generation = static_cast<long*>(malloc(sizeof(long)));
+    alive = static_cast<bool*>(malloc(sizeof(bool)));
+    profession = static_cast<char*>(malloc(sizeof(char)));
+    fitness = static_cast<float*>(malloc(sizeof(float)));
+    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
+    characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
+    *id = idParam;
+    *alive = true;
+    *geneticInformation = geneticInformationParam;
+    *generation = generationParam;
+    *profession = 0;
+    for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
+        *(characteristics + i) = 0;    //TODO: MODIFICAR
+    }
     father = fatherParam;
     mother = motherParam;
+    calculateFitness();
+    lifeThread = 0;
 }
 
+/** Constructor
+ * @brief genera un individuo de generacion N
+ */
+Subject::Subject(const Subject& other){
+    id = static_cast<long*>(malloc(sizeof(long)));
+    generation = static_cast<long*>(malloc(sizeof(long)));
+    alive = static_cast<bool*>(malloc(sizeof(bool)));
+    profession = static_cast<char*>(malloc(sizeof(char)));
+    fitness = static_cast<float*>(malloc(sizeof(float)));
+    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
+    characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
+    *id = *other.id;
+    *alive = true;
+    *geneticInformation = *other.geneticInformation;
+    *generation = *other.generation;
+    *profession = *other.profession;
+    for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
+        *(characteristics + i) = *(other.characteristics + i);    //TODO: MODIFICAR
+    }
+    father = other.father;
+    mother = other.mother;
+    calculateFitness();
+    lifeThread = 0;
+}
+
+/** Destructor
+ */
 Subject::~Subject(){
-    alive = false;
+    free(id);
+    free(generation);
+    free(alive);
+    free(profession);
+    free(fitness);
+    free(geneticInformation);
+    free(characteristics);
+    free(lifeThread);
 }
 
 /** @brief Accede al padre
@@ -67,7 +114,7 @@ Subject* Subject::getMother() {
  * @return Chromosome*
  */
 Chromosome Subject::getGeneticInformation() {
-    return geneticInformation;
+    return *geneticInformation;
 }
 
 /** @brief Accede a la salud
@@ -82,9 +129,10 @@ unsigned char Subject::getHealth(){
  */
 void Subject::setCharacteristic(int value, char position) {
     *(characteristics+position)=*(characteristics+position)+(unsigned char)value;
-};
-int Subject::getGeneration(){
-    return generation;
+}
+
+long Subject::getGeneration(){
+    return *generation;
 }
 
 /** @brief Accede a la edad
@@ -105,22 +153,21 @@ unsigned char Subject::getExperience(){
  * @return float
  */
 float Subject::getFitness(){
-    return fitness;
+    return *fitness;
 }
 
 /** @brief Accede al ID
  * @return float
  */
-int Subject::getID(){
-    return id;
+long Subject::getID(){
+    return *id;
 }
 
 /** @brief calcular  fitness
  *
  */
 void Subject::calculateFitness() {
-    GeneralFitnessCalculator* calculator = ChromosomeMixer::getInstance()->getCalculator();
-    fitness = calculator->calculateFitness(geneticInformation);
+    *fitness = GeneralFitnessCalculator::getInstance()->calculateFitness(geneticInformation);
 }
 
 /** @brief Accede al armadura
@@ -141,26 +188,26 @@ unsigned char Subject::getWeapon(){
  * @return bool
  */
 bool Subject::isAlive(){
-    return alive;
+    return *alive;
 }
 
 /** @brief Mata al jugador colocando en false la bander
  */
 void Subject::kill(){
-    (alive) = 0;
+    *alive = false;
 }
 
 /** @brief Mata al jugador colocando en false la bander
  */
 void Subject::life(){
-    std::cout << "Hello, my ID is: "<< (id) <<std::endl;
+    std::cout << "Hello, my ID is: "<< *id <<std::endl;
 }
 
 /**@brief: accede al pthread
  * @return pthread_t*
  */
 pthread_t* Subject::get_p_thread(){
-    return &lifeThread;
+    return lifeThread;
 
 }
 
@@ -170,7 +217,8 @@ pthread_t* Subject::get_p_thread(){
 void Subject::start_p_thread(){
     void* parameters = malloc(sizeof(PThreadParam));
     new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,0);
-    //pthread_create(&lifeThread,0,subjectLife,parameters);
+    lifeThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
+    pthread_create(lifeThread,0,subjectLife,parameters);
 }
 
 /**@brief metodo ejecutado por el pthread
@@ -184,11 +232,11 @@ void* subjectLife(void* parameter){
     struct timespec timeControler;
     timeControler.tv_nsec=0;
     timeControler.tv_sec=1;
-    int life = 100;
+    int life = 10;
     //Este while corre hasta que se llame al metodo kill()
     while(life > 0){
         //Llama al metodo de vida del sujeto
-        //excecutioner->life();
+        excecutioner->life();
         //Espera un segundo
         nanosleep(&timeControler, 0);
         life--;

@@ -10,16 +10,16 @@
 #include "../Data/DoubleList.h"
 
 class LifeLaboratory {
-    pthread_mutex_t* mutex;
-    void fillGeneration(Population*, int, int*);
-    void selectParents(Population*, int, int*);
+    Population* labRats;
+    void fillGeneration(int, int*);
+    void selectParents(int, int*);
     bool checkSeleccions(Subject*, int*, int);
-    void createPopulation(int,Population*);
 public:
-    LifeLaboratory(pthread_mutex_t*);
-    void createGeneration(Population*,int);
-    void createLife(int,int, Population*);
+    LifeLaboratory(Population*);
+    LifeLaboratory(const LifeLaboratory& other);
+    ~LifeLaboratory();
+    void createGeneration(int);
+    void createPopulation(int);
 };
-
 
 #endif //PROJECTMIDGARDLOGIC_LIFELABORATORY_H
