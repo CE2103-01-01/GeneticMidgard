@@ -172,7 +172,7 @@ void* reproductionThread(void* parameter){
     //Se crea controlador de tiempo
     struct timespec timeControler;
     timeControler.tv_nsec=0;
-    timeControler.tv_sec=5;
+    timeControler.tv_sec=2;
     //Primera generacion
     laboratory->createPopulation(100);
     //Se bloquea mutex
@@ -187,5 +187,8 @@ void* reproductionThread(void* parameter){
     }
     //Se desbloquea mutex
     pthread_mutex_unlock(mutex);
+    nanosleep(&timeControler, NULL);
+    nanosleep(&timeControler, NULL);
+    nanosleep(&timeControler, NULL);
     return 0;
 }
