@@ -19,8 +19,6 @@ set(HEADER_FILES Interface/Random.h
                  Algorithms/GeneralFitnessCalculator.h
                  Algorithms/BinaryReader.h
                  Generators/EvolutionGenerator.h
-                 Proof/chromosomeMixerProof.h
-                 Proof/proofBinary.h
                  Data/BitVector.h
                  Data/DoubleList.h
                  Data/PriorityQueue.h
@@ -28,7 +26,6 @@ set(HEADER_FILES Interface/Random.h
                  Data/Leaf.h
                  Data/Tree.h
                  Data/TreeProof.h
-                 Proof/laboratoryProof.h
                  Network/SocketLogic.h
                  )
 
@@ -45,9 +42,6 @@ set(SOURCE_FILES main.cpp
                  Algorithms/lifeLaboratory.cpp
                  Algorithms/GeneralFitnessCalculator.cpp
                  Algorithms/BinaryReader.cpp
-                 Proof/chromosomeMixerProof.cpp
-                 Proof/proofBinary.cpp
-                 Proof/laboratoryProof.cpp
                  Network/SocketLogic.cpp
                  )
 

@@ -5,8 +5,9 @@ Timesheet
 29/04 3h Planeamiento
 01/05 2h Inicio de LifeLaboratory
 02/05 1h Se finaliza LifeLaboratory
-
-
+03/05 4h Se identifica error en LifeLaboratory, se debuggea
+04/05 4h Se continua debuggeo de LifeLaboratory
+08/05 2h Se corrije error en LifeLaboratory
 
 Bitácora
 
@@ -15,3 +16,6 @@ Bitácora
 29/04 3h Planeamiento: se genera una idea de trabajo acerca del hilo de la vida
 01/05 2h Inicio de LifeLaboratory: se crean los metodos de iteracion para busqueda de padres y se modifican las clases Subject y Population para compatibilidad
 02/05 1h Se finaliza LifeLaboratory: se crean los metodos de comparacion y se coordinan con fitness y demas clases, dejando lista la reproduccion para ser utilizada
+03/05 4h Se identifica error en LifeLaboratory, se debuggea: se nota la perdida de material genetico, asi como la sobreescritura de varias variables, se torna dificil debuggear ya que a veces se paraliza la computadora, ademas explotan errores en lugares no esperados
+04/05 4h Se continua debuggeo de LifeLaboratory: se sigue con el mismo problema, se hacen correcciones y se buscan errores de manejo de memoria, sin embargo no se tiene exito
+08/05 2h Se corrije error en LifeLaboratory: mediante la revision minuciosa del codigo, se identifican errores como dobles free, ademas con la implementacion de copy constructors y ciertas modificaciones logicas, se logra corregir el error
