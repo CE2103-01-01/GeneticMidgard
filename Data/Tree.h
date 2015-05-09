@@ -79,8 +79,8 @@ template <class T> void Tree<T>::split(Leaf* toSplit){
  * @brief: Realiza los calculos necesarios para generar una serie de enteros con la ruta
  */
 template <class T> void Tree<T>::createPath(int index, int floor, int* path){
-    *path = (index-1)%TREE_SIZE;  //Container
-    index=(index-1-max((floor-1)))/TREE_SIZE;
+    *path = (index)%TREE_SIZE;  //Container
+    index=(index-max((floor-1)))/TREE_SIZE;
     for(int i=1; i<floor; i++){
         if(index>=TREE_SIZE){
             index=index%TREE_SIZE;
@@ -135,7 +135,7 @@ template <class T> T* Tree<T>::searchAndDo(int indexToSearch, void method(T*, vo
  * @brief: calcula la ruta al indice recibido e inserta el dato
  */
 template <class T> void Tree<T>::insertElement(T param, int index){
-    if((*len) < max(*floors) && index <= max(*floors)){
+    if(index < max(*floors)){
         T* container = searchElement(index);
         new(container) T(param);
         (*len)++;
