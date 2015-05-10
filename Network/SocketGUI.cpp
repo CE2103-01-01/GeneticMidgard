@@ -4,6 +4,9 @@
 
 
 #include "SocketGUI.h"
+#include "../libs/rapidjson/stringbuffer.h"
+#include "../libs/rapidjson/writer.h"
+
 bool SocketGUI::initialized = false;
 SocketGUI* SocketGUI::singleton = NULL;
 
@@ -68,4 +71,17 @@ void SocketGUI::manageMessage(std::string string) {
     }
 
 
+}
+
+void SocketGUI::updateSpeed(unsigned char speed) {
+    if (!initialized) return;
+    Packet packet;
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+    writer.StartObject();
+    writer.String("action"); writer.String("updateSpeed");
+    writer.String("speed"); writer.Uint(speed);
+    writer.EndObject();
+    packet<<s.GetString();
+    socket.send(packet);
 }

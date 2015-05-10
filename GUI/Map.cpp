@@ -62,8 +62,10 @@ Map::Map() {
     poblacion = new Poblacion(texturePerson,texturePersonLayer);
     Person prson(12,10,10,0,0,255);
     poblacion->addPerson(prson);
-    Person prson2(12,10,14,0,255,255);
+    poblacion->updateLifeId(12, 12);
+    Person prson2(13,10,14,0,255,255);
     poblacion->addPerson(prson2);
+    poblacion->updateLifeId(13,-13);
 }
 
 

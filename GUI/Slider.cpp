@@ -3,6 +3,7 @@
 //
 
 #include "Slider.h"
+#include "../Network/SocketGUI.h"
 
 Slider::Slider(Vector2f vector, int length): length(length), vector(vector) {
 
@@ -18,9 +19,9 @@ void Slider::drawSlider(RenderTarget &target) {
         int alpha = 200;
         shape.setOutlineColor(sf::Color(255, 255, 255, alpha));
         shape.setPosition(vector);
-        //Inside Cirlce
+        //Inside Circle
         circle = CircleShape(height);
-        circle.setFillColor(sf::Color(0, 0, 0, alpha));
+        circle.setFillColor(sf::Color(50, 50, 50, alpha));
 
         init = false;
     }
@@ -30,7 +31,9 @@ void Slider::drawSlider(RenderTarget &target) {
 
 
 }
-
+/*
+ * Receives the vector of mouse position and updates the pos of the slider
+ */
 void Slider::move(Vector2i i) {
     if(shape.getGlobalBounds().contains(Vector2f(i.x, i.y)))
     {
@@ -38,6 +41,7 @@ void Slider::move(Vector2i i) {
         int posCalc = 255* (i.x-xSlider)/(length*2.0f);
         if (posCalc>255) return;
         pos = posCalc;
+        SocketGUI::getInstance()->updateSpeed(pos);
     }
 
 }/*

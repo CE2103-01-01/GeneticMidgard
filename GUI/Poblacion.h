@@ -35,7 +35,8 @@ public:
     unsigned int b;
     LifeUpdate* lifeUpdate;
     bool operator==(unsigned int pId);
-    void setLifeUpdate(LifeUpdate);
+    void setLifeUpdate(int);
+    LifeUpdate *getLifeUpdate();
 
 };
 
@@ -44,6 +45,7 @@ private:
     DoubleList<Person> poblacion;
     Texture texturePerson;
     Texture textureLayer;
+    Font roboto;
 
 public:
     Poblacion(Texture, Texture);

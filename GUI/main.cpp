@@ -120,12 +120,15 @@ int main()
         }
         mapText.clear();
         window.clear();
+        //Render mAP
         window.setView(mapView);
         mapa->renderMap(mapText);
         mapText.display();
+        //Draw map and miniMap
         window.draw(Sprite(mapText.getTexture()));
         window.setView(minimap);
         window.draw(Sprite(mapText.getTexture()));
+        //Draw Slider
         window.setView(fixed);
         slider.drawSlider(window);
         window.display();

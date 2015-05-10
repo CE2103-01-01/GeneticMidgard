@@ -25,6 +25,7 @@ class SocketGUI {
     static void manageMessage(std::string);
 public:
     static SocketGUI* getInstance();
+    void updateSpeed(unsigned char);
 
 };
 
