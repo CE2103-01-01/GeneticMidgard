@@ -204,6 +204,7 @@ void Subject::life(){
 }
 
 /**@brief: accede al pthread
+/**@brief Metodo que inicia el pthread
  * @return pthread_t*
  */
 pthread_t* Subject::get_p_thread(){
@@ -211,7 +212,6 @@ pthread_t* Subject::get_p_thread(){
 
 }
 
-/**@brief Metodo que inicia el pthread
  * @param Subject* subject: sujeto sobre el que se ejecuta
  */
 void Subject::start_p_thread(){

@@ -8,7 +8,7 @@ static const char *const IP_ADDRESS = "127.0.0.1";
 
 static const int PORT = 53000;
 
-static const float RECONNECT_TIME = 0.5f;
+static const float RECONNECT_TIME = 1.0f;
 
 #include <iostream>
 #include <SFML/Network.hpp>

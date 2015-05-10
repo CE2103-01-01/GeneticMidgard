@@ -6,14 +6,7 @@
 #include <string.h>
 #include "Map.h"
 
-int Map::width = 0;
-int Map::height = 0;
-int Map::tileWidth = 0;
-int Map::tileHeight = 0;
-int Map::tilesetWidth = 0;
-int Map::tilesetHeight = 0;
-
-
+Map *Map::singleton = NULL;
 
 Map::Map() {
     rapidxml::xml_node<> *root_node;
@@ -157,4 +150,12 @@ int Map::getWidth() {
 
 Texture Map::getTexture() {
     return texture;
+}
+
+Map *Map::getInstance() {
+    if(!singleton)
+    {
+        singleton = new Map();
+    }
+    return singleton;
 }

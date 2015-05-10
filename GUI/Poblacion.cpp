@@ -3,8 +3,6 @@
 //
 
 #include "Poblacion.h"
-#include "../libs/rapidxml/rapidxml.hpp"
-#include "../libs/rapidxml/rapidxml_utils.hpp"
 #include "Map.h"
 
 void Poblacion::drawPoblacion(RenderTarget &target) {
@@ -13,7 +11,7 @@ void Poblacion::drawPoblacion(RenderTarget &target) {
         Person *next = iter->next();
         Sprite sprite;
         sprite.setTexture(texturePerson);
-        sprite.setPosition(sf::Vector2f(Map::tileWidth * next->x, Map::tileHeight * next->y));
+        sprite.setPosition(sf::Vector2f(Map::getInstance()->getTileWidth() * next->x, Map::getInstance()->getTileHeight() * next->y));
         target.draw(sprite);
         sprite.setTexture(textureLayer);
         sprite.setColor(sf::Color(next->r,next->g,next->b));

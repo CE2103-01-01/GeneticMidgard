@@ -15,6 +15,7 @@ static const char *const PERSONA_TERRAIN = "Persona";
 
 #include <SFML/Graphics.hpp>
 #include "../Data/DoubleList.h"
+
 using namespace sf;
 class LifeUpdate{
 public:

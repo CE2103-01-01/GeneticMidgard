@@ -43,19 +43,21 @@ using namespace std;
 using namespace gui_constants;
 class Map {
 private:
+    Map();
+    static Map* singleton;
     int *terrain[2];
     string tilesetPath = TILESET_PATH;
     unsigned int lastGid;
     Texture texture;
     Poblacion *poblacion;
 public:
-    Map();
-    static int width;
-    static int height;
-    static int tileWidth;
-    static int tileHeight;
-    static int tilesetWidth;
-    static int tilesetHeight;
+    static Map* getInstance();
+    int width;
+    int height;
+    int tileWidth;
+    int tileHeight;
+    int tilesetWidth;
+    int tilesetHeight;
     void printArray(int* array);
     int *getTerrain(int i);
     int getTileWidth();

@@ -6,6 +6,7 @@
 #include "Constants.h"
 #include "Map.h"
 #include "../Network/SocketGUI.h"
+#include "Slider.h"
 
 
 static const int SCROLL_SPEED = 10;
@@ -14,7 +15,7 @@ static const float STEPMOVE = 35.f;
 
 static const int FPS_LIMIT = 20;
 
-void checkViewLimits(View &mapView, View &minimap, float yMax, float yMin, float xMax, float xMin);
+void checkViewLimits(View &mapView, View &minimap, float yMax, float xMax);
 
 using namespace sf;
 using namespace gui_constants;
@@ -23,10 +24,13 @@ int main()
     Thread thread(&SocketGUI::getInstance);//Init Connection
     thread.launch();
 
-    cout<<"Press Enter to begin..."<<endl;
-    cin.ignore();
-    Map mapa = Map();
-    RenderWindow window(sf::VideoMode::getDesktopMode(), WINDOW_NAME);
+    //cout<<"Press Enter to begin..."<<endl;
+    //cin.ignore();
+    Map* mapa = Map::getInstance();
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+
+    RenderWindow window(sf::VideoMode::getDesktopMode(), WINDOW_NAME, sf::Style::Default, settings);
     window.setFramerateLimit(FPS_LIMIT);
     unsigned int heightScreen = window.getSize().y;
     unsigned int widthScreen = window.getSize().x;
@@ -41,20 +45,25 @@ int main()
     mapView.setViewport(FloatRect(0.0f,0.0f,1.0f,1.0f));
 
     RenderTexture mapText;
-    if(!mapText.create(mapa.getHeight()*mapa.getTileHeight(),mapa.getWidth()*mapa.getTileWidth())) abort;
+    if(!mapText.create(mapa->getHeight()*mapa->getTileHeight(),mapa->getWidth()*mapa->getTileWidth())) abort;
+    int lengthSlider = 100;
+    Slider slider(Vector2f(widthScreen*0.5-lengthSlider, heightScreen*0.02), lengthSlider);
 
-    float yMax = mapa.getHeight()*mapa.getTileHeight()-mapView.getSize().y/2;
-    float yMin = mapView.getSize().y/2;
-    float xMax = mapa.getWidth()*mapa.getTileWidth()-mapView.getSize().x/2;
-    float xMin = mapView.getSize().x/2;
-
+    float yMax = mapa->getHeight()*mapa->getTileHeight();
+    float xMax = mapa->getWidth()*mapa->getTileWidth();
     while (window.isOpen())
     {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            slider.move(Mouse::getPosition(window));
+        }
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
                 window.close();
+                thread.terminate();
+            }
 
             // catch the resize events
             else if (event.type == sf::Event::Resized)
@@ -75,7 +84,7 @@ int main()
                     minimap.move(-event.mouseWheel.delta * SCROLL_SPEED, 0);
                 }
 
-                checkViewLimits(mapView, minimap, yMax, yMin, xMax, xMin);
+                checkViewLimits(mapView, minimap, yMax, xMax);
             }
             else if( event.type == sf::Event::KeyPressed )
             {
@@ -95,17 +104,30 @@ int main()
                     mapView.move(-STEPMOVE,0);
                     minimap.move(-STEPMOVE,0);
                 }
-                checkViewLimits(mapView,minimap, yMax, yMin, xMax, xMin);
+
+                else if(event.key.code == sf::Keyboard::I)
+                {
+                    mapView.zoom(0.5f);
+                }
+                else if(event.key.code == sf::Keyboard::O)
+                {
+                    mapView.zoom(2.0f);
+                }
+
+
+                checkViewLimits(mapView,minimap, yMax, xMax);
             }
         }
         mapText.clear();
         window.clear();
         window.setView(mapView);
-        mapa.renderMap(mapText);
+        mapa->renderMap(mapText);
         mapText.display();
         window.draw(Sprite(mapText.getTexture()));
         window.setView(minimap);
         window.draw(Sprite(mapText.getTexture()));
+        window.setView(fixed);
+        slider.drawSlider(window);
         window.display();
     }
 
@@ -113,7 +135,11 @@ int main()
     return 0;
 }
 
-void checkViewLimits(View &mapView,View &minimap, float yMax, float yMin, float xMax, float xMin) {
+void checkViewLimits(View &mapView,View &minimap, float yMax, float xMax) {
+    float xMin = mapView.getSize().x/2;
+    float yMin = mapView.getSize().y/2;
+    yMax -= mapView.getSize().y/2;
+    xMax -= -mapView.getSize().x/2;
     if (mapView.getCenter().y > yMax)
     {
         mapView.setCenter(mapView.getCenter().x, yMax);
