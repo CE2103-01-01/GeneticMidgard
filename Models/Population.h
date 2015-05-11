@@ -23,7 +23,7 @@ class Population {
 public:
     Population(char); //constructor de la poblacion
     ~Population();// destructor por defecto
-    void insertNewMember(Subject*, Subject*, Chromosome);
+    void insertNewMember(Subject*, Subject*, Chromosome*);
     Tree<Subject>* getPopulationTree();
     Subject* getIndividual(int);// obtiene un individuo por medio de indice
     int getPopulationSize();// obtiene la cantidad de personas en la poblacion

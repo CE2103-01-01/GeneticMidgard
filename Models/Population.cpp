@@ -66,10 +66,10 @@ void Population::init_pthread(){
  * @param Subject* mother: madre del individuo
  * @param Chromosome* chromosome: cromosoma del individuo
  */
-void Population::insertNewMember(Subject* father, Subject* mother, Chromosome chromosome) {
+void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* chromosome) {
     (*populationSize)++;
     populationTree->insertElement(
-            Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType)),
+            Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType), 0, 0),
             (*populationSize));
     Subject* newMember = (Subject*)populationTree->searchElement(*populationSize);
     (*populationFitness) += newMember->getFitness();
@@ -80,7 +80,7 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome ch
  */
 void Population::createNewRandomMember() {
     (*populationSize)++;
-    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType)),(*populationSize));
+    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType), 0 ,0),(*populationSize));
     Subject* newMember = (Subject*)populationTree->searchElement(*populationSize);
     (*populationFitness) += newMember->getFitness();
     newMember->start_p_thread();
