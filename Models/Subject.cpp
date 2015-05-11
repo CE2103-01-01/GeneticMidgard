@@ -10,7 +10,10 @@ using namespace constantsSubjectXML;
 /** Constructor
  * @brief genera un individuo de primera generacion
  */
-Subject::Subject(long idParam){
+Subject::Subject(long idParam, int posRow, int posLine){
+    position = static_cast<int*>(malloc(2 * sizeof(int)));
+    *(position) = posRow;
+    *(position + 1) = posLine;
     id = static_cast<long*>(malloc(sizeof(long)));
     generation = static_cast<long*>(malloc(sizeof(long)));
     alive = static_cast<bool*>(malloc(sizeof(bool)));
@@ -35,8 +38,11 @@ Subject::Subject(long idParam){
 /** Constructor
  * @brief genera un individuo de generacion N
  */
-Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticInformationParam,
-                 long generationParam, long idParam){
+Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* geneticInformationParam,
+                 long generationParam, long idParam, int posRow, int posLine){
+    position = static_cast<int*>(malloc(2 * sizeof(int)));
+    *(position) = posRow;
+    *(position + 1) = posLine;
     id = static_cast<long*>(malloc(sizeof(long)));
     generation = static_cast<long*>(malloc(sizeof(long)));
     alive = static_cast<bool*>(malloc(sizeof(bool)));
@@ -46,7 +52,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticI
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     *id = idParam;
     *alive = true;
-    *geneticInformation = geneticInformationParam;
+    *geneticInformation = *geneticInformationParam;
     *generation = generationParam;
     *profession = 0;
     for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
@@ -62,6 +68,9 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome geneticI
  * @brief genera un individuo de generacion N
  */
 Subject::Subject(const Subject& other){
+    position = static_cast<int*>(malloc(2 * sizeof(int)));
+    *(position) = *(other.position);
+    *(position + 1) = *(other.position + 1);
     id = static_cast<long*>(malloc(sizeof(long)));
     generation = static_cast<long*>(malloc(sizeof(long)));
     alive = static_cast<bool*>(malloc(sizeof(bool)));
@@ -86,6 +95,7 @@ Subject::Subject(const Subject& other){
 /** Destructor
  */
 Subject::~Subject(){
+    free(position);
     free(id);
     free(generation);
     free(alive);

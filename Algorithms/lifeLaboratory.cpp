@@ -88,7 +88,7 @@ void LifeLaboratory::fillGeneration(int numberOfNewSubjects, int* parents) {
         //Crea el nuevo cromosoma
         Subject* father = labRats->getIndividual(*(parents+2*i));
         Subject* mother = labRats->getIndividual(*(parents+2*i+1));
-        Chromosome luckyChromosome = ChromosomeMixer::mix(father->getGeneticInformation(),mother->getGeneticInformation());
+        Chromosome* luckyChromosome = ChromosomeMixer::mix(father->getGeneticInformation(),mother->getGeneticInformation());
         //Crea el nuevo sujeto
         labRats->insertNewMember(father,mother,luckyChromosome);
     }

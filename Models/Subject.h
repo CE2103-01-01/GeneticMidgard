@@ -26,10 +26,11 @@ class Subject {
     unsigned char* characteristics;//lista de caracteristicas
     bool* alive;
     Chromosome* geneticInformation;
+    int* position;
     void calculateFitness();//funcion de calcular fitness y set fitness
 public:
-    Subject(long);
-    Subject(Subject*,Subject*,Chromosome,long,long);
+    Subject(long, int, int);
+    Subject(Subject*,Subject*,Chromosome*,long,long,int,int);
     Subject(const Subject&);
     ~Subject();;
     long getGeneration();

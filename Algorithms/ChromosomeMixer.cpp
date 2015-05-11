@@ -11,7 +11,7 @@
  * @param: Chromosome* motherGeneticInformation: cromosoma de la madre
  * @return Chromosome*: dos cromosomas hijos, (return) & (return + sizeof(Chromosome))
  */
-Chromosome ChromosomeMixer::mix(Chromosome fatherGeneticInformation, Chromosome motherGeneticInformation){
+Chromosome* ChromosomeMixer::mix(Chromosome fatherGeneticInformation, Chromosome motherGeneticInformation){
     //Mezcla cromosomas
     unsigned char newGeneticMaterialOne[constantsSubjectXML::NUMBER_OF_GENES];
     newGeneticMaterialOne[constantsSubjectXML::NUMBER_OF_GENES] = {};
@@ -26,15 +26,18 @@ Chromosome ChromosomeMixer::mix(Chromosome fatherGeneticInformation, Chromosome 
         newGeneticMaterialOne[i] = (tmpMask & fatherGene)|(~tmpMask & motherGene);
         newGeneticMaterialTwo[i] = (~tmpMask & fatherGene)|(tmpMask & motherGene);
     }
-    Chromosome optionOne =  Chromosome(newGeneticMaterialOne);
-    Chromosome optionTwo = Chromosome(newGeneticMaterialTwo);
+    Chromosome* optionOne = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
+    new(optionOne) Chromosome(newGeneticMaterialOne);
 
-    float fitnessOne = GeneralFitnessCalculator::getInstance()->calculateFitness(&optionOne);
-    float fitnessTwo = GeneralFitnessCalculator::getInstance()->calculateFitness(&optionTwo);
+    Chromosome* optionTwo = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
+    new(optionTwo) Chromosome(newGeneticMaterialTwo);
 
-    if(fitnessOne >= fitnessTwo){
+    if(GeneralFitnessCalculator::getInstance()->calculateFitness(optionOne)
+       >= GeneralFitnessCalculator::getInstance()->calculateFitness(optionTwo)){
+        free(optionTwo);
         return optionOne;
     }else{
+        free(optionOne);
         return optionTwo;
     }
 }
