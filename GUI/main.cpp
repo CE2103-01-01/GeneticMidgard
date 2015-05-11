@@ -11,9 +11,9 @@
 
 static const int SCROLL_SPEED = 10;
 
-static const float STEPMOVE = 35.f;
+static const float STEPMOVE = 50.f;
 
-static const int FPS_LIMIT = 5;
+static const int FPS_LIMIT = 14;
 
 void checkViewLimits(View &mapView, View &minimap, float yMax, float xMax);
 
@@ -38,14 +38,13 @@ int main()
     unsigned int widthScreen = window.getSize().x;
     //Original View
     sf::View fixed = window.getView();
-    sf::View mapView(FloatRect(0,0,widthScreen,heightScreen));
+    sf::View mapView(Vector2f(mapa->width*mapa->tileWidth/2,mapa->height*mapa->tileHeight/2), Vector2f(widthScreen*2,heightScreen*2));
     //Minimap
     unsigned int size = 300;
-    sf::View minimap(sf::FloatRect(fixed.getCenter().x, fixed.getCenter().y, static_cast<float>(size), static_cast<float>(window.getSize().y*size/window.getSize().x)));
+    sf::View minimap(Vector2f(mapa->width*mapa->tileWidth/2,mapa->height*mapa->tileHeight/2),Vector2f(static_cast<float>(size), static_cast<float>(window.getSize().y*size/window.getSize().x)));
     minimap.setViewport(sf::FloatRect(1.f-static_cast<float>(minimap.getSize().x)/window.getSize().x-0.02f, 1.f-static_cast<float>(minimap.getSize().y)/window.getSize().y-0.02f, static_cast<float>(minimap.getSize().x)/window.getSize().x, static_cast<float>(minimap.getSize().y)/window.getSize().y));
     minimap.zoom(12.f);
     mapView.setViewport(FloatRect(0.0f,0.0f,1.0f,1.0f));
-
     RenderTexture mapText;
     if(!mapText.create(mapa->getHeight()*mapa->getTileHeight(),mapa->getWidth()*mapa->getTileWidth())) abort;
     int lengthSlider = 100;
@@ -144,7 +143,7 @@ void checkViewLimits(View &mapView,View &minimap, float yMax, float xMax) {
     float xMin = mapView.getSize().x/2;
     float yMin = mapView.getSize().y/2;
     yMax -= mapView.getSize().y/2;
-    xMax -= -mapView.getSize().x/2;
+    xMax -= mapView.getSize().x/2;
     if (mapView.getCenter().y > yMax)
     {
         mapView.setCenter(mapView.getCenter().x, yMax);
