@@ -25,8 +25,7 @@ public:
 };
 class Person {
 public:
-    Person(unsigned int id, unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b) :
-            id(id),x(x),y(y),r(r),g(g),b(b) { }
+    Person(unsigned int id, unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b) ;
     unsigned int id;
     unsigned int x;
     unsigned int y;

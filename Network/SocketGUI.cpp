@@ -49,6 +49,7 @@ void SocketGUI::receiving() {
             break;
         }
         packet>>message;
+        needToPaint = true;
         std::cout << "Received: " << message<< std::endl;
         Thread thread(std::bind(&SocketGUI::manageMessage, message));
         thread.launch();
@@ -67,7 +68,7 @@ void SocketGUI::manageMessage(std::string string) {
         unsigned int r = document.FindMember("r")->value.GetUint();
         unsigned int g = document.FindMember("g")->value.GetUint();
         unsigned int b = document.FindMember("b")->value.GetUint();
-        Person person(id,x,y,r,g,b);
+        Person person(id,10,10,255,g,b);
         Map::getInstance()->getPoblacion()->addPerson(person);
     }
     else if (action == "updateSubject")

@@ -14,7 +14,9 @@ using namespace std;
 int Terrain::width = 0;
 int Terrain::height = 0;
 int *Terrain::map = 0;
-
+/*
+ * Se usa este metodo para cargar el xml a memoria
+ */
 void Terrain::initArray() {
     rapidxml::xml_node<>* root_node;
     rapidxml::xml_document<> doc;
@@ -40,19 +42,23 @@ void Terrain::initArray() {
         i++;// contador para el puntero
     }
 }
-
+/*
+ * Visualiza el mapa
+ */
 void Terrain::printArray() {
-    map--;
+    int* mapArray = map -1;
     for (int i = 1; i < width * height+1; ++i)
     {
         const char separator    = ' ';
         const int numWidth      = 6;
-        cout << left << setw(numWidth) << setfill(separator) <<*(map +i);
+        cout << left << setw(numWidth) << setfill(separator) <<*(mapArray +i);
         //if(*(map+i)!=0)cout<<i%80<<","<<i/80<<endl;print objects
         if(i%width==0)cout<<endl;
     }
 }
-
+/*
+ * Algoritmo A* para paths
+ */
 DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &finish) {
     int closed_Nodes_map[width][height]; // map of closed (tried-out) Nodes
     int open_Nodes_map[width][height]; // map of open (not-yet-tried) Nodes
@@ -195,7 +201,9 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
 
 
 }
-
+/*
+ * Auxiliar del A* para el heuristic
+ */
  const int &NodeAS::estimate(const int &xDest, const int &yDest) const {
     static int xd, yd, d;
     xd=xDest-xPos;
@@ -211,11 +219,15 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
     return(d);
 }
 NodeAS::NodeAS(int xPos, int yPos, int level, int priority) : xPos(xPos), yPos(yPos), level(level), priority(priority) { }
-
+/*
+ * Invierte la prioridad
+ */
 bool NodeAS::operator<(NodeAS node) {
     return priority > node.getPriority();
 }
-
+/*
+ * Se usa para cambiar la proridad de nodos
+ */
 void NodeAS::updatePriority(const int &xDest, const int &yDest) {
     priority=level+estimate(xDest, yDest)*10; //A*
     //cout<< priority<<endl;
@@ -240,7 +252,9 @@ int NodeAS::getLevel() const {
 int NodeAS::getPriority() const {
     return priority;
 }
-
+/*
+ * Este Metodo devuelve una posicion libere
+ */
 Vector2D Terrain::getRandomFreePosition() {
     unsigned int x = trueRandom::randRange(0,width-1);
     unsigned int y = trueRandom::randRange(0,width-1);
@@ -302,4 +316,14 @@ Vector2D::Vector2D(const Vector2D& other) {
 Vector2D::Vector2D(int x, int y) {
     this->x=x;
     this->y=y;
+}
+
+int Terrain::getFreeSpaces() {
+    int freeSpaces = 0;
+    for (int i = 0; i < width * height; ++i)
+    {
+        if(*(map +i)==0) freeSpaces++;
+
+    }
+    return freeSpaces;
 }

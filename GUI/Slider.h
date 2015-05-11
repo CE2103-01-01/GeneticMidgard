@@ -11,8 +11,6 @@
 using namespace sf;
 
 
-
-
 class RoundRect : public sf::Shape
 {
 public :
@@ -80,4 +78,7 @@ public:
     void move(Vector2i);
     unsigned char getPosition();
 };
+
+const static Slider NULL_SLIDER(Vector2f(0,0),0);
+
 #endif //PROJECTMIDGARDLOGIC_SLIDER_H

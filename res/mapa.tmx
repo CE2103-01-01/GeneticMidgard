@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="170" height="170" tilewidth="32" tileheight="32" nextobjectid="1">
  <tileset firstgid="1" name="terrain_atlas" tilewidth="32" tileheight="32">
-  <image source="terrain_atlas.png" trans="9ae518" width="5000" height="4352"/>
+  <image source="terrain_atlas.png" trans="9ae518" width="512" height="4352"/>
   <terraintypes>
    <terrain name="Tierra" tile="97"/>
    <terrain name="Zacate" tile="148"/>

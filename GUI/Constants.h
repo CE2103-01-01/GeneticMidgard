@@ -6,5 +6,10 @@
 #define PROJECTMIDGARDLOGIC_CONSTANTS_H
 namespace gui_constants{
     const char *const WINDOW_NAME = "Project MidGard";
+    const int SCROLL_SPEED = 50;
+    const float STEPMOVE = 100.f;
+    const int FPS_LIMIT = 8;
+    const int SIZE_MINIMAP = 300;
 }
+static bool needToPaint = true;
 #endif //PROJECTMIDGARDLOGIC_CONSTANTS_H

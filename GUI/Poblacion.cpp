@@ -7,6 +7,7 @@
 
 void Poblacion::drawPoblacion(RenderTarget &target) {
     DoubleListIterator<Person> *iter = poblacion.getIterator();
+    //std::cout << poblacion.len() << std::endl;
     while (iter->exists()) {
         Person *next = iter->next();
         Sprite sprite;
@@ -23,10 +24,12 @@ void Poblacion::drawPoblacion(RenderTarget &target) {
             text.setStyle(sf::Text::Bold);
             text.setCharacterSize(12);
             text.setString(to_string(life->life));
+            if(life->life==0) text.setString("new");
             text.setPosition(sprite.getPosition());
             text.move(-6,-6);
             if (life->life<0) text.setColor(Color(200,0,0));
-            else text.setColor(Color(0,200,0));
+            else if(life->life>0) text.setColor(Color(0,200,0));
+            else text.setColor(Color(0,0,200));
             target.draw(text);
         }
     }
@@ -122,4 +125,10 @@ LifeUpdate *Person::getLifeUpdate() {
         }
     }
     return nullptr;
+}
+
+Person::Person(unsigned int id, unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b) : id(id),x(x),y(y),r(r),g(g),b(b)
+{
+    lifeUpdate = 0;
+    lifeUpdate = new LifeUpdate(0);
 }

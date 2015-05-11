@@ -36,6 +36,7 @@ public:
     static int height;
     static int *map;
     static void initArray();
+    static int getFreeSpaces();
     static void printArray();
     static DoubleList<Vector2D> findPathAS(const Vector2D &start, const Vector2D &finish);
     static Vector2D getRandomFreePosition();
