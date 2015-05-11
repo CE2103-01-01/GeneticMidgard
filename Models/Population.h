@@ -21,7 +21,7 @@ class Population {
     void calculateFitness();
     void killEmAll();
 public:
-    Population(char); //constructor de la poblacion
+    Population(char,pthread_mutex_t* mutex); //constructor de la poblacion
     ~Population();// destructor por defecto
     void insertNewMember(Subject*, Subject*, Chromosome*);
     Tree<Subject>* getPopulationTree();

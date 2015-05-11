@@ -56,7 +56,8 @@ void SocketLogic::createSubject(unsigned int idSubject, unsigned int x, unsigned
     writer.String("g"); writer.Uint(g);
     writer.String("b"); writer.Uint(b);
     writer.EndObject();
-    packet<<s.GetString();
+    std::string tmp = s.GetString();
+    packet<<tmp;
     client.send(packet);
 }
 

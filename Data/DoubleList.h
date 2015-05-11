@@ -32,13 +32,12 @@ template<class T>
 class Node {
     friend class DoubleList<T>; //Clase amiga lista
 private:
-
     T* data; //Valor almacenado en el nodo
     Node<T>* next; //Node next
     Node<T>* prev; //Node prev
 public:
-    Node(T *); //Constructor
     Node(T); //Constructor
+    Node(const Node&);
     ~Node(); //Destructor
     T *getData(); //Devuelve el dato del objeto
     void setData(T);// Modifica el dato del objeto
@@ -60,7 +59,7 @@ private:
     unsigned long l = 0; //longitud
 public:
     virtual DoubleListIterator<T> *getIterator();
-    //DoubleList(const DoubleList<T>&); //Constructor
+    DoubleList(const DoubleList<T>&); //Constructor
     DoubleList(); //Constructor
     void add(T); //Inserta nodo al inicio
     void append(T); //Inserta nodo al final
@@ -80,16 +79,6 @@ public:
     void print(); //Imprime en consola
 };
 
-
-/** @brief Constructor
-*
-*/
-template<class T>
-Node<T>::Node(T* v) {
-    data = v;
-    next = 0;
-    prev = 0;
-}
 /** @brief Constructor
 *
 */
@@ -100,14 +89,25 @@ Node<T>::Node(T v) {
     next = 0;
     prev = 0;
 }
+
 /** @brief Destructor
 *
 */
 template<class T>
 Node<T>::~Node() {
+    free(data);
     next = 0;
     prev = 0;
-};
+}
+
+template<class T>
+Node<T>::Node(const Node& other){
+    data = static_cast<T*>(malloc(sizeof(T)));
+    *(data) = *(other.data);
+    next = 0;
+    prev = 0;
+}
+
 /** @brief Devuelve el next nodo
 *
 * @return Node<T>
@@ -466,6 +466,22 @@ bool DoubleList<T>::swap(unsigned int i, unsigned int j) {
 
 }
 
+template<class T>
+DoubleList<T>::DoubleList(const DoubleList<T>& other){
+    Node<T>* tmp = other._head;
+    _head = static_cast<Node<T>*>(malloc(sizeof(Node<T>)));
+    new(_head) Node<T>(*tmp->getData());
+    Node<T>* tmp2 = _head;
+    tmp = tmp->next;
+    while(tmp!=0){
+        Node<T>* tmp3 = static_cast<Node<T>*>(malloc(sizeof(Node<T>)));
+        new(tmp3) Node<T>(*tmp->getData());
+        tmp2->insertAfter(tmp3);
+        tmp = tmp->next;
+        tmp2 = tmp3;
+    }
+
+}
 
 template<class T>
 bool DoubleList<T>::has(T data) {

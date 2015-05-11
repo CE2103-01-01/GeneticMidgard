@@ -10,7 +10,7 @@
  * @param Tree<Subject>* peopleTreeParam: primera generacion
  * @param char populationTypeParam: tipo de poblacion
  */
-Population::Population(char populationTypeParam){
+Population::Population(char populationTypeParam, pthread_mutex_t* mutex){
     //Reserva espacios
     populationType = static_cast<char*>(malloc(sizeof(char)));
     populationFitness = static_cast<float*>(malloc(sizeof(float)));
@@ -19,7 +19,7 @@ Population::Population(char populationTypeParam){
     populationTree = static_cast<Tree<Subject>*>(malloc(sizeof(Tree<Subject>)));
     defunct = static_cast<bool*>(malloc(sizeof(bool)));
     reproduction_pthread = 0;
-    mutex = 0;
+    mutex = mutex;
     //Llena espacios
     *populationType = populationTypeParam;
     *populationSize = 0;
@@ -54,8 +54,6 @@ void Population::calculateFitness(){
 /**@brief: inicia el pthread
  */
 void Population::init_pthread(){
-    mutex = static_cast<pthread_mutex_t*>(malloc(sizeof(pthread_mutex_t)));
-    pthread_mutex_init(mutex,NULL);
     reproduction_pthread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
     void* parameter = malloc(sizeof(PThreadParam));
     new(static_cast<PThreadParam*>(parameter)) PThreadParam(this,mutex);
@@ -173,7 +171,7 @@ void* reproductionThread(void* parameter){
     //Se crea controlador de tiempo
     struct timespec timeControler;
     timeControler.tv_nsec=0;
-    timeControler.tv_sec=2;
+    timeControler.tv_sec=5;
     //Primera generacion
     laboratory->createPopulation(100);
     //Se bloquea mutex
@@ -188,8 +186,5 @@ void* reproductionThread(void* parameter){
     }
     //Se desbloquea mutex
     pthread_mutex_unlock(mutex);
-    nanosleep(&timeControler, NULL);
-    nanosleep(&timeControler, NULL);
-    nanosleep(&timeControler, NULL);
     return 0;
 }

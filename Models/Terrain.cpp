@@ -39,7 +39,7 @@ void Terrain::initArray() {
         *(map +i) = graphicID;
         i++;// contador para el puntero
     }
-};
+}
 
 void Terrain::printArray() {
     map--;
@@ -51,7 +51,7 @@ void Terrain::printArray() {
         //if(*(map+i)!=0)cout<<i%80<<","<<i/80<<endl;print objects
         if(i%width==0)cout<<endl;
     }
-};
+}
 
 DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &finish) {
     int closed_Nodes_map[width][height]; // map of closed (tried-out) Nodes
@@ -194,7 +194,7 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
     return DoubleList<Vector2D>();
 
 
-};
+}
 
  const int &NodeAS::estimate(const int &xDest, const int &yDest) const {
     static int xd, yd, d;
@@ -219,23 +219,23 @@ bool NodeAS::operator<(NodeAS node) {
 void NodeAS::updatePriority(const int &xDest, const int &yDest) {
     priority=level+estimate(xDest, yDest)*10; //A*
     //cout<< priority<<endl;
-};
+}
 
 void NodeAS::nextLevel(const int &i) {
     level+=10;//Priority going straight
-};
+}
 
 int NodeAS::getxPos() const {
     return xPos;
-};
+}
 
 int NodeAS::getyPos() const {
     return yPos;
-};
+}
 
 int NodeAS::getLevel() const {
     return level;
-};
+}
 
 int NodeAS::getPriority() const {
     return priority;

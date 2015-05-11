@@ -4,6 +4,7 @@
 
 #include "Subject.h"
 #include "Terrain.h"
+#include "../Network/SocketLogic.h"
 
 using namespace pugi;
 using namespace constantsSubjectXML;
@@ -202,6 +203,8 @@ void Subject::start_p_thread(){
     Terrain::set(positionsVector,*id);
     *(position) = positionsVector.x;
     *(position + 1) = positionsVector.y;
+    SocketLogic::getInstance()->createSubject(*id,*(position),*(position+1),*(characteristics+POSITION_OF_RED),
+                               *(characteristics+POSITION_OF_GREEN),*(characteristics+POSITION_OF_BLUE));
     void* parameters = malloc(sizeof(PThreadParam));
     new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,NULL);
     lifeThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
@@ -216,16 +219,16 @@ void* subjectLife(void* parameter){
     //Castea el parametro y extrae el sujeto
     Subject* excecutioner = static_cast<Subject*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
     //Crea estructura para tiempo
-    struct timespec timeControler;
-    timeControler.tv_nsec=500000000;
-    timeControler.tv_sec=1;
+    struct timespec timeController;
+    timeController.tv_nsec=500000000;
+    timeController.tv_sec=1;
     int life = 5;
     //Este while corre hasta que se llame al metodo kill()
     while(excecutioner->isAlive()){
         //Llama al metodo de vida del sujeto
         excecutioner->life();
         //Espera un segundo
-        nanosleep(&timeControler, 0);
+        nanosleep(&timeController, 0);
         life--;
         if(life==0){
             excecutioner->kill();

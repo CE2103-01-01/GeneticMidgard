@@ -1,16 +1,17 @@
 #include "Models/Population.h"
 #include "Network/SocketLogic.h"
 #include "Models/Terrain.h"
+#include "Models/PopulationManager.h"
 
 int main()
 {
     Terrain::initArray();
-   // SocketLogic::getInstance();
+    SocketLogic::getInstance();
 
-    Population* population = static_cast<Population*>(malloc(sizeof(Population)));
-    new(population) Population(0);
+    pthread_mutex_t* mutex;
+    pthread_mutex_init(mutex,NULL);
+    PopulationManager* populationManager = PopulationManager::getInstance(mutex);
+    populationManager->killEmAll();
 
-    population->init_pthread();
-    pthread_join(*population->get_pthread(),0);
     return 0;
 }

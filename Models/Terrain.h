@@ -25,8 +25,8 @@ static char const *const TILE_NODE = "tile";
 class Vector2D
 {
 public:
-    Vector2D(const Vector2D& v) :x(v.x), y(v.y){ }
-    Vector2D(int x, int y) : x(x), y(y) { }
+    Vector2D(const Vector2D&);
+    Vector2D(int, int);
     int x;
     int y;
 };
