@@ -10,8 +10,8 @@
 #define PROJECTMIDGARD_POPULATION_H
 
 class Population {
-    pthread_mutex_t* mutex;
     pthread_t* reproduction_pthread;
+    int* activePopulationsOnManager;
     int* actualGeneration;
     int* populationSize;
     float* populationFitness;
@@ -21,7 +21,7 @@ class Population {
     void calculateFitness();
     void killEmAll();
 public:
-    Population(char,pthread_mutex_t* mutex); //constructor de la poblacion
+    Population(char, int*); //constructor de la poblacion
     ~Population();// destructor por defecto
     void insertNewMember(Subject*, Subject*, Chromosome*);
     Tree<Subject>* getPopulationTree();
@@ -35,6 +35,7 @@ public:
     void exterminate();
     void init_pthread();
     pthread_t* get_pthread();
+    void delete_pthread();
 };
 
 void* reproductionThread(void*);

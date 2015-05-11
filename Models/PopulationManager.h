@@ -8,7 +8,7 @@
 #include "Population.h"
 
 class PopulationManager {
-    pthread_t* managementThread;
+    static pthread_t* managementThread;
     static PopulationManager* singleton;
     int* actualID;
     int* activePopulations;
@@ -23,7 +23,8 @@ class PopulationManager {
         int getActivePopulations();
         Population* getPopulation();
         static PopulationManager* getInstance(pthread_mutex_t*);
-        pthread_t* get_pthread();
+        static pthread_t* get_pthread();
+        void delete_pthread();
 };
 
 void* populationManagerThread(void*);

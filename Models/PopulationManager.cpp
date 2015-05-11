@@ -5,19 +5,12 @@
 #include "PopulationManager.h"
 
 PopulationManager* PopulationManager::singleton = 0;
+pthread_t* PopulationManager::managementThread = 0;
 
 /**@brief constructor
  * @param int numberOfPopulations: numero de poblaciones a manejar
  */
 PopulationManager::PopulationManager(int numberOfPopulations, pthread_mutex_t* mutex){
-    //Reserva espacio para N cantidad de poblaciones, donde N = numberOfPopulations
-    population = static_cast<Population*>(malloc(sizeof(Population)*numberOfPopulations));
-    //Itera creando la cantidad de poblaciones solicitada
-    for(int i = 0; i < numberOfPopulations; i++){
-        new(population+i) Population(i, mutex);
-        population->init_pthread();
-//        pthread_join(*population->get_pthread(),0);
-    }
     //Reserva espacio para el contador de poblaciones
     activePopulations = static_cast<int*>(malloc(sizeof(int)));
     //Inicia el contador de poblaciones
@@ -26,6 +19,12 @@ PopulationManager::PopulationManager(int numberOfPopulations, pthread_mutex_t* m
     actualID = static_cast<int*>(malloc(sizeof(int)));
     //Inicia el ID de poblaciones
     *(actualID) = numberOfPopulations;
+    //Reserva espacio para N cantidad de poblaciones, donde N = numberOfPopulations
+    population = static_cast<Population*>(malloc(sizeof(Population)*numberOfPopulations));
+    //Itera creando la cantidad de poblaciones solicitada
+    for(int i = 0; i < numberOfPopulations; i++){
+        new(population+i) Population(i,activePopulations);
+    }
     //Reserva espacio para parametro de pthread
     void* parameters = malloc(sizeof(PThreadParam));
     //Crea parametro de pthread
@@ -40,8 +39,8 @@ PopulationManager::PopulationManager(int numberOfPopulations, pthread_mutex_t* m
  */
 PopulationManager::~PopulationManager(){
     free(population);
-   // free(actualID);
-  //  free(managementThread);
+    free(actualID);
+    free(managementThread);
     free(activePopulations);
 }
 
@@ -100,6 +99,14 @@ PopulationManager* PopulationManager::getInstance(pthread_mutex_t* mutex) {
 
 }
 
+/**@brief elimina el pthread
+ */
+void PopulationManager::delete_pthread(){
+    free(managementThread);
+}
+
+/**@brief mata a todos
+ */
 void PopulationManager::killEmAll(){
     //Inicia pthread de poblaciones, se asume que al no haber empezado, las poblaciones activas son todas
     for(int i = 0; i < *actualID; i++){
@@ -128,21 +135,16 @@ void* populationManagerThread(void* param){
     for(int i = 0; i < manager->getActivePopulations(); i++){
         //Inicia el pthread
         (manager->getPopulation()+i)->init_pthread();
-        //Hace que se espere la finalizacion del pthread
     }
-    int i = 0; //TODO: cambiar
     //Este while corre hasta que se mueran todos
     while(manager->isSomeoneAlive()){
         //Llama al metodo del thread
         manager->thread();
         //Espera un segundo
         nanosleep(&timeController, 0);
-        i++; //TODO: cambiar
-        if(i<10){
-            manager->killEmAll();
-        }
     }
     //Se desbloquea mutex
     pthread_mutex_unlock(mutex);
+    manager->delete_pthread();
     return 0;
 }

@@ -10,8 +10,9 @@
  * @param Tree<Subject>* peopleTreeParam: primera generacion
  * @param char populationTypeParam: tipo de poblacion
  */
-Population::Population(char populationTypeParam, pthread_mutex_t* mutexParam){
+Population::Population(char populationTypeParam, int* activePopulationsOnManagerParam){
     //Reserva espacios
+    activePopulationsOnManager = activePopulationsOnManagerParam;
     populationType = static_cast<char*>(malloc(sizeof(char)));
     populationFitness = static_cast<float*>(malloc(sizeof(float)));
     populationSize = static_cast<int*>(malloc(sizeof(int)));
@@ -19,7 +20,6 @@ Population::Population(char populationTypeParam, pthread_mutex_t* mutexParam){
     populationTree = static_cast<Tree<Subject>*>(malloc(sizeof(Tree<Subject>)));
     defunct = static_cast<bool*>(malloc(sizeof(bool)));
     reproduction_pthread = 0;
-    mutex = mutexParam;
     //Llena espacios
     *populationType = populationTypeParam;
     *populationSize = 0;
@@ -34,12 +34,12 @@ Population::Population(char populationTypeParam, pthread_mutex_t* mutexParam){
 Population::~Population() {
     free(populationTree);
     free(defunct);
-    mutex = 0;
     free(reproduction_pthread);
     free(actualGeneration);
     free(populationSize);
     free(populationFitness);
     free(populationType);// tipo de la poblacion
+    activePopulationsOnManager = 0;
 }
 
 /**@brief: calcula el fitness
@@ -56,7 +56,7 @@ void Population::calculateFitness(){
 void Population::init_pthread(){
     reproduction_pthread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
     void* parameter = malloc(sizeof(PThreadParam));
-    new(static_cast<PThreadParam*>(parameter)) PThreadParam(this,mutex);
+    new(static_cast<PThreadParam*>(parameter)) PThreadParam(this,NULL);
     pthread_create(reproduction_pthread,NULL,reproductionThread,parameter);
 }
 
@@ -149,6 +149,7 @@ bool Population::isDefunct() {
 void Population::exterminate(){
     killEmAll();
     *defunct = true;
+    (*activePopulationsOnManager)--;
 }
 
 /**Accede al pthread
@@ -158,12 +159,17 @@ pthread_t* Population::get_pthread(){
     return reproduction_pthread;
 }
 
+/**@brief elimina el pthread
+ */
+void Population::delete_pthread(){
+    free(reproduction_pthread);
+}
+
 /**@brief Metodo del pthread
  * @param void* populationParameter: poblacion
  */
 void* reproductionThread(void* parameter){
     //Se obtiene el mutex y la poblacion
-    pthread_mutex_t* mutex = static_cast<PThreadParam*>(parameter)->getMutex();
     Population* population = static_cast<Population*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
     //Se crea el laboratorio
     LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
@@ -171,20 +177,17 @@ void* reproductionThread(void* parameter){
     //Se crea controlador de tiempo
     struct timespec timeControler;
     timeControler.tv_nsec=0;
-    timeControler.tv_sec=2;
+    timeControler.tv_sec=1;
     //Primera generacion
     laboratory->createPopulation(100);
-    //Se bloquea mutex
-    pthread_mutex_lock(mutex);
     //Loop que se ejecutara mientras la poblacion viva
+    int x = 0;
     while(!population->isDefunct()){
         laboratory->createGeneration(SUBJECTS_BY_GENERATION);
-        if(population->getPopulationSize()>=400){
-            population->exterminate();//TODO: cambiar, es prueba
-        }
+        x++;
+        if(x==100) population->exterminate();
         nanosleep(&timeControler, NULL);
     }
-    //Se desbloquea mutex
-    pthread_mutex_unlock(mutex);
+    population->delete_pthread();
     return 0;
 }
