@@ -198,13 +198,13 @@ pthread_t* Subject::get_p_thread(){
  * @param Subject* subject: sujeto sobre el que se ejecuta
  */
 void Subject::start_p_thread(){
-    Vector2D positionsVector = Terrain::getRandomFreePosition();
+    //Vector2D positionsVector = Terrain::getRandomFreePosition();
     position = static_cast<int*>(malloc(2 * sizeof(int)));
-    Terrain::set(positionsVector,*id);
-    *(position) = positionsVector.x;
-    *(position + 1) = positionsVector.y;
-    SocketLogic::getInstance()->createSubject(*id,*(position),*(position+1),*(characteristics+POSITION_OF_RED),
-                               *(characteristics+POSITION_OF_GREEN),*(characteristics+POSITION_OF_BLUE));
+    //Terrain::set(positionsVector,*id);
+    *(position) = 0;
+    *(position + 1) = 0;
+    //SocketLogic::getInstance()->createSubject(*id,*(position),*(position+1),*(characteristics+POSITION_OF_RED),
+    //                           *(characteristics+POSITION_OF_GREEN),*(characteristics+POSITION_OF_BLUE));
     void* parameters = malloc(sizeof(PThreadParam));
     new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,NULL);
     lifeThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));

@@ -293,3 +293,13 @@ void Terrain::set(int i, int j, int dato) {
     if(width<i||height<j||i<0||j<0) abort();
     *(map+i+(j*width)) = dato;
 }
+
+Vector2D::Vector2D(const Vector2D& other) {
+    x=other.x;
+    y=other.y;
+}
+
+Vector2D::Vector2D(int x, int y) {
+    this->x=x;
+    this->y=y;
+}

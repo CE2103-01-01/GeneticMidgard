@@ -10,7 +10,7 @@
  * @param Tree<Subject>* peopleTreeParam: primera generacion
  * @param char populationTypeParam: tipo de poblacion
  */
-Population::Population(char populationTypeParam, pthread_mutex_t* mutex){
+Population::Population(char populationTypeParam, pthread_mutex_t* mutexParam){
     //Reserva espacios
     populationType = static_cast<char*>(malloc(sizeof(char)));
     populationFitness = static_cast<float*>(malloc(sizeof(float)));
@@ -19,14 +19,14 @@ Population::Population(char populationTypeParam, pthread_mutex_t* mutex){
     populationTree = static_cast<Tree<Subject>*>(malloc(sizeof(Tree<Subject>)));
     defunct = static_cast<bool*>(malloc(sizeof(bool)));
     reproduction_pthread = 0;
-    mutex = mutex;
+    mutex = mutexParam;
     //Llena espacios
     *populationType = populationTypeParam;
     *populationSize = 0;
     *actualGeneration = 1;
     *populationFitness = 0;
     *defunct = false;
-    new(populationTree) Tree<Subject>();
+    new(populationTree) Tree<Subject>(TREE_SIZE);
 }
 
 /**@brief: libera el espacio utilizado
@@ -34,7 +34,7 @@ Population::Population(char populationTypeParam, pthread_mutex_t* mutex){
 Population::~Population() {
     free(populationTree);
     free(defunct);
-    free(mutex);
+    mutex = 0;
     free(reproduction_pthread);
     free(actualGeneration);
     free(populationSize);

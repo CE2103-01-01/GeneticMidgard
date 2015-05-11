@@ -18,11 +18,11 @@ class PopulationManager {
         PopulationManager(int,pthread_mutex_t*);
         ~PopulationManager();
         void thread();
+        void killEmAll();
         bool isSomeoneAlive();
         int getActivePopulations();
         Population* getPopulation();
         static PopulationManager* getInstance(pthread_mutex_t*);
-        void killEmAll();
 };
 
 void* populationManagerThread(void*);

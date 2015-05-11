@@ -5,13 +5,13 @@
 
 int main()
 {
-    Terrain::initArray();
-    SocketLogic::getInstance();
+   // Terrain::initArray();
+   // SocketLogic::getInstance();
 
     pthread_mutex_t* mutex;
     pthread_mutex_init(mutex,NULL);
     PopulationManager* populationManager = PopulationManager::getInstance(mutex);
-    populationManager->killEmAll();
+   // populationManager->killEmAll();
 
     return 0;
 }
