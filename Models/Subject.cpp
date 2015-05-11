@@ -95,7 +95,14 @@ Subject::Subject(const Subject& other){
 /** Destructor
  */
 Subject::~Subject(){
-
+    free(id);
+    free(generation);
+    free(characteristics);
+    free(alive);
+    free(profession);
+    free(fitness);
+    free(geneticInformation);
+    free(position);
 }
 
 /** @brief Accede al padre
