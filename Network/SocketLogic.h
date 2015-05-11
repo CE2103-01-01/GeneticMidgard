@@ -33,5 +33,7 @@ public:
 
 };
 
+void createSubject(unsigned int idSubject, unsigned int x, unsigned int y,
+                   unsigned int r, unsigned int g, unsigned int b);
 
 #endif //PROJECTMIDGARDLOGIC_SOCKETLOGIC_H

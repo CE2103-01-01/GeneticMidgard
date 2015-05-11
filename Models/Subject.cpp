@@ -195,10 +195,8 @@ void Subject::start_p_thread(){
     position = static_cast<int*>(malloc(2 * sizeof(int)));
     *(position) = positionsVector.x;
     *(position + 1) = positionsVector.y;
-    //Thread message(std::bind(&SocketLogic::getInstance()->createSubject,*id,*(position),*(position+1),
-    //                          *(characteristics+POSITION_OF_RED, *(characteristics+POSITION_OF_GREEN),
-    //                          *(characteristics+POSITION_OF_BLUE)));
-    //message.launch();
+    void createSubject(unsigned int idSubject, unsigned int x, unsigned int y,
+                       unsigned int r, unsigned int g, unsigned int b);
     void* parameters = malloc(sizeof(PThreadParam));
     new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,NULL);
     lifeThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));

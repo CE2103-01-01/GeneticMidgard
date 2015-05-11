@@ -102,3 +102,8 @@ void SocketLogic::deleteObject(unsigned int idObject) {
     packet<<s.GetString();
     client.send(packet);
 }
+
+void createSubject(unsigned int idSubject, unsigned int x, unsigned int y, unsigned int r, unsigned int g,
+                   unsigned int b) {
+    SocketLogic::getInstance()->createSubject(idSubject,x,y,r,g,b);
+}
