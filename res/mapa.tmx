@@ -8,7 +8,6 @@
    <terrain name="Arbusto" tile="145"/>
    <terrain name="Persona" tile="1835"/>
   </terraintypes>
-  <tile id="69" terrain=",,,0"/>
   <tile id="80" terrain=",,,0"/>
   <tile id="81" terrain=",,0,0"/>
   <tile id="82" terrain=",,0,"/>

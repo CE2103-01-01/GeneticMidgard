@@ -15,6 +15,7 @@ static const char *const PERSONA_TERRAIN = "Persona";
 
 #include <SFML/Graphics.hpp>
 #include "../Data/DoubleList.h"
+
 using namespace sf;
 class LifeUpdate{
 public:
@@ -34,7 +35,8 @@ public:
     unsigned int b;
     LifeUpdate* lifeUpdate;
     bool operator==(unsigned int pId);
-    void setLifeUpdate(LifeUpdate);
+    void setLifeUpdate(int);
+    LifeUpdate *getLifeUpdate();
 
 };
 
@@ -43,6 +45,7 @@ private:
     DoubleList<Person> poblacion;
     Texture texturePerson;
     Texture textureLayer;
+    Font roboto;
 
 public:
     Poblacion(Texture, Texture);

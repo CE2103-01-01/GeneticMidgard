@@ -3,8 +3,6 @@
 //
 
 #include "Poblacion.h"
-#include "../libs/rapidxml/rapidxml.hpp"
-#include "../libs/rapidxml/rapidxml_utils.hpp"
 #include "Map.h"
 
 void Poblacion::drawPoblacion(RenderTarget &target) {
@@ -13,11 +11,23 @@ void Poblacion::drawPoblacion(RenderTarget &target) {
         Person *next = iter->next();
         Sprite sprite;
         sprite.setTexture(texturePerson);
-        sprite.setPosition(sf::Vector2f(Map::tileWidth * next->x, Map::tileHeight * next->y));
+        sprite.setPosition(sf::Vector2f(Map::getInstance()->getTileWidth() * next->x, Map::getInstance()->getTileHeight() * next->y));
         target.draw(sprite);
         sprite.setTexture(textureLayer);
         sprite.setColor(sf::Color(next->r,next->g,next->b));
         target.draw(sprite);
+        LifeUpdate* life =  next->getLifeUpdate();
+        if (life) {
+            Text text;
+            text.setFont(roboto);
+            text.setStyle(sf::Text::Bold);
+            text.setCharacterSize(12);
+            text.setString(to_string(life->life));
+            text.setPosition(sprite.getPosition());
+            if (life->life<0) text.setColor(Color(200,0,0));
+            else text.setColor(Color(0,200,0));
+            target.draw(text);
+        }
     }
 }
 
@@ -61,7 +71,7 @@ void Poblacion::updateLifeId(unsigned int id, int lifeUpdate) {
         Person *next = iter->next();
         if(*next==id)
         {
-            next->setLifeUpdate(LifeUpdate(lifeUpdate));
+            next->setLifeUpdate(lifeUpdate);
             return;
         }
     }
@@ -71,16 +81,44 @@ bool Person::operator==(unsigned int pId) {
     return (id==pId);
 }
 
-LifeUpdate::LifeUpdate(int life) {
+LifeUpdate::LifeUpdate(int life) :life(life){
     startTime = Clock();
+
 }
 
-void Person::setLifeUpdate(LifeUpdate update) {
-    lifeUpdate = static_cast<LifeUpdate*>(malloc(sizeof(update)));
-    new(lifeUpdate) LifeUpdate(update);
+
+
+
+void Person::setLifeUpdate(int i) {
+    if(lifeUpdate)free(lifeUpdate);
+    lifeUpdate = new LifeUpdate(i);
 }
+
 
 Poblacion::Poblacion(Texture texture, Texture pTextureLayer) {
     texturePerson = texture;
     textureLayer = pTextureLayer;
+
+    if (!roboto.loadFromFile("../res/roboto.ttf"))
+    {
+        std::cout << "Error al cargar Roboto Font" << std::endl;
+    }
+
+}
+
+LifeUpdate *Person::getLifeUpdate() {
+    if (lifeUpdate)
+    {
+        float elapsedSeconds = lifeUpdate->startTime.getElapsedTime().asSeconds();
+        if (elapsedSeconds < 1.0f)
+        {
+            return lifeUpdate;
+        }
+        else
+        {
+            free(lifeUpdate);
+            lifeUpdate = nullptr;
+        }
+    }
+    return nullptr;
 }
