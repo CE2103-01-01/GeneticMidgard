@@ -272,6 +272,7 @@ Vector2D Terrain::getRandomFreePositionNear(Vector2D vector){
         }
         i++;
     }
+    std::cout << "No hay espacio disponible en la matriz" << std::endl;
     return Vector2D(-1,-1);
 }
 
