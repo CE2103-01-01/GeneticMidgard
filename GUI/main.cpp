@@ -13,7 +13,7 @@ static const int SCROLL_SPEED = 10;
 
 static const float STEPMOVE = 50.f;
 
-static const int FPS_LIMIT = 14;
+static const int FPS_LIMIT = 8;
 
 void checkViewLimits(View &mapView, View &minimap, float yMax, float xMax);
 

@@ -246,37 +246,33 @@ Vector2D Terrain::getRandomFreePosition() {
     unsigned int y = trueRandom::randRange(0,width-1);
     if (get(x,y)==0) return Vector2D(x,y);
     //Primer intento segun rango definido
-    Vector2D primerIntento = getRandomFreePositionNear(Vector2D(x,y),RANGO_DEL_PRIMER_INTENTO);
-    if(primerIntento.x<0||primerIntento.y<0){
-        int range = width;
-        if (width<height) range= height;
-        return getRandomFreePositionNear(Vector2D(width/2,height/2),range/2);
-    }
-    else
-    {
-        return primerIntento;
-    }
+    return getRandomFreePositionNear(Vector2D(x,y));
+
 
 }
 
-Vector2D Terrain::getRandomFreePositionNear(Vector2D vector, int range){
-    DoubleList<Vector2D> opciones = DoubleList<Vector2D>();
-    for (int i = -range; i <= range; ++i) {
-        for (int j = -range; j <= range; ++j) {
-            int x = vector.x+i;
-            int y = vector.y+j;
-            if (!(x<0||x>=width||y<0||y>=width||get(x,y)!=0))
-            {
-                opciones.append(Vector2D(x,y));
+Vector2D Terrain::getRandomFreePositionNear(Vector2D vector){
+    int i=1;
+    int max = width;
+    if (height>width)max = height;
+    int x,y;
+    while (i<max){
+        for (int switchXY = 0; switchXY < 2; ++switchXY) {//Switch between X axis wall and Y axis walls
+            for (int Wall = -i; Wall <= i; Wall += 2 * i) {// Switch Between two parallel walls
+                if(switchXY ==0) x = vector.x + Wall;
+                else y = vector.y + Wall;
+                for (int positionThroughWall = -i; positionThroughWall < i; ++positionThroughWall) {
+                    if(switchXY ==0) y = vector.y + positionThroughWall;
+                    else x = vector.x+ positionThroughWall;
+                    if (!(x < 0 || x >= width || y < 0 || y >= width || get(x, y) != 0)) {//Free Valid Space
+                        return Vector2D(x, y);
+                    }
+                }
             }
         }
+        i++;
     }
-    int largoLista = opciones.len();
-    if (largoLista==0) {
-        std::cout << "No se encontro campo disponible en el randomPosition" << std::endl;
-        return Vector2D(-1,-1);
-    }
-    return *opciones.get(trueRandom::randRange(0,largoLista-1));
+    return Vector2D(-1,-1);
 }
 
 int Terrain::get(Vector2D vector) {

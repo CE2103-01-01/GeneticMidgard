@@ -39,7 +39,7 @@ public:
     static void printArray();
     static DoubleList<Vector2D> findPathAS(const Vector2D &start, const Vector2D &finish);
     static Vector2D getRandomFreePosition();
-    static Vector2D getRandomFreePositionNear(Vector2D, int);
+    static Vector2D getRandomFreePositionNear(Vector2D);
     static int get(Vector2D);
     static int get(int,int);
     static void set(Vector2D, int);
