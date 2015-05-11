@@ -52,3 +52,41 @@ void Slider::move(Vector2i i) {
 unsigned char Slider::getPosition() {
     return pos;
 }
+
+RoundRect::RoundRect(const sf::Vector2f& radius = sf::Vector2f(0, 0)) : m_radius(radius)
+{
+    update();
+}
+
+void RoundRect::setRadius(const sf::Vector2f &radius) {
+    m_radius = radius;
+    update();
+}
+
+const sf::Vector2f &RoundRect::getRadius() const {
+    return m_radius;
+}
+
+unsigned int RoundRect::getPointCount() const {
+    return 30;
+}
+
+sf::Vector2f RoundRect::getPoint(unsigned int index) const {
+    static const float pi = 3.141592654f;
+
+    float x;
+    float y;
+    int offset = m_radius.x - m_radius.y;
+    float angle = index * 2 * pi / getPointCount()-pi/2;
+    if (angle<pi/2) {
+        x = offset  + std::cos(angle) * m_radius.y;
+        y = std::sin(angle) * m_radius.y;
+    }
+    else
+    {
+        x =  std::cos(angle) * m_radius.y - offset;
+        y =  std::sin(angle) * m_radius.y;
+    }
+
+    return sf::Vector2f(m_radius.x + x, m_radius.y + y);
+}
