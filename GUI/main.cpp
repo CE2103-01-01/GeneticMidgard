@@ -13,7 +13,7 @@ static const int SCROLL_SPEED = 10;
 
 static const float STEPMOVE = 35.f;
 
-static const int FPS_LIMIT = 20;
+static const int FPS_LIMIT = 5;
 
 void checkViewLimits(View &mapView, View &minimap, float yMax, float xMax);
 
@@ -29,8 +29,10 @@ int main()
     Map* mapa = Map::getInstance();
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
-
-    RenderWindow window(sf::VideoMode::getDesktopMode(), WINDOW_NAME, sf::Style::Default, settings);
+    VideoMode video = VideoMode::getDesktopMode();
+    video.height *=0.7;
+    video.width *=0.7;
+    RenderWindow window(video, WINDOW_NAME, sf::Style::Default, settings);
     window.setFramerateLimit(FPS_LIMIT);
     unsigned int heightScreen = window.getSize().y;
     unsigned int widthScreen = window.getSize().x;
