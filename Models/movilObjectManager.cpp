@@ -14,11 +14,26 @@ using namespace constantsSubjectXML;
 movilObjectManager::movilObjectManager() {
     xml_document objectSource;
     objectSource.load_file(CONSTANT_XML_PATH);
+    listObject = DoubleList<movilObject>();
     int elementCounter=std::distance(objectSource.child("CONSTANTS").child("MOVILOBJECT").begin(),
                                      objectSource.child("CONSTANTS").child("MOVILOBJECT").end());
-    trueRandom::randRange(0,elementCounter);
-    Vector2D position = Terrain::getRandomFreePosition();
-    Terrain::set(position,-100);
+    for(int i =0; i<500;i++){
+        int objectNumber = trueRandom::randRange(0,elementCounter);
+        xml_node temp = objectSource.child("CONSTANTS").child("MOVILOBJECT").first_child();
+        for(int j =0;j<objectNumber;j++){
+          temp = temp.next_sibling();
+        }
+        Vector2D position = Terrain::getRandomFreePosition();
+        std::string name = temp.attribute("name").as_string();
+        movilObject object = movilObject(this,name,temp.attribute("characteristic")
+                                                 .as_int(),temp.attribute("value").as_int(),i,position.x
+                                                    ,position.y);
+        listObject.append(object);
+        Terrain::set(position,-100);
+    }
+
+
+
     std::cout<<elementCounter<<std::endl;
 }
 /**Reduce cantidad de contador de objetos
@@ -33,11 +48,13 @@ void movilObjectManager::decreseCounter() {
  * @param string name: nombre de objeto, int carateristic:identificador de caracteristca
  * @param int value: valor que se modifica en la caracteristica
  */
-movilObject::movilObject(movilObjectManager* control,std::string name,int caracteristic,int value,int identificator)  {
+movilObject::movilObject(movilObjectManager* control,std::string name,int characteristic,int value,
+                         int identificator,int xPosition,int yPosition)  {
     manager = control;
+    position=new Vector2D(xPosition,yPosition);
     use = false;
     type=name;
-    object = caracteristic;
+    object = characteristic;
     effect = value;
     id=identificator;
 }
@@ -71,4 +88,20 @@ std::string movilObject::getType() {
  */
 int movilObject::getId() {
     return id;
+}
+/**obtener la posicion en x del objeto
+ *@brief obtener el posicion en x del objeto
+ * @return int :  posicion x del objeto
+ *
+ */
+int movilObject::get_X_Position() {
+    return position->x;
+}
+/**obtener la posicion en y del objeto
+ *@brief obtener el posicion en y del objeto
+ * @return int :  posicion y del objeto
+ *
+ */
+int movilObject::get_Y_Position() {
+    return position->y;
 }

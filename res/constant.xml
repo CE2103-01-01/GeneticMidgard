@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <CONSTANTS>
     <MOVILOBJECT>
-        <object name="apple" caracteristic="0" value="5"/>
-        <object name="meat" caracteristic="0" value="20"/>
+        <object name="apple" characteristic="0" value="5"/>
+        <object name="meat" characteristic="0" value="20"/>
     </MOVILOBJECT>
 
     <Fitness>

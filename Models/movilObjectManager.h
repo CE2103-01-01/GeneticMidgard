@@ -14,9 +14,11 @@
  * @caracteristicas: depende parametros de archivo xml
  *
 */
+class movilObject;
 class movilObjectManager{
 private:
     int objectCounter;
+    DoubleList<movilObject> listObject;
 public:
     movilObjectManager();
     void createObject();
@@ -30,17 +32,20 @@ public:
 class movilObject {
 private:
     movilObjectManager* manager;
+    Vector2D* position;
     int effect;
     std::string type;
     int object;
     bool use;
     int id;
 public:
-    movilObject(movilObjectManager*,std::string,int,int,int);
+    movilObject(movilObjectManager*,std::string,int,int,int,int,int);
     ~movilObject();
     void applyEffect(Subject* person);
     int getId();
     std::string getType();
+    int get_X_Position();
+    int get_Y_Position();
 
 };
 
