@@ -67,7 +67,9 @@ public:
     string getTilesetPath();
     int getWidth();
     int getHeight();
+    Poblacion *getPoblacion();
     Texture getTexture();
+
     void renderMap(RenderTarget&);
     IntRect getTileRect(unsigned int gid);
 };

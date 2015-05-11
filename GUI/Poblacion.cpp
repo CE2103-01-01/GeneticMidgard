@@ -24,6 +24,7 @@ void Poblacion::drawPoblacion(RenderTarget &target) {
             text.setCharacterSize(12);
             text.setString(to_string(life->life));
             text.setPosition(sprite.getPosition());
+            text.move(-6,-6);
             if (life->life<0) text.setColor(Color(200,0,0));
             else text.setColor(Color(0,200,0));
             target.draw(text);

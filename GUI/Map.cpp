@@ -26,7 +26,7 @@ Map::Map() {
     tilesetHeight = std::atoi(image_node->first_attribute(HEIGHT_NODE)->value());
     tilesetWidth = std::atoi(image_node->first_attribute(WIDTH_NODE)->value());
     lastGid = (tilesetWidth/tileWidth)*(tilesetHeight/tileHeight);
-    cout<<lastGid<<endl;
+    //cout<<lastGid<<endl;
     //Terrain settings
     int pos = 0;
     for (rapidxml::xml_node<> *layer_node = root_node->first_node(LAYER_NODE); layer_node;
@@ -60,12 +60,6 @@ Map::Map() {
     if (!texturePersonLayer.loadFromFile(tilesetPath,getTileRect(1852))) abort();
 
     poblacion = new Poblacion(texturePerson,texturePersonLayer);
-    Person prson(12,10,10,0,0,255);
-    poblacion->addPerson(prson);
-    poblacion->updateLifeId(12, 12);
-    Person prson2(13,10,14,0,255,255);
-    poblacion->addPerson(prson2);
-    poblacion->updateLifeId(13,-13);
 }
 
 
@@ -160,4 +154,8 @@ Map *Map::getInstance() {
         singleton = new Map();
     }
     return singleton;
+}
+
+Poblacion *Map::getPoblacion() {
+    return poblacion;
 }
