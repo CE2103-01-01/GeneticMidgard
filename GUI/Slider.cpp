@@ -52,8 +52,12 @@ void Slider::move(Vector2i i) {
 unsigned char Slider::getPosition() {
     return pos;
 }
-
-RoundRect::RoundRect(const sf::Vector2f& radius = sf::Vector2f(0, 0)) : m_radius(radius)
+RoundRect::RoundRect()
+{
+    m_radius = Vector2f(0,0);
+    update();
+}
+RoundRect::RoundRect(const sf::Vector2f& radius) : m_radius(radius)
 {
     update();
 }

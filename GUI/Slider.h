@@ -16,8 +16,8 @@ using namespace sf;
 class RoundRect : public sf::Shape
 {
 public :
-
-    explicit RoundRect(const sf::Vector2f& radius = sf::Vector2f(0, 0));
+    explicit RoundRect();
+    explicit RoundRect(const sf::Vector2f& radius);
     void setRadius(const sf::Vector2f& radius);
     const sf::Vector2f& getRadius() const;
     virtual unsigned int getPointCount() const;
