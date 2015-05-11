@@ -23,6 +23,7 @@ class PopulationManager {
         int getActivePopulations();
         Population* getPopulation();
         static PopulationManager* getInstance(pthread_mutex_t*);
+        pthread_t* get_pthread();
 };
 
 void* populationManagerThread(void*);

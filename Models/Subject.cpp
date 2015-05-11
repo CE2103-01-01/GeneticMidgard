@@ -13,7 +13,6 @@ using namespace constantsSubjectXML;
  * @brief genera un individuo de primera generacion
  */
 Subject::Subject(long idParam){
-    position = 0;
     id = static_cast<long*>(malloc(sizeof(long)));
     generation = static_cast<long*>(malloc(sizeof(long)));
     alive = static_cast<bool*>(malloc(sizeof(bool)));
@@ -33,6 +32,7 @@ Subject::Subject(long idParam){
     father = 0;
     mother = 0;
     lifeThread = 0;
+    position = 0;
 }
 
 /** Constructor
@@ -40,7 +40,6 @@ Subject::Subject(long idParam){
  */
 Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* geneticInformationParam,
                  long generationParam, long idParam){
-    position = 0;
     id = static_cast<long*>(malloc(sizeof(long)));
     generation = static_cast<long*>(malloc(sizeof(long)));
     alive = static_cast<bool*>(malloc(sizeof(bool)));
@@ -60,6 +59,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     mother = motherParam;
     calculateFitness();
     lifeThread = 0;
+    position = 0;
 }
 
 /** Constructor
@@ -67,9 +67,9 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
  */
 Subject::Subject(const Subject& other){
     if(other.position != 0){
-        position = static_cast<int*>(malloc(2 * sizeof(int)));
-        *(position) = *(other.position);
-        *(position + 1) = *(other.position + 1);
+    //    position = static_cast<int*>(malloc(2 * sizeof(int)));
+    //    *(position) = *(other.position);
+    //    *(position + 1) = *(other.position + 1);
     }
     id = static_cast<long*>(malloc(sizeof(long)));
     generation = static_cast<long*>(malloc(sizeof(long)));
@@ -88,22 +88,14 @@ Subject::Subject(const Subject& other){
     }
     father = other.father;
     mother = other.mother;
-    calculateFitness();
+    *fitness = *other.fitness;
     lifeThread = 0;
 }
 
 /** Destructor
  */
 Subject::~Subject(){
-    free(position);
-    free(id);
-    free(generation);
-    free(alive);
-    free(profession);
-    free(fitness);
-    free(geneticInformation);
-    free(characteristics);
-    free(lifeThread);
+
 }
 
 /** @brief Accede al padre
@@ -143,7 +135,7 @@ long Subject::getGeneration(){
  * @return float
  */
 float Subject::getFitness(){
-    return *fitness;
+    return 0;
 }
 
 /** @brief Accede al ID
@@ -199,8 +191,8 @@ pthread_t* Subject::get_p_thread(){
  */
 void Subject::start_p_thread(){
     //Vector2D positionsVector = Terrain::getRandomFreePosition();
-    position = static_cast<int*>(malloc(2 * sizeof(int)));
     //Terrain::set(positionsVector,*id);
+    position = static_cast<int*>(malloc(2 * sizeof(int)));
     *(position) = 0;
     *(position + 1) = 0;
     //SocketLogic::getInstance()->createSubject(*id,*(position),*(position+1),*(characteristics+POSITION_OF_RED),

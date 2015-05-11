@@ -26,7 +26,7 @@ Population::Population(char populationTypeParam, pthread_mutex_t* mutexParam){
     *actualGeneration = 1;
     *populationFitness = 0;
     *defunct = false;
-    new(populationTree) Tree<Subject>(TREE_SIZE);
+    new(populationTree) Tree<Subject>();
 }
 
 /**@brief: libera el espacio utilizado
@@ -171,7 +171,7 @@ void* reproductionThread(void* parameter){
     //Se crea controlador de tiempo
     struct timespec timeControler;
     timeControler.tv_nsec=0;
-    timeControler.tv_sec=5;
+    timeControler.tv_sec=2;
     //Primera generacion
     laboratory->createPopulation(100);
     //Se bloquea mutex

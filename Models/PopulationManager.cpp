@@ -16,7 +16,7 @@ PopulationManager::PopulationManager(int numberOfPopulations, pthread_mutex_t* m
     for(int i = 0; i < numberOfPopulations; i++){
         new(population+i) Population(i, mutex);
         population->init_pthread();
-        pthread_join(*population->get_pthread(),0);
+//        pthread_join(*population->get_pthread(),0);
     }
     //Reserva espacio para el contador de poblaciones
     activePopulations = static_cast<int*>(malloc(sizeof(int)));
@@ -40,8 +40,8 @@ PopulationManager::PopulationManager(int numberOfPopulations, pthread_mutex_t* m
  */
 PopulationManager::~PopulationManager(){
     free(population);
-    free(actualID);
-    free(managementThread);
+   // free(actualID);
+  //  free(managementThread);
     free(activePopulations);
 }
 
@@ -79,6 +79,13 @@ int PopulationManager::getActivePopulations(){
     return *activePopulations;
 }
 
+/**@brief accede al numero de poblaciones activas
+ * return int
+ */
+pthread_t* PopulationManager::get_pthread(){
+    return managementThread;
+}
+
 /**@brief metodo singleton
  * @param pthread_mutex_t* mutex: mutex de memoria, solo se utiliza la primera vez
  * @return PopulationManager*
@@ -114,7 +121,7 @@ void* populationManagerThread(void* param){
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=50;
+    timeController.tv_sec=10;
     //Se desbloquea mutex
     pthread_mutex_lock(mutex);
     //Inicia pthread de poblaciones, se asume que al no haber empezado, las poblaciones activas son todas
@@ -122,7 +129,6 @@ void* populationManagerThread(void* param){
         //Inicia el pthread
         (manager->getPopulation()+i)->init_pthread();
         //Hace que se espere la finalizacion del pthread
-        pthread_join(*(manager->getPopulation()+i)->get_pthread(),0);
     }
     int i = 0; //TODO: cambiar
     //Este while corre hasta que se mueran todos
