@@ -8,7 +8,7 @@
 #define TREE_SIZE 150
 #define SUBJECTS_BY_GENERATION 20
 #define GENE_LEN_ON_BYTES 1
-#define NUMBER_OF_CHARACTERISTICS 8
+#define NUMBER_OF_CHARACTERISTICS 15
 #define POSITION_OF_AGE 0
 #define POSITION_OF_EXPERIENCE 1
 #define POSITION_OF_HEALTH 2
@@ -23,6 +23,9 @@
 #define POSITION_OF_SUPERSTITION 10
 #define POSITION_OF_ARMOR 11
 #define POSITION_OF_WEAPON 12
+#define POSITION_OF_RED 13
+#define POSITION_OF_GREEN 14
+#define POSITION_OF_BLUE 15
 
 //TODO: estas bibliotecas se estan incluyendo en muchos archivos donde no se ocupan y hacen el codigo mas pesado, se debe buscar su uso y separarlo...
 #include <fstream>

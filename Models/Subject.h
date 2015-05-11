@@ -29,8 +29,8 @@ class Subject {
     int* position;
     void calculateFitness();//funcion de calcular fitness y set fitness
 public:
-    Subject(long, int, int);
-    Subject(Subject*,Subject*,Chromosome*,long,long,int,int);
+    Subject(long);
+    Subject(Subject*,Subject*,Chromosome*,long,long);
     Subject(const Subject&);
     ~Subject();;
     long getGeneration();
@@ -41,12 +41,8 @@ public:
     Subject* getFather(); // Obtiene padre 1
     Subject* getMother(); // Obtiene padre 2
     float getFitness();
-    unsigned char getWeapon();
-    unsigned char  getArmor();
-    unsigned char getHealth();
-    unsigned char getAge();
-    unsigned char getExperience();
-    void setCharacteristic(int,char);
+    unsigned char getCharacteristic(int);
+    void setCharacteristic(unsigned char, unsigned char);
     bool isAlive();
     void kill();
     void life(void);

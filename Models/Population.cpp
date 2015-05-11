@@ -4,6 +4,7 @@
 
 #include "Population.h"
 #include "../Algorithms/lifeLaboratory.h"
+#include "Terrain.h"
 
 /** Construye una poblacion
  * @param Tree<Subject>* peopleTreeParam: primera generacion
@@ -46,7 +47,7 @@ Population::~Population() {
 void Population::calculateFitness(){
     (*populationFitness) = 0;
     for (int i = 1; i <= (*populationSize); i++) {
-        (*populationFitness) += ((Subject*)populationTree->searchElement(i-1))->getFitness();
+        (*populationFitness) += populationTree->searchElement(i-1)->getFitness();
     }
 }
 
@@ -69,9 +70,9 @@ void Population::init_pthread(){
 void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* chromosome) {
     (*populationSize)++;
     populationTree->insertElement(
-            Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType), 0, 0),
-            (*populationSize));
-    Subject* newMember = (Subject*)populationTree->searchElement(*populationSize);
+            Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType)), (*populationSize)
+    );
+    Subject* newMember = populationTree->searchElement(*populationSize);
     (*populationFitness) += newMember->getFitness();
     newMember->start_p_thread();
 }
@@ -80,8 +81,8 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* c
  */
 void Population::createNewRandomMember() {
     (*populationSize)++;
-    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType), 0 ,0),(*populationSize));
-    Subject* newMember = (Subject*)populationTree->searchElement(*populationSize);
+    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType)),(*populationSize));
+    Subject* newMember = populationTree->searchElement(*populationSize);
     (*populationFitness) += newMember->getFitness();
     newMember->start_p_thread();
 }
@@ -91,7 +92,7 @@ void Population::createNewRandomMember() {
  * @return Subject*
  */
 Subject* Population::getIndividual(int id) {
-    return (Subject*)populationTree->searchElement((id/10));
+    return populationTree->searchElement((id/10));
 }
 
 /**@brief devuelve el arbol de poblacion
@@ -133,7 +134,7 @@ void Population::updateGeneration() {
  */
 void Population::killEmAll() {
     for(int i = 1; i <= *populationSize; i++){
-        ((Subject*)populationTree->searchElement(i))->kill();
+        populationTree->searchElement(i)->kill();
     }
 }
 

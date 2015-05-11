@@ -1,9 +1,11 @@
 #include "Models/Population.h"
+#include "Network/SocketLogic.h"
+#include "Models/Terrain.h"
 
 int main()
 {
-    //sf::Thread thread(&SocketLogic::getInstance);// Inicializar el socket
-    //thread.launch();//NO QUITAR O MOVER
+    Terrain::initArray();
+   // SocketLogic::getInstance();
 
     Population* population = static_cast<Population*>(malloc(sizeof(Population)));
     new(population) Population(0);

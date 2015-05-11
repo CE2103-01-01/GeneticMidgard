@@ -34,7 +34,9 @@ void Terrain::initArray() {
          tile_node;
          tile_node = tile_node->next_sibling() )
     {
-        *(map +i)=std::atoi( tile_node->first_attribute( "gid" )->value() );
+        int graphicID = std::atoi(tile_node->first_attribute( "gid" )->value());
+        if(graphicID != 0)graphicID = -1;
+        *(map +i) = graphicID;
         i++;// contador para el puntero
     }
 };
@@ -243,7 +245,8 @@ Vector2D Terrain::getRandomFreePosition() {
     unsigned int x = trueRandom::randRange(0,width-1);
     unsigned int y = trueRandom::randRange(0,width-1);
     if (get(x,y)==0) return Vector2D(x,y);
-    Vector2D primerIntento = getRandomFreePositionNear(Vector2D(x,y),6);
+    //Primer intento segun rango definido
+    Vector2D primerIntento = getRandomFreePositionNear(Vector2D(x,y),RANGO_DEL_PRIMER_INTENTO);
     if(primerIntento.x<0||primerIntento.y<0){
         int range = width;
         if (width<height) range= height;
@@ -256,7 +259,7 @@ Vector2D Terrain::getRandomFreePosition() {
 
 }
 
-Vector2D Terrain::getRandomFreePositionNear(Vector2D vector, unsigned int range){
+Vector2D Terrain::getRandomFreePositionNear(Vector2D vector, int range){
     DoubleList<Vector2D> opciones = DoubleList<Vector2D>();
     for (int i = -range; i <= range; ++i) {
         for (int j = -range; j <= range; ++j) {

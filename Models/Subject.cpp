@@ -3,6 +3,8 @@
 //
 
 #include "Subject.h"
+#include "Terrain.h"
+#include "../Network/SocketLogic.h"
 
 using namespace pugi;
 using namespace constantsSubjectXML;
@@ -10,10 +12,8 @@ using namespace constantsSubjectXML;
 /** Constructor
  * @brief genera un individuo de primera generacion
  */
-Subject::Subject(long idParam, int posRow, int posLine){
-    position = static_cast<int*>(malloc(2 * sizeof(int)));
-    *(position) = posRow;
-    *(position + 1) = posLine;
+Subject::Subject(long idParam){
+    position = 0;
     id = static_cast<long*>(malloc(sizeof(long)));
     generation = static_cast<long*>(malloc(sizeof(long)));
     alive = static_cast<bool*>(malloc(sizeof(bool)));
@@ -39,10 +39,8 @@ Subject::Subject(long idParam, int posRow, int posLine){
  * @brief genera un individuo de generacion N
  */
 Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* geneticInformationParam,
-                 long generationParam, long idParam, int posRow, int posLine){
-    position = static_cast<int*>(malloc(2 * sizeof(int)));
-    *(position) = posRow;
-    *(position + 1) = posLine;
+                 long generationParam, long idParam){
+    position = 0;
     id = static_cast<long*>(malloc(sizeof(long)));
     generation = static_cast<long*>(malloc(sizeof(long)));
     alive = static_cast<bool*>(malloc(sizeof(bool)));
@@ -68,9 +66,11 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
  * @brief genera un individuo de generacion N
  */
 Subject::Subject(const Subject& other){
-    position = static_cast<int*>(malloc(2 * sizeof(int)));
-    *(position) = *(other.position);
-    *(position + 1) = *(other.position + 1);
+    if(other.position != 0){
+        position = static_cast<int*>(malloc(2 * sizeof(int)));
+        *(position) = *(other.position);
+        *(position + 1) = *(other.position + 1);
+    }
     id = static_cast<long*>(malloc(sizeof(long)));
     generation = static_cast<long*>(malloc(sizeof(long)));
     alive = static_cast<bool*>(malloc(sizeof(bool)));
@@ -127,36 +127,16 @@ Chromosome Subject::getGeneticInformation() {
     return *geneticInformation;
 }
 
-/** @brief Accede a la salud
- * @return unsigned char
- */
-unsigned char Subject::getHealth(){
-    return *(characteristics + POSITION_OF_HEALTH);
-}
 /** @brief Modifica una caracteristica
  * @param int value:valor que modifica la caracteristica
  * @param char position:posicion donde es encuentra la caracteristica
  */
-void Subject::setCharacteristic(int value, char position) {
-    *(characteristics+position)=*(characteristics+position)+(unsigned char)value;
+void Subject::setCharacteristic(unsigned char value, unsigned char position) {
+    *(characteristics+position)=*(characteristics+position)+value;
 }
 
 long Subject::getGeneration(){
     return *generation;
-}
-
-/** @brief Accede a la edad
- * @return unsigned char
- */
-unsigned char Subject::getAge(){
-    return *(characteristics + POSITION_OF_AGE);
-}
-
-/** @brief Accede a la experiencia
- * @return unsigned char
- */
-unsigned char Subject::getExperience(){
-    return  *(characteristics + POSITION_OF_EXPERIENCE);
 }
 
 /** @brief Accede al fitness
@@ -180,18 +160,11 @@ void Subject::calculateFitness() {
     *fitness = GeneralFitnessCalculator::getInstance()->calculateFitness(geneticInformation);
 }
 
-/** @brief Accede al armadura
+/** @brief Accede a una caracteristica
  * @return unsigned char*
  */
-unsigned char Subject::getArmor(){
-    return  *(characteristics + POSITION_OF_ARMOR);
-}
-
-/** @brief Accede al arma
- * @return unsigned char*
- */
-unsigned char Subject::getWeapon(){
-    return *(characteristics + POSITION_OF_WEAPON);
+unsigned char Subject::getCharacteristic(int position){
+    return *(characteristics + position);
 }
 
 /** @brief Retorna true si el jugador esta vivo
@@ -210,7 +183,7 @@ void Subject::kill(){
 /** @brief Mata al jugador colocando en false la bander
  */
 void Subject::life(){
-    std::cout << "Hello, my ID is: "<< *id <<std::endl;
+    std::cout << "Hello, my ID is: "<< *id << " i am on " << *(position) << " , " << *(position+1) << std::endl;
 }
 
 /**@brief: accede al pthread
@@ -225,10 +198,17 @@ pthread_t* Subject::get_p_thread(){
  * @param Subject* subject: sujeto sobre el que se ejecuta
  */
 void Subject::start_p_thread(){
+    Vector2D positionsVector = Terrain::getRandomFreePosition();
+    position = static_cast<int*>(malloc(2 * sizeof(int)));
+    Terrain::set(positionsVector,*id);
+    *(position) = positionsVector.x;
+    *(position + 1) = positionsVector.y;
+    SocketLogic::getInstance()->createSubject(*id,*(position),*(position + 1),*(characteristics+POSITION_OF_RED),
+                                              *(characteristics+POSITION_OF_GREEN), *(characteristics+POSITION_OF_BLUE));
     void* parameters = malloc(sizeof(PThreadParam));
-    new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,0);
+    new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,NULL);
     lifeThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
-    pthread_create(lifeThread,0,subjectLife,parameters);
+    pthread_create(lifeThread,NULL,subjectLife,parameters);
 }
 
 /**@brief metodo ejecutado por el pthread

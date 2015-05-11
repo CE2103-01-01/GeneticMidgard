@@ -5,6 +5,7 @@
 #ifndef PROJECTMIDGARD_TERRAIN_H
 #define PROJECTMIDGARD_TERRAIN_H
 
+#define RANGO_DEL_PRIMER_INTENTO 6
 
 static char const *const MAP_NODE = "map";
 static char const *const LAYER_NODE = "layer";
@@ -38,7 +39,7 @@ public:
     static void printArray();
     static DoubleList<Vector2D> findPathAS(const Vector2D &start, const Vector2D &finish);
     static Vector2D getRandomFreePosition();
-    static Vector2D getRandomFreePositionNear(Vector2D, unsigned int);
+    static Vector2D getRandomFreePositionNear(Vector2D, int);
     static int get(Vector2D);
     static int get(int,int);
     static void set(Vector2D, int);
