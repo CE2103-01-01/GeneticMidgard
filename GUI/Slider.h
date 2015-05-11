@@ -10,7 +10,9 @@
 
 using namespace sf;
 
-
+/*
+ * Figure Needed by Slider
+ */
 class RoundRect : public sf::Shape
 {
 public :

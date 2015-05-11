@@ -4,7 +4,9 @@
 
 #include "Slider.h"
 #include "../Network/SocketGUI.h"
-
+/*
+ * Constructor of Slider
+ */
 Slider::Slider(Vector2f vector, int length): length(length), vector(vector) {
 
 }

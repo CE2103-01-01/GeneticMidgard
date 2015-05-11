@@ -23,6 +23,10 @@ void ManageEvents(Thread &socketThread, RenderWindow &window);
 
 using namespace sf;
 using namespace gui_constants;
+
+/*
+ * Main Thread of GUI
+ */
 int main()
 {
     Thread socketThread(&SocketGUI::getInstance);//Init Connection
@@ -82,7 +86,9 @@ int main()
 }
 
 
-
+/*
+ * Checks windows bounds
+ */
 void checkViewLimits() {
     float xMin = mapView.getSize().x/2;
     float yMin = mapView.getSize().y/2;
