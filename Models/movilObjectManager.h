@@ -19,6 +19,7 @@ class movilObjectManager{
 private:
     int objectCounter;
     DoubleList<movilObject> listObject;
+    DoubleList<xml_node> listXmlData;
 public:
     movilObjectManager();
     void createObject();

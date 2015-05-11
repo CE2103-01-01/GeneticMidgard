@@ -15,18 +15,24 @@ movilObjectManager::movilObjectManager() {
     xml_document objectSource;
     objectSource.load_file(CONSTANT_XML_PATH);
     listObject = DoubleList<movilObject>();
+    listXmlData = DoubleList<xml_node>();
     int elementCounter=std::distance(objectSource.child("CONSTANTS").child("MOVILOBJECT").begin(),
                                      objectSource.child("CONSTANTS").child("MOVILOBJECT").end());
+    xml_node temp = objectSource.child("CONSTANTS").child("MOVILOBJECT").first_child();
+    listXmlData.append(temp);
+    for(int h=0; h<elementCounter;h++){
+        temp = temp.next_sibling();
+        listXmlData.append(temp);
+    }
     for(int i =0; i<500;i++){
         int objectNumber = trueRandom::randRange(0,elementCounter);
-        xml_node temp = objectSource.child("CONSTANTS").child("MOVILOBJECT").first_child();
-        for(int j =0;j<objectNumber;j++){
-          temp = temp.next_sibling();
-        }
+
         Vector2D position = Terrain::getRandomFreePosition();
-        std::string name = temp.attribute("name").as_string();
-        movilObject object = movilObject(this,name,temp.attribute("characteristic")
-                                                 .as_int(),temp.attribute("value").as_int(),i,position.x
+        std::string name = (*listXmlData.getNode(objectNumber)->getData()).attribute("name").as_string();
+        movilObject object = movilObject(this,name,(*listXmlData.getNode(objectNumber)->getData())
+                                                 .attribute("characteristic")
+                                                 .as_int(),(*listXmlData.getNode(objectNumber)->getData())
+                                                 .attribute("value").as_int(),i,position.x
                                                     ,position.y);
         listObject.append(object);
         Terrain::set(position,-100);
