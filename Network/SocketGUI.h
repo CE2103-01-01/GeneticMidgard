@@ -9,7 +9,10 @@ static const char *const IP_ADDRESS = "127.0.0.1";
 static const int PORT = 53000;
 
 static const float RECONNECT_TIME = 2.0f;
-
+#include "../libs/rapidjson/stringbuffer.h"
+#include "../libs/rapidjson/writer.h"
+#include "../GUI/Poblacion.h"
+#include "../GUI/Map.h"
 #include <iostream>
 #include <SFML/Network.hpp>
 #include "../libs/rapidjson/document.h"

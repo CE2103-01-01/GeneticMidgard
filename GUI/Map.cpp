@@ -2,8 +2,7 @@
 // Created by Pablo Rodriguez Quesada on 5/1/15.
 //
 
-#include <iostream>
-#include <string.h>
+
 #include "Map.h"
 
 Map *Map::singleton = NULL;

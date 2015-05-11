@@ -4,10 +4,7 @@
 
 
 #include "SocketGUI.h"
-#include "../libs/rapidjson/stringbuffer.h"
-#include "../libs/rapidjson/writer.h"
-#include "../GUI/Poblacion.h"
-#include "../GUI/Map.h"
+
 
 bool SocketGUI::initialized = false;
 SocketGUI* SocketGUI::singleton = NULL;
@@ -68,8 +65,10 @@ void SocketGUI::manageMessage(std::string string) {
         unsigned int r = document.FindMember("r")->value.GetUint();
         unsigned int g = document.FindMember("g")->value.GetUint();
         unsigned int b = document.FindMember("b")->value.GetUint();
-        Person person(id,10,10,255,g,b);
+        Person person(id,x,y,r,g,b);
+        peopleMutex.lock();
         Map::getInstance()->getPoblacion()->addPerson(person);
+        peopleMutex.unlock();
     }
     else if (action == "updateSubject")
     {

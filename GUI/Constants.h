@@ -4,6 +4,8 @@
 
 #ifndef PROJECTMIDGARDLOGIC_CONSTANTS_H
 #define PROJECTMIDGARDLOGIC_CONSTANTS_H
+
+#include <SFML/System.hpp>
 namespace gui_constants{
     const char *const WINDOW_NAME = "Project MidGard";
     const int SCROLL_SPEED = 50;
@@ -12,4 +14,5 @@ namespace gui_constants{
     const int SIZE_MINIMAP = 300;
 }
 static bool needToPaint = true;
+sf::Mutex peopleMutex;
 #endif //PROJECTMIDGARDLOGIC_CONSTANTS_H

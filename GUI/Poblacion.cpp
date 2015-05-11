@@ -6,6 +6,7 @@
 #include "Map.h"
 
 void Poblacion::drawPoblacion(RenderTarget &target) {
+    peopleMutex.lock();
     DoubleListIterator<Person> *iter = poblacion.getIterator();
     //std::cout << poblacion.len() << std::endl;
     while (iter->exists()) {
@@ -33,6 +34,7 @@ void Poblacion::drawPoblacion(RenderTarget &target) {
             target.draw(text);
         }
     }
+    peopleMutex.unlock();
 }
 
 void Poblacion::addPerson(Person &person) {

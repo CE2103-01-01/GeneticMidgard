@@ -182,7 +182,7 @@ void Subject::kill(){
 /** @brief Mata al jugador colocando en false la bander
  */
 void Subject::life(){
-    std::cout << "Hello, my ID is: "<< *id << " i am on " << *(position) << " , " << *(position+1) << std::endl;
+    //std::cout << "Hello, my ID is: "<< *id << " i am on " << *(position) << " , " << *(position+1) << std::endl;
 }
 
 /**@brief: accede al pthread
@@ -234,6 +234,6 @@ void* subjectLife(void* parameter){
             excecutioner->kill();
         }
     }
-    std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
+    //std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
     return 0;
 }
