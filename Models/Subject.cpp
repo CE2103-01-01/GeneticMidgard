@@ -4,7 +4,6 @@
 
 #include "Subject.h"
 #include "Terrain.h"
-#include "../Network/SocketLogic.h"
 
 using namespace pugi;
 using namespace constantsSubjectXML;
@@ -164,7 +163,7 @@ void Subject::calculateFitness() {
  * @return unsigned char*
  */
 unsigned char Subject::getCharacteristic(int position){
-    return *(characteristics + position);
+    return  *(characteristics + position);
 }
 
 /** @brief Retorna true si el jugador esta vivo
@@ -203,8 +202,6 @@ void Subject::start_p_thread(){
     Terrain::set(positionsVector,*id);
     *(position) = positionsVector.x;
     *(position + 1) = positionsVector.y;
-    SocketLogic::getInstance()->createSubject(*id,*(position),*(position + 1),*(characteristics+POSITION_OF_RED),
-                                              *(characteristics+POSITION_OF_GREEN), *(characteristics+POSITION_OF_BLUE));
     void* parameters = malloc(sizeof(PThreadParam));
     new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,NULL);
     lifeThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));

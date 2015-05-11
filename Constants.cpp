@@ -10,8 +10,8 @@ using namespace pugi;
 
 namespace constants {
 
-    extern const std::string HOME_PATH = getenv("HOME"); //TODO : Buscar usos, pasar a mayucula
-    extern const std::string PROJECT_PATH = HOME_PATH + "/Midgard"; //TODO : Buscar usos, pasar a mayucula
+    extern const std::string HOME_PATH = getenv("HOME");
+    extern const std::string PROJECT_PATH = HOME_PATH + "/Midgard";
     int creaDirA = mkdir(PROJECT_PATH.c_str(), 0777);
     extern char const *const MAP_FILE = "../res/mapa.tmx";
 }
