@@ -8,7 +8,7 @@
 #include "Leaf.h"
 
 template <class T> class Tree{
-    pthread_mutex_t mutexData = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_t* mutex;
     int* len;
     int* floors;
     Leaf* root;
@@ -31,25 +31,24 @@ public:
  * @brief: Reserva el espacio de las variables y la primera hoja
  */
 template <class T> Tree<T>::Tree(){
-    pthread_mutex_lock( &mutexData );
     root = (Leaf*)(malloc(sizeof(Leaf)));
     new(root) Leaf(TREE_SIZE, (int)sizeof(T));
     len = (int*)(malloc(sizeof(int)));
     *len = 0;
     floors = (int*)(malloc(sizeof(int)));
     *floors= 1;
-    pthread_mutex_unlock( &mutexData );
+    pthread_mutex_t* mutex = static_cast<pthread_mutex_t*>(malloc(sizeof(pthread_mutex_t)));
+    pthread_mutex_init(mutex,NULL);
 }
 
 /** Destructor
  * @brief: Libera las variables ocupadas
  */
 template <class T> Tree<T>::~Tree(){
-    pthread_mutex_lock( &mutexData );
     free(len);
     free(root);
     free(floors);
-    pthread_mutex_unlock( &mutexData );
+    free(mutex);
 }
 
 /* Maximo
@@ -102,7 +101,7 @@ template <class T> void Tree<T>::createPath(int index, int floor, int* path){
  * @brief: calcula la ruta al indice recibido
  */
 template <class T> T* Tree<T>::searchElement(int index){
-    pthread_mutex_lock( &mutexData );
+    pthread_mutex_lock(mutex);
     int floor=*floors;
     if(index <= max(floor)){
         while(max(floor-1)>index){
@@ -115,10 +114,10 @@ template <class T> T* Tree<T>::searchElement(int index){
             tmp = tmp->getSons() + *(path+i);
         }
         void* ret = (tmp->getContainers() + (*path)*sizeof(T));
-        pthread_mutex_unlock( &mutexData );
+        pthread_mutex_unlock(mutex);
        return static_cast<T*>(ret);
     }else{
-        pthread_mutex_unlock( &mutexData );
+        pthread_mutex_unlock(mutex);
         return 0;
     }
 
@@ -143,7 +142,7 @@ template <class T> T* Tree<T>::searchAndDo(int indexToSearch, void method(T*, vo
  * @brief: calcula la ruta al indice recibido e inserta el dato
  */
 template <class T> void Tree<T>::insertElement(T param, int index){
-    pthread_mutex_lock( &mutexData );
+    pthread_mutex_lock(mutex);
     if(index < max(*floors)){
         T* container = searchElement(index);
         new(container) T(param);
@@ -153,7 +152,7 @@ template <class T> void Tree<T>::insertElement(T param, int index){
         (*floors)++;
         insertElement(param,index);
     }
-    pthread_mutex_unlock( &mutexData );
+    pthread_mutex_unlock(mutex);
 }
 
 /** Inserta
@@ -171,10 +170,10 @@ template <class T> void Tree<T>::insertElement(T newElement){
  * @brief: calcula la ruta al indice recibido y lo borra, pero antes ejecuta un metodo sobre el
  */
 template <class T> void Tree<T>::deleteElement(int index, void method(T*, void*), void* methodParam){
-    pthread_mutex_lock( &mutexData );
+    pthread_mutex_lock(mutex);
     method(searchElement(index),methodParam);
     len--;
-    pthread_mutex_unlock( &mutexData );
+    pthread_mutex_unlock(mutex);
 }
 
 
