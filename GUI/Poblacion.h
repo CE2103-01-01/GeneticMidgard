@@ -14,7 +14,10 @@ static const char *const NAME = "name";
 static const char *const PERSONA_TERRAIN = "Persona";
 
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include "../Data/DoubleList.h"
+#include "Map.h"
+
 
 using namespace sf;
 class LifeUpdate{

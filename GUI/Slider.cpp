@@ -3,7 +3,7 @@
 //
 
 #include "Slider.h"
-#include "../Network/SocketGUI.h"
+
 /*
  * Constructor of Slider
  */

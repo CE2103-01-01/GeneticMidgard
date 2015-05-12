@@ -42,6 +42,9 @@ static const char *const TILESET_PATH = "../res/";
 using namespace sf;
 using namespace std;
 using namespace gui_constants;
+
+class Poblacion;
+
 class Map {
 private:
     Map();

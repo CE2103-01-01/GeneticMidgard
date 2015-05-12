@@ -3,7 +3,7 @@
 //
 
 #include "Poblacion.h"
-#include "Map.h"
+
 
 void Poblacion::drawPoblacion(RenderTarget &target) {
     peopleMutex.lock();

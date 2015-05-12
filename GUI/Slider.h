@@ -7,7 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-
+#include "../Network/SocketGUI.h"
 using namespace sf;
 
 /*
