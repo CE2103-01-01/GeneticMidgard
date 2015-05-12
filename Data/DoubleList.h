@@ -9,6 +9,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+
+
 template<class T>
 class DoubleList;
 template<class T>
@@ -54,6 +56,7 @@ public:
 template<class T>
 class DoubleList {
 private:
+    pthread_mutex_t mutexData = PTHREAD_MUTEX_INITIALIZER;
     Node<T>* _head; //primer nodo
     Node<T>* _tail; //_tail nodo
     unsigned long l = 0; //longitud
@@ -63,7 +66,6 @@ public:
     DoubleList(); //Constructor
     void add(T); //Inserta nodo al inicio
     void append(T); //Inserta nodo al final
-    void append(T*); //Inserta nodo al final
     bool deleteNodeByData(T); //Busca nodo y lo borra
     bool deleteNode(unsigned int); //Busca nodo y lo borra
     void deleteAll(); //Borra all
@@ -194,8 +196,10 @@ void Node<T>::freeNext() {
 */
 template<class T>
 DoubleList<T>::DoubleList() {
+    pthread_mutex_lock( &mutexData );
     _head=0;
     _tail=0;
+    pthread_mutex_unlock( &mutexData );
 };
 /** @brief Inserta un nodo al inicio
 *
@@ -203,6 +207,7 @@ DoubleList<T>::DoubleList() {
 */
 template<class T>
 void DoubleList<T>::add(T d) {
+    pthread_mutex_lock( &mutexData );
     Node<T> *n = new Node<T>(d);
     if(_head!=0){
         _head->insertBefore(n);
@@ -212,25 +217,9 @@ void DoubleList<T>::add(T d) {
         _tail = n;
     };
     l++;
+    pthread_mutex_unlock( &mutexData );
 };
 
-/** @brief Inserta un nodo al final
-*
-* @param Node<T>*
-*/
-template<class T>
-void DoubleList<T>::append(T* d) {
-    Node<T>* n = static_cast<Node<T>*>(malloc(sizeof(Node<T>)));
-    new(n) Node<T>(d);
-    if(_tail!=0){
-        _tail->insertAfter(n);
-        _tail=n;
-    }else{
-        _head=n;
-        _tail=n;
-    };
-    l++;
-};
 
 /** @brief Inserta un nodo al final
 *
@@ -238,6 +227,7 @@ void DoubleList<T>::append(T* d) {
 */
 template<class T>
 void DoubleList<T>::append(T d) {
+    pthread_mutex_lock( &mutexData );
     Node<T>* n = static_cast<Node<T>*>(malloc(sizeof(Node<T>)));
     *n = Node<T>(d);
     if(_tail!=0){
@@ -248,6 +238,7 @@ void DoubleList<T>::append(T d) {
         _tail=n;
     };
     l++;
+    pthread_mutex_unlock( &mutexData );
 };
 /** @brief Borra el nodo que contiene el dato d
 *
@@ -255,6 +246,7 @@ void DoubleList<T>::append(T d) {
 */
 template<class T>
 bool DoubleList<T>::deleteNodeByData(T d) {
+    pthread_mutex_lock( &mutexData );
     Node<T> *tmp = _head;
     for(int i=0; i<l; i++){
         if(*tmp->getData()==d){
@@ -263,10 +255,12 @@ bool DoubleList<T>::deleteNodeByData(T d) {
             }
             free(tmp);
             l--;
+            pthread_mutex_unlock( &mutexData );
             return true;
         };
         tmp=tmp->getNextNode();
     };
+    pthread_mutex_unlock( &mutexData );
     return false;
 };
 /** @brief Borra el nodo de la getNode d
@@ -275,11 +269,13 @@ bool DoubleList<T>::deleteNodeByData(T d) {
 */
 template<class T>
 bool DoubleList<T>::deleteNode(unsigned int d) {
+    pthread_mutex_lock( &mutexData );
     if(d==0){
         if (l == 1) {
             free(_head);
             _head = _tail = 0;
             l--;
+            pthread_mutex_unlock( &mutexData );
             return true;
         }
         _head=_head->getNextNode();
@@ -287,6 +283,7 @@ bool DoubleList<T>::deleteNode(unsigned int d) {
         free(_head->getPreNode());
         _head->freePrev();
         l--;
+        pthread_mutex_unlock( &mutexData );
         return true;
     }else if(d==l-1){
         Node<T> *tmp = _tail;
@@ -295,6 +292,7 @@ bool DoubleList<T>::deleteNode(unsigned int d) {
         free(_tail->getNextNode());
         _tail->freeNext();
         l--;
+        pthread_mutex_unlock( &mutexData );
         return true;
     }else if(d<l){
         Node<T> *tmp = _head;
@@ -309,8 +307,10 @@ bool DoubleList<T>::deleteNode(unsigned int d) {
         sig->freePrev();
         ant->insertAfter(sig);
         l--;
+        pthread_mutex_unlock( &mutexData );
         return true;
     }else{
+        pthread_mutex_unlock( &mutexData );
         return false;
     };
 };
@@ -319,12 +319,14 @@ bool DoubleList<T>::deleteNode(unsigned int d) {
 */
 template<class T>
 void DoubleList<T>::deleteAll() {
+    pthread_mutex_lock( &mutexData );
     for(int i=0; i<l; i++){
         Node<T> *tmp = _head;
         _head=_head->getNextNode();
         free(tmp);
     };
     l=0;
+    pthread_mutex_unlock( &mutexData );
 };
 /** Revisa si la lista esta o no vacia
 *
@@ -357,21 +359,25 @@ Node<T> *DoubleList<T>::search(T d) {
 */
 template<class T>
 Node<T> *DoubleList<T>::getNode(int n) {
+    pthread_mutex_lock( &mutexData );
     if(n<l){
         if(n<l/2){
             Node<T> *tmp = _head;
             for(int i=0; i<n; i++){
                 tmp=tmp->getNextNode();
             };
+            pthread_mutex_unlock( &mutexData );
             return tmp;
         }else{
             Node<T> *tmp = _tail;
             for(int i=l-1; i>n; i--){
                 tmp=tmp->getPreNode();
             };
+            pthread_mutex_unlock( &mutexData );
             return tmp;
         };
     }else{
+        pthread_mutex_unlock( &mutexData );
         return 0;
     };
 };
@@ -382,18 +388,21 @@ Node<T> *DoubleList<T>::getNode(int n) {
 */
 template<class T>
 T *DoubleList<T>::get(int n) {
+    pthread_mutex_lock( &mutexData );
     if(n<l){
         if(n<l/2){
             Node<T> *tmp = _head;
             for(int i=0; i<n; i++){
                 tmp=tmp->getNextNode();
             };
+            pthread_mutex_unlock( &mutexData );
             return (tmp->getData());
         }else{
             Node<T> *tmp = _tail;
             for(int i=l-1; i>n; i--){
                 tmp=tmp->getPreNode();
             };
+            pthread_mutex_unlock( &mutexData );
             return (tmp->getData());
         };
     }
@@ -452,8 +461,11 @@ unsigned long DoubleListIterator<T>::getPosition() {
 
 template<class T>
 bool DoubleList<T>::swap(unsigned int i, unsigned int j) {
-    if (j > l - 1 || i > l - 1 || i == j)
+    pthread_mutex_lock( &mutexData );
+    if (j > l - 1 || i > l - 1 || i == j) {
+        pthread_mutex_unlock( &mutexData );
         return false;
+    }
 
     Node<T> *iNode = getNode(i);
     Node<T> *jNode = getNode(j);
@@ -461,6 +473,7 @@ bool DoubleList<T>::swap(unsigned int i, unsigned int j) {
     T *dataI = iNode->data;
     iNode->data = jNode->data;
     jNode->data = dataI;
+    pthread_mutex_unlock( &mutexData );
     return true;
 
 
@@ -468,6 +481,7 @@ bool DoubleList<T>::swap(unsigned int i, unsigned int j) {
 
 template<class T>
 DoubleList<T>::DoubleList(const DoubleList<T>& other){
+    pthread_mutex_lock( &mutexData );
     Node<T>* tmp = other._head;
     _head = static_cast<Node<T>*>(malloc(sizeof(Node<T>)));
     new(_head) Node<T>(*tmp->getData());
@@ -480,7 +494,7 @@ DoubleList<T>::DoubleList(const DoubleList<T>& other){
         tmp = tmp->next;
         tmp2 = tmp3;
     }
-
+    pthread_mutex_unlock( &mutexData );
 }
 
 template<class T>

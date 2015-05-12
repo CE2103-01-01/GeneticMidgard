@@ -47,7 +47,7 @@ void SocketGUI::receiving() {
         }
         packet>>message;
         needToPaint = true;
-        std::cout << "Received: " << message<< std::endl;
+        //std::cout << "Received: " << message<< std::endl;
         Thread thread(std::bind(&SocketGUI::manageMessage, message));
         thread.launch();
     }
@@ -66,9 +66,7 @@ void SocketGUI::manageMessage(std::string string) {
         unsigned int g = document.FindMember("g")->value.GetUint();
         unsigned int b = document.FindMember("b")->value.GetUint();
         Person person(id,x,y,r,g,b);
-        peopleMutex.lock();
         Map::getInstance()->getPoblacion()->addPerson(person);
-        peopleMutex.unlock();
     }
     else if (action == "updateSubject")
     {

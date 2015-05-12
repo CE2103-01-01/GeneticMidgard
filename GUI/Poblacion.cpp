@@ -38,7 +38,10 @@ void Poblacion::drawPoblacion(RenderTarget &target) {
 }
 
 void Poblacion::addPerson(Person &person) {
+    peopleMutex.lock();
+    std::cout << poblacion.len() << std::endl;
     poblacion.add(person);
+    peopleMutex.unlock();
 }
 
 void Poblacion::deletePerson(unsigned int id) {
