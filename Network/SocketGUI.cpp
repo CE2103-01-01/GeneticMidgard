@@ -47,7 +47,7 @@ void SocketGUI::receiving() {
         }
         packet>>message;
         needToPaint = true;
-        //std::cout << "Received: " << message<< std::endl;
+        std::cout << "Received: " << message<< std::endl;
         Thread thread(std::bind(&SocketGUI::manageMessage, message));
         thread.launch();
     }
