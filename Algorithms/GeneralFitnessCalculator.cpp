@@ -14,6 +14,7 @@ GeneralFitnessCalculator* GeneralFitnessCalculator::instance = 0;
  */
 GeneralFitnessCalculator::GeneralFitnessCalculator(){
     constants = static_cast<float*>(malloc(sizeof(float)*NUMBER_OF_GENES));
+
     rapidxml::xml_node<>* root_node;
     rapidxml::xml_document<> doc;
     rapidxml::file<> file( CONSTANT_XML_PATH );
@@ -51,4 +52,22 @@ GeneralFitnessCalculator* GeneralFitnessCalculator::getInstance(){
     }
     //Retorna la instancia, ya sea guardada o recien creada
     return instance;
+}
+
+float GeneralFitnessCalculator::calculateFitness(std::string age, Chromosome *chromosome) {
+    if(ageIdentificator!=age){
+        rapidxml::xml_node<>* root_node;
+        rapidxml::xml_document<> doc;
+        rapidxml::file<> file( CONSTANT_XML_PATH );
+        doc.parse<0>( file.data() );
+        root_node = doc.first_node("CONSTANTS")->first_node("FitnessByAge")->first_node(age.c_str());
+        int forIteratorIndex = 0;
+        rapidxml::xml_node<>*node = root_node->first_node();
+        while(node) {
+            *(constants + forIteratorIndex++) = std::atof(node->value());
+            node = node->next_sibling();
+        }
+        ageIdentificator=age;
+        calculateFitness(chromosome);
+    }
 }
