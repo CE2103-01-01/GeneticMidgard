@@ -48,7 +48,7 @@ PopulationManager::~PopulationManager(){
  * @return Population*
  */
 Population* PopulationManager::mergePopulations(){
-    //TODO: implementar
+
 }
 
 /**@brief metodo que ejecuta las acciones
