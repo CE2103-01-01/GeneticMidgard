@@ -170,13 +170,13 @@ template <class T> void Tree<T>::insertElement(T param, int index){
         T* container = searchElementUnlocked(index);
         new(container) T(param);
         (*len)++;
-        pthread_mutex_unlock( &mutexData );
     }else{
         split(root);
         (*floors)++;
-        pthread_mutex_unlock( &mutexData );
+
         insertElement(param,index);
     }
+    pthread_mutex_unlock( &mutexData );
 }
 
 /** Inserta
