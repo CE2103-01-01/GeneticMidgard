@@ -46,11 +46,11 @@ template <class T> Tree<T>::Tree(){
  * @brief: Libera las variables ocupadas
  */
 template <class T> Tree<T>::~Tree(){
-    pthread_mutex_lock( &mutexData );
+    pthread_mutex_lock( mutex );
     free(len);
     free(root);
     free(floors);
-    pthread_mutex_unlock( &mutexData );
+    pthread_mutex_unlock(mutex );
     free(mutex);
 }
 
