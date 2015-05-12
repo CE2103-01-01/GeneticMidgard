@@ -6,6 +6,7 @@
 #include "SocketGUI.h"
 
 
+
 bool SocketGUI::initialized = false;
 SocketGUI* SocketGUI::singleton = NULL;
 
@@ -46,7 +47,7 @@ void SocketGUI::receiving() {
             break;
         }
         packet>>message;
-        std::cout << "Received: " << message<< std::endl;
+        //std::cout << "Received: " << message<< std::endl;
         Thread thread(std::bind(&SocketGUI::manageMessage, message));
         thread.launch();
     }
@@ -58,6 +59,7 @@ void SocketGUI::manageMessage(std::string string) {
     std::string action = document.FindMember("action")->value.GetString();
     if (action == "createSubject")
     {
+
         unsigned int id = document.FindMember("id")->value.GetUint();
         unsigned int x = document.FindMember("x")->value.GetUint();
         unsigned int y = document.FindMember("y")->value.GetUint();
@@ -66,7 +68,7 @@ void SocketGUI::manageMessage(std::string string) {
         unsigned int b = document.FindMember("b")->value.GetUint();
         Person person(id,x,y,r,g,b);
         Map::getInstance()->getPoblacion()->addPerson(person);
-
+        //std::cout << id << std::endl;
     }
     else if (action == "updateSubject")
     {
@@ -77,7 +79,8 @@ void SocketGUI::manageMessage(std::string string) {
         std::cout << "changeEdda: " << std::endl;
     }
 
-    needToPaint = true;
+    (Map::getInstance()->needToPaint) = true;
+    std::cout << "Flag to paint" << std::endl;
 }
 
 void SocketGUI::updateSpeed(unsigned char speed) {

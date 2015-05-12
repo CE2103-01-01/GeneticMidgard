@@ -74,8 +74,9 @@ public:
     Poblacion *getPoblacion();
     Texture getTexture();
 
-    void renderMap(RenderTarget&);
+    void renderMap(RenderTarget&, const IntRect &rect);
     IntRect getTileRect(unsigned int gid);
+    bool needToPaint;
 };
 
 

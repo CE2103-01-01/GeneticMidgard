@@ -67,7 +67,7 @@ add_executable(ProjectMidgardLogic  ${SOURCE_FILES}
                                     ${HEADER_FILES}
                                     ${XML}
                                     ${DATA_STRUCTS}
-                                    ${RES_FILES} Models/PopulationManager.cpp Models/PopulationManager.h Models/AgeManager.cpp Models/AgeManager.h)
+                                    ${RES_FILES} Models/PopulationManager.cpp Models/PopulationManager.h Models/AgeManager.cpp Models/AgeManager.h Network/SocketConfig.h)
 include_directories(../libs)
 target_link_libraries (ProjectMidgardLogic ${CMAKE_THREAD_LIBS_INIT})
 

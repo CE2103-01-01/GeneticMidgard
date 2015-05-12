@@ -8,6 +8,7 @@
 Map *Map::singleton = NULL;
 
 Map::Map() {
+
     rapidxml::xml_node<> *root_node;
     rapidxml::xml_document<> doc;
     rapidxml::file<> file(MAP_LOCATION);
@@ -59,6 +60,7 @@ Map::Map() {
     if (!texturePersonLayer.loadFromFile(tilesetPath,getTileRect(1852))) abort();
 
     poblacion = new Poblacion(texturePerson,texturePersonLayer);
+    needToPaint = true;
 }
 
 
@@ -96,15 +98,18 @@ int *Map::getTerrain(int i) {
     return terrain[i];
 }
 
-void Map::renderMap(RenderTarget &renderArea) {
-        for (int layer = 0; layer < 2; ++layer) {
+void Map::renderMap(RenderTarget& renderArea, const IntRect &rect) {
+        int i;
+        int j;
+    int leftBound = rect.left/tileWidth;
+    if(leftBound<0)leftBound=0;
+    int topBound = rect.top/tileWidth;
+    if(topBound<0)topBound=0;
+    for (int layer = 0; layer < 2; ++layer) {
             int *layerData = (terrain[layer]);
-            for (int i = 0; i < width; ++i) {
-                //cout<<theView.getSize().y<<endl;
-                for (int j = 0; j < height; ++j) {
-
+            for (i = leftBound; i < rect.width/tileWidth+1 && i<width ; ++i) {
+                for (j = topBound; j < rect.height/tileHeight+1 && j < height; ++j) {
                     int gid = *(layerData + i + (width * j));
-
                     if (!gid) continue;
                     Sprite sprite;
                     sprite.setTexture(texture);
@@ -115,7 +120,7 @@ void Map::renderMap(RenderTarget &renderArea) {
             }
         }
 
-    poblacion->drawPoblacion(renderArea);
+    poblacion->drawPoblacion(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
 }
 
     IntRect Map::getTileRect(unsigned int i) {

@@ -5,12 +5,13 @@
 #include "Poblacion.h"
 
 
-void Poblacion::drawPoblacion(RenderTarget &target) {
+void Poblacion::drawPoblacion(RenderTarget &target, const IntRect &rect) {
     peopleMutex.lock();
     DoubleListIterator<Person> *iter = poblacion.getIterator();
-    //std::cout << poblacion.len() << std::endl;
+
     while (iter->exists()) {
         Person *next = iter->next();
+        if(rect.contains(Vector2i(next->x,next->y)))continue;
         Sprite sprite;
         sprite.setTexture(texturePerson);
         sprite.setPosition(sf::Vector2f(Map::getInstance()->getTileWidth() * next->x, Map::getInstance()->getTileHeight() * next->y));
@@ -39,7 +40,6 @@ void Poblacion::drawPoblacion(RenderTarget &target) {
 
 void Poblacion::addPerson(Person &person) {
     peopleMutex.lock();
-    std::cout << poblacion.len() << std::endl;
     poblacion.add(person);
     peopleMutex.unlock();
 }

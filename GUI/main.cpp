@@ -18,7 +18,7 @@ unsigned int widthScreen;
 float yMax;
 float xMax;
 
-
+IntRect getRenderArea();
 void ManageEvents(Thread &socketThread, RenderWindow &window);
 
 using namespace sf;
@@ -64,12 +64,13 @@ int main()
     while (window.isOpen())
     {
         ManageEvents(socketThread,window);
-        if(!needToPaint) continue;
+        if(!(Map::getInstance()->needToPaint)) continue;
+        std::cout << "Painting " << std::endl;
         mapText.clear();
         window.clear();
         //Render mAP
         window.setView(mapView);
-        mapa->renderMap(mapText);
+        mapa->renderMap(mapText, getRenderArea());
         mapText.display();
         //Draw map and miniMap
         window.draw(Sprite(mapText.getTexture()));
@@ -79,7 +80,7 @@ int main()
         window.setView(fixed);
         slider.drawSlider(window);
         window.display();
-        needToPaint = false;
+        (Map::getInstance()->needToPaint) = false;
     }
 
     return 0;
@@ -111,15 +112,32 @@ void checkViewLimits() {
         mapView.setCenter(xMin, mapView.getCenter().y);
         minimap.setCenter(xMin, mapView.getCenter().y);
     }
-    needToPaint = true;
+    (Map::getInstance()->needToPaint) = true;
 }
 
+IntRect getRenderArea()
+{   //MiniMap Limits
+    int minX = minimap.getCenter().x-minimap.getSize().x/2;
+    int minY = minimap.getCenter().y-minimap.getSize().y/2;
+    int maxX = minX + minimap.getSize().x;
+    int maxY = minY + minimap.getSize().y;
+    //Map Limits
+    int minXMap = mapView.getCenter().x-mapView.getSize().x/2;
+    int minYMap = mapView.getCenter().y-mapView.getSize().y/2;
+    int maxXMap = minXMap + mapView.getSize().x;
+    int maxYMap = minYMap + mapView.getSize().y;
+    if(minXMap<minX)minX = minXMap;
+    if(minYMap<minY)minY = minYMap;
+    if(maxXMap>maxX)maxX = maxXMap;
+    if(maxYMap>maxY)maxY = maxYMap;
+    return IntRect(minX,minY,maxX,maxY);
+}
 
 void ManageEvents(Thread &socketThread, RenderWindow &window) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         slider.move(Mouse::getPosition(window));
-        needToPaint = true;
+        (Map::getInstance()->needToPaint) = true;
     }
     sf::Event event;
     while (window.pollEvent(event))
@@ -136,11 +154,11 @@ void ManageEvents(Thread &socketThread, RenderWindow &window) {
             FloatRect visibleArea(0, 0, event.size.width, event.size.height);
             window.setView(View(visibleArea));
             checkViewLimits();
-            needToPaint = true;
+            (Map::getInstance()->needToPaint) = true;
         }
 
         else if (event.type == Event::MouseWheelMoved) {
-            needToPaint = true;
+            (Map::getInstance()->needToPaint) = true;
             if (!Keyboard::isKeyPressed(Keyboard::LShift)) {
                 mapView.move(0, event.mouseWheel.delta * SCROLL_SPEED);
                 minimap.move(0, event.mouseWheel.delta * SCROLL_SPEED);
@@ -154,7 +172,7 @@ void ManageEvents(Thread &socketThread, RenderWindow &window) {
         }
         else if( event.type == Event::KeyPressed )
         {
-            needToPaint = true;
+            (Map::getInstance()->needToPaint) = true;
             if (event.key.code == Keyboard::Down || event.key.code == Keyboard::S){
                 mapView.move(0, STEPMOVE);
                 minimap.move(0, STEPMOVE);

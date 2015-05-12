@@ -5,8 +5,8 @@
 #ifndef PROJECTMIDGARDLOGIC_SOCKETLOGIC_H
 #define PROJECTMIDGARDLOGIC_SOCKETLOGIC_H
 
-static const int PORT = 53000;
 
+#include "SocketConfig.h"
 #include <SFML/Network.hpp>
 #include "../libs/rapidjson/writer.h"
 #include "../libs/rapidjson/stringbuffer.h"

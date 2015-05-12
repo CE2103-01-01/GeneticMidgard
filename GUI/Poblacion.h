@@ -51,7 +51,7 @@ private:
 
 public:
     Poblacion(Texture, Texture);
-    void drawPoblacion(RenderTarget&);
+    void drawPoblacion(RenderTarget&,const IntRect &);
     void addPerson(Person&);
     void deletePerson(unsigned int id);
     void updateId(unsigned int id, unsigned int x, unsigned int y);

@@ -3,6 +3,8 @@
 //
 
 #include "SocketLogic.h"
+
+
 bool SocketLogic::initialized  = false;
 void SocketLogic::init() {
     initialized = true;
