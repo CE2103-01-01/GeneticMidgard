@@ -16,6 +16,7 @@ Population::Population(char populationTypeParam, int* activePopulationsOnManager
     populationType = static_cast<char*>(malloc(sizeof(char)));
     populationFitness = static_cast<float*>(malloc(sizeof(float)));
     populationSize = static_cast<int*>(malloc(sizeof(int)));
+    fittest = static_cast<int*>(calloc(0,sizeof(int)*(SUBJECTS_BY_GENERATION/2)));
     actualGeneration = static_cast<int*>(malloc(sizeof(int)));
     populationTree = static_cast<Tree<Subject>*>(malloc(sizeof(Tree<Subject>)));
     defunct = static_cast<bool*>(malloc(sizeof(bool)));
@@ -32,6 +33,7 @@ Population::Population(char populationTypeParam, int* activePopulationsOnManager
 /**@brief: libera el espacio utilizado
  */
 Population::~Population() {
+    free(fittest);
     free(populationTree);
     free(defunct);
     free(reproduction_pthread);

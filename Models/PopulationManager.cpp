@@ -95,8 +95,8 @@ PopulationManager* PopulationManager::getInstance(pthread_mutex_t* mutex) {
     }else{
         singleton = static_cast<PopulationManager*>(malloc(sizeof(PopulationManager)));
         new(singleton) PopulationManager(INITIAL_NUMBER_OF_POPULATIONS,mutex);
+        return singleton;
     }
-
 }
 
 /**@brief elimina el pthread

@@ -32,7 +32,7 @@ Subject::Subject(long idParam){
     father = 0;
     mother = 0;
     lifeThread = 0;
-    position = 0;
+    position = static_cast<int*>(calloc(0,2 * sizeof(int)));
 }
 
 /** Constructor
@@ -59,17 +59,17 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     mother = motherParam;
     calculateFitness();
     lifeThread = 0;
-    position = 0;
+    position = static_cast<int*>(calloc(0,2 * sizeof(int)));
 }
 
 /** Constructor
  * @brief genera un individuo de generacion N
  */
 Subject::Subject(const Subject& other){
+    position = static_cast<int*>(malloc(2 * sizeof(int)));
     if(other.position != 0){
-    //    position = static_cast<int*>(malloc(2 * sizeof(int)));
-    //    *(position) = *(other.position);
-    //    *(position + 1) = *(other.position + 1);
+        *(position) = *(other.position);
+        *(position + 1) = *(other.position + 1);
     }
     id = static_cast<long*>(malloc(sizeof(long)));
     generation = static_cast<long*>(malloc(sizeof(long)));
@@ -199,12 +199,11 @@ pthread_t* Subject::get_p_thread(){
 void Subject::start_p_thread(){
     Vector2D positionsVector = Terrain::getRandomFreePosition();
     Terrain::set(positionsVector,*id);
-    position = static_cast<int*>(malloc(2 * sizeof(int)));
     *(position) = positionsVector.x;
     *(position + 1) = positionsVector.y;
-    Thread message(std::bind(&createSubject,*id,*(position),*(position+1),*(characteristics+POSITION_OF_RED),
-                               *(characteristics+POSITION_OF_GREEN),*(characteristics+POSITION_OF_BLUE)));
-    message.launch();
+    //Thread message(std::bind(&createSubject,*id,*(position),*(position+1),*(characteristics+POSITION_OF_RED),
+    //                           *(characteristics+POSITION_OF_GREEN),*(characteristics+POSITION_OF_BLUE)));
+    //message.launch();
     void* parameters = malloc(sizeof(PThreadParam));
     new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,NULL);
     lifeThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
@@ -222,7 +221,7 @@ void* subjectLife(void* parameter){
     struct timespec timeController;
     timeController.tv_nsec=500000000;
     timeController.tv_sec=1;
-    int life = 5;
+    int life = 20;
     //Este while corre hasta que se llame al metodo kill()
     while(excecutioner->isAlive()){
         //Llama al metodo de vida del sujeto

@@ -8,55 +8,58 @@
 #include "Leaf.h"
 
 template <class T> class Tree{
-    pthread_mutex_t mutexData = PTHREAD_MUTEX_INITIALIZER;
-    int* len;
+    pthread_mutex_t* mutexData;
+    long* len;
     int* floors;
+    long* maximun;
     Leaf* root;
     void split(Leaf*);
-    int max(int);
-    void createPath(int,int,int*);
-    T* searchElementUnlocked(int);
+    long max(int);
+    void createPath(long,int,int*);
+    T* searchElementUnlocked(long);
 public:
     Tree();
     ~Tree();
-    T* searchElement(int);
-    T* searchAndDo(int, void(T*, void*), void*);
-    void insertElement(T,int);
+    T* searchElement(long);
+    T* searchAndDo(long, void(T*, void*), void*);
+    void insertElement(T,long);
     void insertElement(T);
-    void deleteElement(int, void(T*, void*), void*);
-    int lenght();
-    int max();
+    void deleteElement(long, void(T*, void*), void*);
+    long lenght();
+    long max();
 };
 
 /** Constructor
  * @brief: Reserva el espacio de las variables y la primera hoja
  */
 template <class T> Tree<T>::Tree(){
-    pthread_mutex_lock( &mutexData );
-    root = (Leaf*)(malloc(sizeof(Leaf)));
+    pthread_mutex_t* mutex = static_cast<pthread_mutex_t*>(malloc(sizeof(pthread_mutex_t)));
+    pthread_mutex_init(mutex,NULL);
+    root = static_cast<Leaf*>(malloc(sizeof(Leaf)));
     new(root) Leaf(TREE_SIZE, (int)sizeof(T));
-    len = (int*)(malloc(sizeof(int)));
-    *len = 0;
-    floors = (int*)(malloc(sizeof(int)));
+    floors = static_cast<int*>(malloc(sizeof(int)));
     *floors= 1;
-    pthread_mutex_unlock( &mutexData );
+    len = static_cast<long*>(malloc(sizeof(int)));
+    *len = 0;
+    maximun = static_cast<long*>(malloc(sizeof(int)));
+    *maximun = max(*floors);
 }
 
 /** Destructor
  * @brief: Libera las variables ocupadas
  */
 template <class T> Tree<T>::~Tree(){
-    pthread_mutex_lock( &mutexData );
     free(len);
     free(root);
     free(floors);
-    pthread_mutex_unlock( &mutexData );
+    free(maximun);
+    free(mutexData);
 }
 
 /* Maximo
  * @brief: Realiza un calculo de la maxima cantidad de nodos que puede albergar el arbol con altura X
  */
-template <class T> int Tree<T>::max(int floor){
+template <class T> long Tree<T>::max(int floor){
     if(floor > 0){
         return TREE_SIZE + (((floor-1) * floor) / 2) * TREE_SIZE * TREE_SIZE;
     }else{
@@ -73,10 +76,10 @@ template <class T> void Tree<T>::split(Leaf* toSplit){
         Leaf* sons = toSplit->getSons();
         for(int i=0; i<TREE_SIZE; i++){
             split(sons+i);
-        };
+        }
     }else{
         toSplit->split();
-    };
+    }
 }
 
 /** Crear rutas
@@ -84,7 +87,7 @@ template <class T> void Tree<T>::split(Leaf* toSplit){
  * @param: int floor: piso a ocupar
  * @brief: Realiza los calculos necesarios para generar una serie de enteros con la ruta
  */
-template <class T> void Tree<T>::createPath(int index, int floor, int* path){
+template <class T> void Tree<T>::createPath(long index, int floor, int* path){
     *path = (index)%TREE_SIZE;  //Container
     index=(index-1-max((floor-1)))/TREE_SIZE;
     for(int i=1; i<floor; i++){
@@ -96,54 +99,65 @@ template <class T> void Tree<T>::createPath(int index, int floor, int* path){
             index=index/TREE_SIZE;
         }
     }
-};
+}
 
 /** Buscador
  * @param: int index: indice a buscar
  * @brief: calcula la ruta al indice recibido
  */
-template <class T> T* Tree<T>::searchElement(int index){
-    pthread_mutex_lock( &mutexData );
+template <class T> T* Tree<T>::searchElement(long index){
+    pthread_mutex_lock(mutexData);
     int floor=*floors;
     if(index <= max(floor)){
+        //Localiza el piso
         while(max(floor-1)>index){
             floor--;
         }
-        int* path = (int*)malloc((floor)*sizeof(int));
+        //Crea la ruta
+        int* path = static_cast<int*>(malloc(floor * sizeof(int)));
         createPath(index,floor,path);
-        Leaf* tmp = root;
+        //Avanza en la ruta
+        Leaf* tmpLeaf = root;
         for(int i=floor-1; i>0; i--){
-            tmp = tmp->getSons() + *(path+i);
+            tmpLeaf = tmpLeaf->getSons() + *(path+i);
         }
-        void* ret = (tmp->getContainers() + (*path)*sizeof(T));
-        pthread_mutex_unlock( &mutexData );
-       return static_cast<T*>(ret);
+        //Toma el contenedor, es decir el elemento
+        T* elementToReturn = static_cast<T*>(tmpLeaf->getContainers() + (*path)*sizeof(T));
+        //Libera el espacio de la ruta
+        //free(path);
+        //retorna el elemento
+        pthread_mutex_unlock(mutexData);
+        return elementToReturn;
     }else{
-        pthread_mutex_unlock( &mutexData );
+        pthread_mutex_unlock(mutexData);
         return 0;
     }
-
 }
-template <class T> T* Tree<T>::searchElementUnlocked(int index){
+template <class T> T* Tree<T>::searchElementUnlocked(long index) {
     int floor=*floors;
     if(index <= max(floor)){
+        //Localiza el piso
         while(max(floor-1)>index){
             floor--;
         }
-        int* path = (int*)malloc((floor)*sizeof(int));
+        //Crea la ruta
+        int* path = static_cast<int*>(malloc(floor * sizeof(int)));
         createPath(index,floor,path);
-        Leaf* tmp = root;
+        //Avanza en la ruta
+        Leaf* tmpLeaf = root;
         for(int i=floor-1; i>0; i--){
-            tmp = tmp->getSons() + *(path+i);
+            tmpLeaf = tmpLeaf->getSons() + *(path+i);
         }
-        void* ret = (tmp->getContainers() + (*path)*sizeof(T));
-        return static_cast<T*>(ret);
+        //Toma el contenedor, es decir el elemento
+        T* elementToReturn = static_cast<T*>(tmpLeaf->getContainers() + (*path)*sizeof(T));
+        //Libera el espacio de la ruta
+        //free(path);
+        //retorna el elemento
+        return elementToReturn;
     }else{
         return 0;
     }
-
 }
-
 
 /** Buscador
  * @param: int index: indice a buscar
@@ -151,11 +165,9 @@ template <class T> T* Tree<T>::searchElementUnlocked(int index){
  * @param: void* methodParam: parametro del metodo a ejecutar
  * @brief: calcula la ruta al indice recibido
  */
-template <class T> T* Tree<T>::searchAndDo(int indexToSearch, void method(T*, void*), void* methodParam){
-    pthread_mutex_lock( &mutexData );
-    T* toReturn = searchElementUnlocked(indexToSearch);
+template <class T> T* Tree<T>::searchAndDo(long indexToSearch, void method(T*, void*), void* methodParam){
+    T* toReturn = searchElement(indexToSearch);
     method(toReturn, methodParam);
-    pthread_mutex_unlock( &mutexData );
     return toReturn;
 }
 
@@ -164,19 +176,19 @@ template <class T> T* Tree<T>::searchAndDo(int indexToSearch, void method(T*, vo
  * @param: T param: dato a insertar
  * @brief: calcula la ruta al indice recibido e inserta el dato
  */
-template <class T> void Tree<T>::insertElement(T param, int index){
-    pthread_mutex_lock( &mutexData );
-    if(index < max(*floors)){
+template <class T> void Tree<T>::insertElement(T param, long index){
+    pthread_mutex_lock(mutexData);
+    if(index < *maximun){
         T* container = searchElementUnlocked(index);
         new(container) T(param);
         (*len)++;
     }else{
         split(root);
         (*floors)++;
-
+        *maximun = max(*floors);
         insertElement(param,index);
     }
-    pthread_mutex_unlock( &mutexData );
+    pthread_mutex_unlock(mutexData);
 }
 
 /** Inserta
@@ -193,11 +205,11 @@ template <class T> void Tree<T>::insertElement(T newElement){
  * @param: void* methodParam: parametro del metodo a ejecutar
  * @brief: calcula la ruta al indice recibido y lo borra, pero antes ejecuta un metodo sobre el
  */
-template <class T> void Tree<T>::deleteElement(int index, void method(T*, void*), void* methodParam){
-    pthread_mutex_lock( &mutexData );
+template <class T> void Tree<T>::deleteElement(long index, void method(T*, void*), void* methodParam){
+    pthread_mutex_lock(mutexData);
     method(searchElementUnlocked(index),methodParam);
     len--;
-    pthread_mutex_unlock( &mutexData );
+    pthread_mutex_unlock(mutexData);
 }
 
 
@@ -205,7 +217,7 @@ template <class T> void Tree<T>::deleteElement(int index, void method(T*, void*)
  * @return int: nodos en uso
  * @brief: devuelve la cantidad de nodos en uso
  */
-template <class T> int Tree<T>::lenght(){
+template <class T> long Tree<T>::lenght(){
     return *len;
 }
 
@@ -213,9 +225,9 @@ template <class T> int Tree<T>::lenght(){
  * @return int: maximo numero de nodos
  * @brief: devuelve la cantidad de nodos maxima
  */
-template <class T> int Tree<T>::max(){
-    return max(*floors);
+template <class T> long Tree<T>::max(){
+    return *maximun;
 }
 
 
-#endif //VH2015_TREE_HT* Tree::searchElementUnlocked(int i){
+#endif //VH2015_TREE_H

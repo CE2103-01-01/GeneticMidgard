@@ -12,6 +12,7 @@
 class Population {
     pthread_t* reproduction_pthread;
     int* activePopulationsOnManager;
+    int* fittest;
     int* actualGeneration;
     int* populationSize;
     float* populationFitness;
