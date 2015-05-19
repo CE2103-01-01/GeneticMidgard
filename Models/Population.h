@@ -10,6 +10,7 @@
 #define PROJECTMIDGARD_POPULATION_H
 
 class Population {
+    unsigned char* colors;
     pthread_t* reproduction_pthread;
     int* activePopulationsOnManager;
     int* fittest;

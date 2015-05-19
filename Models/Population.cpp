@@ -12,6 +12,7 @@
  */
 Population::Population(char populationTypeParam, int* activePopulationsOnManagerParam){
     //Reserva espacios
+    colors = static_cast<unsigned char*>(malloc(3));
     activePopulationsOnManager = activePopulationsOnManagerParam;
     populationType = static_cast<char*>(malloc(sizeof(char)));
     populationFitness = static_cast<float*>(malloc(sizeof(float)));
@@ -22,6 +23,9 @@ Population::Population(char populationTypeParam, int* activePopulationsOnManager
     defunct = static_cast<bool*>(malloc(sizeof(bool)));
     reproduction_pthread = 0;
     //Llena espacios
+    *(colors) = trueRandom::getRandom()%256;
+    *(colors + 1) = trueRandom::getRandom()%256;
+    *(colors + 2) = trueRandom::getRandom()%256;
     *populationType = populationTypeParam;
     *populationSize = 0;
     *actualGeneration = 1;
@@ -70,7 +74,8 @@ void Population::init_pthread(){
 void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* chromosome) {
     (*populationSize)++;
     populationTree->insertElement(
-            Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType)), (*populationSize)
+            Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType), colors),
+            *populationSize
     );
     Subject* newMember = populationTree->searchElement(*populationSize);
     (*populationFitness) += newMember->getFitness();
@@ -81,7 +86,7 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* c
  */
 void Population::createNewRandomMember() {
     (*populationSize)++;
-    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType)),(*populationSize));
+    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType), colors),*populationSize);
     Subject* newMember = populationTree->searchElement(*populationSize);
     (*populationFitness) += newMember->getFitness();
     newMember->start_p_thread();

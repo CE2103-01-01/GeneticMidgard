@@ -18,6 +18,7 @@
 class Subject {
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
+    Chromosome* geneticInformation;
     pthread_t* lifeThread;
     long* id;
     long* generation;
@@ -25,12 +26,11 @@ class Subject {
     char* profession;
     unsigned char* characteristics;//lista de caracteristicas
     bool* alive;
-    Chromosome* geneticInformation;
     int* position;
     void calculateFitness();//funcion de calcular fitness y set fitness
 public:
-    Subject(long);
-    Subject(Subject*,Subject*,Chromosome*,long,long);
+    Subject(long,unsigned char*);
+    Subject(Subject*,Subject*,Chromosome*,long,long,unsigned char*);
     Subject(const Subject&);
     ~Subject();;
     long getGeneration();

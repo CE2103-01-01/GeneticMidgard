@@ -25,14 +25,7 @@ PopulationManager::PopulationManager(int numberOfPopulations, pthread_mutex_t* m
     for(int i = 0; i < numberOfPopulations; i++){
         new(population+i) Population(i,activePopulations);
     }
-    //Reserva espacio para parametro de pthread
-    void* parameters = malloc(sizeof(PThreadParam));
-    //Crea parametro de pthread
-    new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,mutex);
-    //Reserva espacio para el pthread
     managementThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
-    //Inicia el pthread
-    pthread_create(managementThread,0,populationManagerThread,parameters);
 }
 
 /**@brief destructor

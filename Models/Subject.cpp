@@ -12,7 +12,7 @@ using namespace constantsSubjectXML;
 /** Constructor
  * @brief genera un individuo de primera generacion
  */
-Subject::Subject(long idParam){
+Subject::Subject(long idParam, unsigned char* colors){
     id = static_cast<long*>(malloc(sizeof(long)));
     generation = static_cast<long*>(malloc(sizeof(long)));
     alive = static_cast<bool*>(malloc(sizeof(bool)));
@@ -21,13 +21,19 @@ Subject::Subject(long idParam){
     geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     *id = idParam;
-    *alive = true;
     *geneticInformation = Chromosome();
     *generation = 0;
     *profession = 0;
-    for(int i = 0; i < NUMBER_OF_CHARACTERISTICS; i++){
-        *(characteristics + i) = 0;    //TODO: MODIFICAR
+    for(int i = 0; i < NUMBER_OF_CHARACTERISTICS - NUMBER_OF_NON_GENETIC_CHARACTERISCTICS; i++){
+        *(characteristics + i) = geneticInformation->getGene(i);
     }
+    *(characteristics + POSITION_OF_AGE) = 0;
+    *(characteristics + POSITION_OF_EXPERIENCE) = 0;
+    *(characteristics + POSITION_OF_RED) = *(colors);
+    *(characteristics + POSITION_OF_GREEN) = *(colors + 1);
+    *(characteristics + POSITION_OF_BLUE) = *(colors + 2);
+    *(characteristics + POSITION_OF_WEAPON) = 0;
+    *(characteristics + POSITION_OF_ARMOR) = 0;
     calculateFitness();
     father = 0;
     mother = 0;
@@ -39,7 +45,7 @@ Subject::Subject(long idParam){
  * @brief genera un individuo de generacion N
  */
 Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* geneticInformationParam,
-                 long generationParam, long idParam){
+                 long generationParam, long idParam, unsigned char* colors){
     id = static_cast<long*>(malloc(sizeof(long)));
     generation = static_cast<long*>(malloc(sizeof(long)));
     alive = static_cast<bool*>(malloc(sizeof(bool)));
@@ -48,13 +54,19 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     *id = idParam;
-    *alive = true;
     *geneticInformation = *geneticInformationParam;
     *generation = generationParam;
     *profession = 0;
-    for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
-        *(characteristics + i) = 0;    //TODO: MODIFICAR
+    for(int i = 0; i < NUMBER_OF_CHARACTERISTICS - NUMBER_OF_NON_GENETIC_CHARACTERISCTICS; i++){
+        *(characteristics + i) = geneticInformation->getGene(i);
     }
+    *(characteristics + POSITION_OF_AGE) = 0;
+    *(characteristics + POSITION_OF_EXPERIENCE) = 0;
+    *(characteristics + POSITION_OF_RED) = *(colors);
+    *(characteristics + POSITION_OF_GREEN) = *(colors + 1);
+    *(characteristics + POSITION_OF_BLUE) = *(colors + 2);
+    *(characteristics + POSITION_OF_WEAPON) = 0;
+    *(characteristics + POSITION_OF_ARMOR) = 0;
     father = fatherParam;
     mother = motherParam;
     calculateFitness();
@@ -79,7 +91,6 @@ Subject::Subject(const Subject& other){
     geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
     characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     *id = *other.id;
-    *alive = true;
     *geneticInformation = *other.geneticInformation;
     *generation = *other.generation;
     *profession = *other.profession;
@@ -98,7 +109,6 @@ Subject::~Subject(){
     free(id);
     free(generation);
     free(characteristics);
-    free(alive);
     free(profession);
     free(fitness);
     free(geneticInformation);
@@ -170,7 +180,8 @@ unsigned char Subject::getCharacteristic(int position){
  * @return bool
  */
 bool Subject::isAlive(){
-    return *alive;
+    return (*(characteristics + POSITION_OF_LIFE) > 0 &&
+            *(characteristics + POSITION_OF_AGE) <= (20 * geneticInformation->getGene(POSITION_OF_LIFE))/51);
 }
 
 /** @brief Mata al jugador colocando en false la bander
@@ -221,17 +232,12 @@ void* subjectLife(void* parameter){
     struct timespec timeController;
     timeController.tv_nsec=500000000;
     timeController.tv_sec=1;
-    int life = 20;
     //Este while corre hasta que se llame al metodo kill()
     while(excecutioner->isAlive()){
         //Llama al metodo de vida del sujeto
         excecutioner->life();
         //Espera un segundo
         nanosleep(&timeController, 0);
-        life--;
-        if(life==0){
-            excecutioner->kill();
-        }
     }
     std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
     return 0;

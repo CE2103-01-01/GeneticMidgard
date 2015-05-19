@@ -7,18 +7,23 @@
 
 #include <pthread.h>
 #include "PopulationManager.h"
+#include "movilObjectManager.h"
 
 class AgeManager {
     pthread_mutex_t* generalMutex;
+    pthread_t* managementThread;
     long* generalSleep;
-    PopulationManager* manager;
     int* actualAge;
+    PopulationManager* populationManager;
+    movilObjectManager* objectManager;
     void changeAge();
     void evaluateEvolution();
-    void thread();
     public:
         AgeManager();
         ~AgeManager();
+        PopulationManager* getPopulationManager();
+        pthread_mutex_t* getGeneralMutex();
+        void thread();
 };
 
 void* ageManagerThread(void*);
