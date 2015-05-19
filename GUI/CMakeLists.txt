@@ -7,5 +7,6 @@ if(SFML_FOUND)
   target_link_libraries(ProjectMidgardGUI ${SFML_LIBRARIES})
 endif()
 
-execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/res
-                                                           ${CMAKE_BINARY_DIR}/res)
+configure_file(../res/mapa.tmx ../res/mapa.tmx COPYONLY)
+configure_file(../res/terrain_atlas_small.png ../res/terrain_atlas_small.png COPYONLY)
+configure_file(../res/roboto.ttf ../res/roboto.ttf COPYONLY)
