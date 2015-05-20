@@ -11,20 +11,18 @@
  * @param: Chromosome* motherGeneticInformation: cromosoma de la madre
  * @return Chromosome*: dos cromosomas hijos, (return) & (return + sizeof(Chromosome))
  */
-Chromosome* ChromosomeMixer::mix(Chromosome fatherGeneticInformation, Chromosome motherGeneticInformation){
+Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation, Chromosome* motherGeneticInformation){
     //Mezcla cromosomas
-    unsigned char newGeneticMaterialOne[constantsSubjectXML::NUMBER_OF_GENES];
-    newGeneticMaterialOne[constantsSubjectXML::NUMBER_OF_GENES] = {};
-    unsigned char newGeneticMaterialTwo[constantsSubjectXML::NUMBER_OF_GENES];
-    newGeneticMaterialTwo[constantsSubjectXML::NUMBER_OF_GENES] = {};
+    unsigned char* newGeneticMaterialOne = static_cast<unsigned char*>(malloc(constantsSubjectXML::NUMBER_OF_GENES));
+    unsigned char* newGeneticMaterialTwo = static_cast<unsigned char*>(malloc(constantsSubjectXML::NUMBER_OF_GENES));
     for(int i=0; i < constantsSubjectXML::NUMBER_OF_GENES; i++){
         //Se toma el gen del padre y madre
-        unsigned char fatherGene = fatherGeneticInformation.getGene(i);
-        unsigned char motherGene = motherGeneticInformation.getGene(i);
+        unsigned char fatherGene = fatherGeneticInformation->getGene(i);
+        unsigned char motherGene = motherGeneticInformation->getGene(i);
         unsigned char tmpMask = (unsigned char)(rand()%256);
         //Se aplican y asignan las mascaras
-        newGeneticMaterialOne[i] = (tmpMask & fatherGene)|(~tmpMask & motherGene);
-        newGeneticMaterialTwo[i] = (~tmpMask & fatherGene)|(tmpMask & motherGene);
+        *(newGeneticMaterialOne + i) = (tmpMask & fatherGene)|(~tmpMask & motherGene);
+        *(newGeneticMaterialTwo + i) = (~tmpMask & fatherGene)|(tmpMask & motherGene);
     }
     Chromosome* optionOne = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
     new(optionOne) Chromosome(newGeneticMaterialOne);

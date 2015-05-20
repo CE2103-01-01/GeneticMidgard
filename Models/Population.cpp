@@ -74,7 +74,7 @@ void Population::init_pthread(){
 void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* chromosome) {
     (*populationSize)++;
     populationTree->insertElement(
-            Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType), colors),
+            Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType),  actualGeneration),
             *populationSize
     );
     Subject* newMember = populationTree->searchElement(*populationSize);
@@ -86,7 +86,7 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* c
  */
 void Population::createNewRandomMember() {
     (*populationSize)++;
-    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType), colors),*populationSize);
+    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType), actualGeneration),*populationSize);
     Subject* newMember = populationTree->searchElement(*populationSize);
     (*populationFitness) += newMember->getFitness();
     newMember->start_p_thread();
@@ -192,7 +192,7 @@ void* reproductionThread(void* parameter){
     while(!population->isDefunct()){
         laboratory->createGeneration(SUBJECTS_BY_GENERATION);
         x++;
-        if(x==100) population->exterminate();
+        //if(x==100) population->exterminate();
         nanosleep(&timeControler, NULL);
     }
     population->delete_pthread();

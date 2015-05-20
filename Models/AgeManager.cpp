@@ -4,13 +4,39 @@
 
 #include "AgeManager.h"
 
+/**Constructor
+ */
 AgeManager::AgeManager(){
+    //Edda actual
+    actualAge = static_cast<int*>(malloc(sizeof(int)));
+    *actualAge = 0;
+    //Sleep general
+    generalSleep = static_cast<long*>(malloc(sizeof(long)));
+    *generalSleep = 1000;
+    //Thread de manejo de eddas
+    managementThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
+    //Mutex
     generalMutex = static_cast<pthread_mutex_t*>(malloc(sizeof(pthread_mutex_t)));
     pthread_mutex_init(generalMutex,NULL);
-    PopulationManager* populationManager = PopulationManager::getInstance(generalMutex);
+    //manejador de poblaciones
+    populationManager = PopulationManager::getInstance(generalMutex);
+    //Manejador de objetos moviles
+    //objectManager = static_cast<movilObjectManager*>(malloc(sizeof(movilObjectManager)));
+    //new(objectManager) movilObjectManager();
+    pthread_create(managementThread,0,ageManagerThread, static_cast<void*>(this));
+    pthread_join(*managementThread,NULL);
 }
 
-AgeManager::~AgeManager(){}
+/**Destructor
+ */
+AgeManager::~AgeManager(){
+    free(generalMutex);
+    free(generalSleep);
+    free(managementThread);
+    free(populationManager);
+ //   free(objectManager);
+    free(actualAge);
+}
 
 void AgeManager::thread(){
 }
@@ -27,7 +53,7 @@ PopulationManager* AgeManager::getPopulationManager(){
 
 void AgeManager::changeAge(){}
 
-void* populationManagerThread(void* parameter){
+void* ageManagerThread(void* parameter){
     AgeManager* excecutioner = static_cast<AgeManager*>(parameter);
     //Reserva espacio para parametro de pthread
     void* populationManagerThreadParameters = malloc(sizeof(PThreadParam));
@@ -36,9 +62,7 @@ void* populationManagerThread(void* parameter){
             PThreadParam(excecutioner->getPopulationManager(),excecutioner->getGeneralMutex());
     //Inicia el pthread del manejador de poblaciomnes
     pthread_create(excecutioner->getPopulationManager()->get_pthread(),0,populationManagerThread,populationManagerThreadParameters);
-    while(true){
-        excecutioner->thread();
-    }
+    pthread_join(*excecutioner->getPopulationManager()->get_pthread(),0);
 
-    return 0;
+    return NULL;
 }

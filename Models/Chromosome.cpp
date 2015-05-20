@@ -11,7 +11,6 @@ using namespace constantsSubjectXML;
  * @brief Crea la cantidad de genes del archivo genes.xml con tamaño definido en Constants.h
  */
 Chromosome::Chromosome() {
-    trueRandom::init();
     geneticData = static_cast<unsigned char*>(malloc(sizeof(unsigned char)*NUMBER_OF_GENES));
     for (int i = 0; i < NUMBER_OF_GENES; i++) {
         *(geneticData+i) = trueRandom::getRandom()%256;

@@ -12,94 +12,96 @@ using namespace constantsSubjectXML;
 /** Constructor
  * @brief genera un individuo de primera generacion
  */
-Subject::Subject(long idParam, unsigned char* colors){
+Subject::Subject(long idParam, int* actualYearParam){
+    //Ano actual
+    actualYear = actualYearParam;
+    //Crea y asigna id
     id = static_cast<long*>(malloc(sizeof(long)));
-    generation = static_cast<long*>(malloc(sizeof(long)));
-    alive = static_cast<bool*>(malloc(sizeof(bool)));
-    profession = static_cast<char*>(malloc(sizeof(char)));
-    fitness = static_cast<float*>(malloc(sizeof(float)));
-    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
-    characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     *id = idParam;
-    *geneticInformation = Chromosome();
+    //Crea y asigna generacion
+    generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = 0;
-    *profession = 0;
-    for(int i = 0; i < NUMBER_OF_CHARACTERISTICS - NUMBER_OF_NON_GENETIC_CHARACTERISCTICS; i++){
-        *(characteristics + i) = geneticInformation->getGene(i);
-    }
-    *(characteristics + POSITION_OF_AGE) = 0;
-    *(characteristics + POSITION_OF_EXPERIENCE) = 0;
-    *(characteristics + POSITION_OF_RED) = *(colors);
-    *(characteristics + POSITION_OF_GREEN) = *(colors + 1);
-    *(characteristics + POSITION_OF_BLUE) = *(colors + 2);
-    *(characteristics + POSITION_OF_WEAPON) = 0;
-    *(characteristics + POSITION_OF_ARMOR) = 0;
+    //Crea y asigna la informacion genetica
+    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
+    *geneticInformation = Chromosome();
+    //Calcula fitness
+    fitness = static_cast<float*>(malloc(sizeof(float)));
     calculateFitness();
+    //Crea las caracteristicas
+    characteristics = static_cast<unsigned char*>(calloc(0,NUMBER_OF_CHARACTERISTICS));
+    //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
+    *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = (20 * geneticInformation->getGene(POSITION_OF_GENE_LIFE))/51;
+    //Crea posicion
+    position = static_cast<int*>(calloc(0,2 * sizeof(int)));
+    //Asigna padres
     father = 0;
     mother = 0;
+    //Coloca en 0 el puntero al thread
     lifeThread = 0;
-    position = static_cast<int*>(calloc(0,2 * sizeof(int)));
 }
 
 /** Constructor
  * @brief genera un individuo de generacion N
  */
 Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* geneticInformationParam,
-                 long generationParam, long idParam, unsigned char* colors){
+                 long generationParam, long idParam, int* actualYearParam){
+    //Ano actual
+    actualYear = actualYearParam;
     id = static_cast<long*>(malloc(sizeof(long)));
-    generation = static_cast<long*>(malloc(sizeof(long)));
-    alive = static_cast<bool*>(malloc(sizeof(bool)));
-    profession = static_cast<char*>(malloc(sizeof(char)));
-    fitness = static_cast<float*>(malloc(sizeof(float)));
-    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
-    characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     *id = idParam;
-    *geneticInformation = *geneticInformationParam;
+    //Crea y asigna generacion
+    generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = generationParam;
-    *profession = 0;
-    for(int i = 0; i < NUMBER_OF_CHARACTERISTICS - NUMBER_OF_NON_GENETIC_CHARACTERISCTICS; i++){
-        *(characteristics + i) = geneticInformation->getGene(i);
-    }
-    *(characteristics + POSITION_OF_AGE) = 0;
-    *(characteristics + POSITION_OF_EXPERIENCE) = 0;
-    *(characteristics + POSITION_OF_RED) = *(colors);
-    *(characteristics + POSITION_OF_GREEN) = *(colors + 1);
-    *(characteristics + POSITION_OF_BLUE) = *(colors + 2);
-    *(characteristics + POSITION_OF_WEAPON) = 0;
-    *(characteristics + POSITION_OF_ARMOR) = 0;
+    //Crea y asigna la informacion genetica
+    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
+    *geneticInformation = *geneticInformationParam;
+    //Calcula fitness
+    fitness = static_cast<float*>(malloc(sizeof(float)));
+    calculateFitness();
+    //Crea las caracteristicas
+    characteristics = static_cast<unsigned char*>(calloc(0,NUMBER_OF_CHARACTERISTICS));
+    //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
+    *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = (20 * geneticInformation->getGene(POSITION_OF_GENE_LIFE))/51;
+    //Crea posicion
+    position = static_cast<int*>(calloc(0,2 * sizeof(int)));
+    //Asigna padres
     father = fatherParam;
     mother = motherParam;
-    calculateFitness();
+    //Coloca en 0 el puntero al thread
     lifeThread = 0;
-    position = static_cast<int*>(calloc(0,2 * sizeof(int)));
-}
+    }
 
 /** Constructor
  * @brief genera un individuo de generacion N
  */
 Subject::Subject(const Subject& other){
+    //Ano actual
+    actualYear = other.actualYear;
+    //Crea la posicion
     position = static_cast<int*>(malloc(2 * sizeof(int)));
+    //Copia la posicion del otro
     if(other.position != 0){
         *(position) = *(other.position);
         *(position + 1) = *(other.position + 1);
     }
+    //Copia id
     id = static_cast<long*>(malloc(sizeof(long)));
-    generation = static_cast<long*>(malloc(sizeof(long)));
-    alive = static_cast<bool*>(malloc(sizeof(bool)));
-    profession = static_cast<char*>(malloc(sizeof(char)));
-    fitness = static_cast<float*>(malloc(sizeof(float)));
-    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
-    characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     *id = *other.id;
-    *geneticInformation = *other.geneticInformation;
+    //Copia generacion
+    generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = *other.generation;
-    *profession = *other.profession;
+    //Copia fitness
+    fitness = static_cast<float*>(malloc(sizeof(float)));
+    *fitness = *other.fitness;
+    //Copia informacion genetica
+    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
+    *geneticInformation = *other.geneticInformation;
+    characteristics = static_cast<unsigned char*>(malloc(NUMBER_OF_CHARACTERISTICS));
     for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
-        *(characteristics + i) = *(other.characteristics + i);    //TODO: MODIFICAR
+        *(characteristics + i) = *(other.characteristics + i);
     }
     father = other.father;
     mother = other.mother;
-    *fitness = *other.fitness;
     lifeThread = 0;
 }
 
@@ -109,7 +111,6 @@ Subject::~Subject(){
     free(id);
     free(generation);
     free(characteristics);
-    free(profession);
     free(fitness);
     free(geneticInformation);
     free(position);
@@ -132,16 +133,16 @@ Subject* Subject::getMother() {
 /** @brief Accede al cromosoma
  * @return Chromosome*
  */
-Chromosome Subject::getGeneticInformation() {
-    return *geneticInformation;
+Chromosome* Subject::getGeneticInformation() {
+    return geneticInformation;
 }
 
 /** @brief Modifica una caracteristica
- * @param int value:valor que modifica la caracteristica
- * @param char position:posicion donde es encuentra la caracteristica
+ * @param unsigned char value:valor que modifica la caracteristica
+ * @param int position:posicion donde es encuentra la caracteristica
  */
-void Subject::setCharacteristic(unsigned char value, unsigned char position) {
-    *(characteristics+position)=*(characteristics+position)+value;
+void Subject::setCharacteristic(unsigned char value, int position) {
+    *(characteristics+position)+=value;
 }
 
 long Subject::getGeneration(){
@@ -176,24 +177,48 @@ unsigned char Subject::getCharacteristic(int position){
     return  *(characteristics + position);
 }
 
-/** @brief Retorna true si el jugador esta vivo
+/** @brief Ataca a un sujeto
+ * @param Subject* opponent
+ */
+void Subject::attack(Subject* opponent){
+    //Se suma el gen del ataque del atacante con la caracteristica arma
+    int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)
+                       + *(characteristics+POSITION_OF_CHARACTERISTIC_WEAPON);
+    //Se suma el gen de la defensa del oponente con la caracteristica armadura
+    int defenseResult = opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_ATTACK)
+                        + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
+
+    //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
+    if(attackResult > defenseResult){
+        opponent->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+    }//Si el primer elemento de la comparacion es menor, el ataque es menor que la defensa, por lo tanto no acierta
+    else if(attackResult < defenseResult){
+        this->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+    }//Si los elementos son iguales, el ataque es igual que la defensa, por lo tanto el dano es mutuo
+    else{
+        opponent->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+        this->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+    }
+}
+
+/** @brief Retorna true si el jugador esta vivo, para ello la vida debe ser mayor a 0 y menor o igual a la edad
  * @return bool
  */
 bool Subject::isAlive(){
-    return (*(characteristics + POSITION_OF_LIFE) > 0 &&
-            *(characteristics + POSITION_OF_AGE) <= (20 * geneticInformation->getGene(POSITION_OF_LIFE))/51);
+    return *(characteristics + POSITION_OF_CHARACTERISTIC_AGE) <= *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) > 0;
 }
 
 /** @brief Mata al jugador colocando en false la bander
  */
 void Subject::kill(){
-    *alive = false;
+    *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = 0;
 }
 
 /** @brief Mata al jugador colocando en false la bander
  */
 void Subject::life(){
-    std::cout << "Hello, my ID is: "<< *id << " i am on " << *(position) << " , " << *(position+1) << std::endl;
+    *(characteristics + POSITION_OF_CHARACTERISTIC_AGE) = *actualYear - *generation;
+    std::cout << "Hello, my ID is: "<< *id <<std::endl;
 }
 
 /**@brief: accede al pthread

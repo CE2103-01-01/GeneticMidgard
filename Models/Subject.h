@@ -20,32 +20,30 @@ class Subject {
     Subject* mother; //padre del individuo
     Chromosome* geneticInformation;
     pthread_t* lifeThread;
-    long* id;
-    long* generation;
-    float* fitness;
-    char* profession;
-    unsigned char* characteristics;//lista de caracteristicas
-    bool* alive;
     int* position;
+    int* actualYear;
+    int* generation;
+    long* id;
+    float* fitness;
+    unsigned char* characteristics;//vida-experiencia-arma-armadura-profesion
     void calculateFitness();//funcion de calcular fitness y set fitness
 public:
-    Subject(long,unsigned char*);
-    Subject(Subject*,Subject*,Chromosome*,long,long,unsigned char*);
+    Subject(long,int*);
+    Subject(Subject*,Subject*,Chromosome*,long,long,int*);
     Subject(const Subject&);
     ~Subject();;
     long getGeneration();
     long getID();
-    int calculateDamage();  // TODO: implementar
-    int calculateDefense(); // TODO: implementar
-    Chromosome getGeneticInformation();
+    Chromosome* getGeneticInformation();
     Subject* getFather(); // Obtiene padre 1
     Subject* getMother(); // Obtiene padre 2
     float getFitness();
     unsigned char getCharacteristic(int);
-    void setCharacteristic(unsigned char, unsigned char);
+    void setCharacteristic(unsigned char, int);
+    void attack(Subject*);
+    void life(void);
     bool isAlive();
     void kill();
-    void life(void);
     pthread_t* get_p_thread();
     void start_p_thread();
 };

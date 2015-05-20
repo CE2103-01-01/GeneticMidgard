@@ -106,7 +106,6 @@ template <class T> void Tree<T>::createPath(long index, int floor, int* path){
  * @brief: calcula la ruta al indice recibido
  */
 template <class T> T* Tree<T>::searchElement(long index){
-    pthread_mutex_lock(mutexData);
     int floor=*floors;
     if(index <= max(floor)){
         //Localiza el piso
@@ -126,10 +125,8 @@ template <class T> T* Tree<T>::searchElement(long index){
         //Libera el espacio de la ruta
         //free(path);
         //retorna el elemento
-        pthread_mutex_unlock(mutexData);
         return elementToReturn;
     }else{
-        pthread_mutex_unlock(mutexData);
         return 0;
     }
 }
@@ -177,9 +174,9 @@ template <class T> T* Tree<T>::searchAndDo(long indexToSearch, void method(T*, v
  * @brief: calcula la ruta al indice recibido e inserta el dato
  */
 template <class T> void Tree<T>::insertElement(T param, long index){
-    pthread_mutex_lock(mutexData);
+   // pthread_mutex_lock(mutexData);
     if(index < *maximun){
-        T* container = searchElementUnlocked(index);
+        T* container = searchElement(index);
         new(container) T(param);
         (*len)++;
     }else{
@@ -188,7 +185,7 @@ template <class T> void Tree<T>::insertElement(T param, long index){
         *maximun = max(*floors);
         insertElement(param,index);
     }
-    pthread_mutex_unlock(mutexData);
+  //  pthread_mutex_unlock(mutexData);
 }
 
 /** Inserta
