@@ -1,5 +1,47 @@
 Timesheet:
+20/04/2015
+    Se crea la estructura principal 1h
 22/04/2015
-      Se crea la interfaz random para pruebas, Y las clases iniciales casi vacias 1h
+    Se crea la interfaz random para pruebas, Y las clases iniciales casi vacias como genes 1h
 25/04/2015
-      Reunion Jairo y Alex Diagrama de clases 2h
+    Reunion Jairo y Alex Diagrama de clases 2h
+26/04/2015
+    Se incluyen librerias, se crea Subject 2h
+27/04/2015
+    Se investiga sobre formato tmx y se implementa una parte, se hace una parte del A*  5h
+29/04/2015
+    Se usa cola de prioridades estilo STL , se crea el terreno 3h
+01/05/2015
+    Se usa la libreria SFML para la gui y se crea una ventana prueba 3h
+02/05/2015
+    Se crea un minimapa, arreglo cmake, pinta, hace crop, scroll 6h
+03/05/2015
+    RapidJson, creacion de sockets en funcionamiento. RandomPosition en el terrain 3h
+07/05/2015
+    GUI pinta persona con colores 2h
+10/05/2015
+    Slider GUI, arreglo de sockets y mutex 4h
+Bitacora:
+20/04/2015
+    Se crea la estructura principal usando modelos
+22/04/2015
+    Se crea la interfaz random para accesar al random de c++ y que se pueda cambiar facilmente por arduino
+25/04/2015
+    Reunion Jairo y Alex Diagrama de clases, hablamos de laestructura principal del programa
+26/04/2015
+    Se incluyen librerias, se crea Subject 2h
+27/04/2015
+    Se investiga sobre formato tmx y se implementa una parte, se hace una parte del A* 
+29/04/2015
+    Se usa cola de prioridades estilo STL , se crea el terreno en la logica que carga el tmx
+01/05/2015
+    Se usa la libreria SFML para la gui y se crea una ventana prueba
+02/05/2015
+    Se crea un minimapa, arreglo cmake, pinta los cuadros, hace el crop por cuadros para pintar
+    se puede deslizar con las fechas por el mapa
+03/05/2015
+    RapidJson, creacion de sockets en funcionamiento para pintar. RandomPosition en el terrain para aparecer a jugadores
+07/05/2015
+    GUI pinta persona con colores dependiendo de los genes r g b
+10/05/2015
+    Slider del gui para el socket de la velocidad de los threads...
