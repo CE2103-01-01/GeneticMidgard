@@ -112,6 +112,7 @@ void Population::updateFittest() {
     for(int i = 2*SUBJECTS_BY_GENERATION-1; i>0; i--){
         //Si un miembro esta muerto
         if(!((*(fittest+i))->isAlive())){
+            (*(fittest+i))->changeSelection(false);
             deficit++;
             for(int j = i; j < 2*SUBJECTS_BY_GENERATION-1; j++){
                 //Se acomoda al muerto al final
@@ -175,6 +176,14 @@ bool Population::isDefunct() {
     return *defunct;
 }
 
+
+/**@brief accede a los mejores
+ * @return Subject**
+ */
+Subject** Population::getFittest() {
+    return fittest;
+}
+
 /**@brief llena la lista de los mejores seres
  */
 void Population::fillFittest(int indexOnFittest){
@@ -190,6 +199,7 @@ void Population::fillFittest(int indexOnFittest){
             }
         }
         //Agrega el temporal a la lista
+        tmpSelection->changeSelection(true);
         *(fittest + i) = tmpSelection;
     }
     *smallerIndexOnTree = (*(fittest + 2*SUBJECTS_BY_GENERATION - 1))->getID()/10;
@@ -221,27 +231,23 @@ void Population::delete_pthread(){
  * @param void* populationParameter: poblacion
  */
 void* reproductionThread(void* parameter){
-    //Se obtiene el mutex y la poblacion
+    //Se obtiene la poblacion
     Population* population = static_cast<Population*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
     //Se crea el laboratorio
     LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
     new(laboratory) LifeLaboratory(population);
     //Se crea controlador de tiempo
-    struct timespec timeControler;
-    timeControler.tv_nsec=0;
-    timeControler.tv_sec=1;
+    struct timespec* timeController = static_cast<timespec*>(malloc(sizeof(timespec)));
+    timeController->tv_nsec=0;
+    timeController->tv_sec=1;
     //Primera generacion
-    laboratory->createPopulation(INITIAL_NUMBER_OF_SUBJECTS);
-    population->fillFittest(0);
+    laboratory->createPopulation();
     //Loop que se ejecutara mientras la poblacion viva
-    int x = 0;
     while(!population->isDefunct()){
-        population->updateFittest();
-        laboratory->createGeneration(SUBJECTS_BY_GENERATION);
-        x++;
-        //if(x==100) population->exterminate();
-        nanosleep(&timeControler, NULL);
+        laboratory->createGeneration();
+        nanosleep(timeController, NULL);
     }
+    free(timeController);
     population->delete_pthread();
     return 0;
 }

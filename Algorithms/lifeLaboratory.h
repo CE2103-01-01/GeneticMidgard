@@ -11,15 +11,13 @@
 
 class LifeLaboratory {
     Population* labRats;
-    void fillGeneration(int, int*);
-    void selectParents(int, int*);
-    bool checkSeleccions(Subject*, int*, int);
+    void fillGeneration();
 public:
     LifeLaboratory(Population*);
     LifeLaboratory(const LifeLaboratory& other);
     ~LifeLaboratory();
-    void createGeneration(int);
-    void createPopulation(int);
+    void createGeneration();
+    void createPopulation();
 };
 
 #endif //PROJECTMIDGARDLOGIC_LIFELABORATORY_H

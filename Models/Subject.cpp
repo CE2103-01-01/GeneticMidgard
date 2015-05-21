@@ -277,16 +277,17 @@ void* subjectLife(void* parameter){
     //Castea el parametro y extrae el sujeto
     Subject* excecutioner = static_cast<Subject*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
     //Crea estructura para tiempo
-    struct timespec timeController;
-    timeController.tv_nsec=500000000;
-    timeController.tv_sec=1;
+    struct timespec* timeController = static_cast<timespec*>(malloc(sizeof(timespec)));
+    timeController->tv_nsec=500000000;
+    timeController->tv_sec=1;
     //Este while corre hasta que se llame al metodo kill()
     while(excecutioner->isAlive()){
         //Llama al metodo de vida del sujeto
         excecutioner->life();
         //Espera un segundo
-        nanosleep(&timeController, 0);
+        nanosleep(timeController, 0);
     }
     std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
+    free(timeController);
     return 0;
 }

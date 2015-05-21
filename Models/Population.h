@@ -39,6 +39,7 @@ public:
     void updateFittest(Subject*);
     void updateFittest();
     void fillFittest(int);
+    Subject** getFittest();
 };
 
 void* reproductionThread(void*);
