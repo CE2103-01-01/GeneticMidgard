@@ -21,10 +21,6 @@ PopulationManager::PopulationManager(int numberOfPopulations, pthread_mutex_t* m
     *(actualID) = numberOfPopulations;
     //Reserva espacio para N+1 cantidad de poblaciones, donde N = numberOfPopulations
     population = static_cast<Population*>(calloc(0,sizeof(Population)*numberOfPopulations + 1));
-    //Itera creando la cantidad de poblaciones solicitada
-    for(int i = 0; i < numberOfPopulations; i++){
-        new(population+i) Population(i,activePopulations);
-    }
     managementThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
 }
 
@@ -67,8 +63,8 @@ Population* PopulationManager::getPopulation(){
 /**@brief accede al numero de poblaciones activas
  * return int
  */
-int PopulationManager::getActivePopulations(){
-    return *activePopulations;
+int* PopulationManager::getActivePopulations(){
+    return activePopulations;
 }
 
 /**@brief accede al numero de poblaciones activas
@@ -116,17 +112,17 @@ void PopulationManager::killEmAll(){
  */
 void* populationManagerThread(void* param){
     //Extrae el parametro
-    PopulationManager* manager = static_cast<PopulationManager*>(static_cast<PThreadParam*>(param)->getExcecutioner());
     pthread_mutex_t* mutex = static_cast<PThreadParam*>(param)->getMutex();
+    PopulationManager* manager = PopulationManager::getInstance(mutex);
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
     timeController.tv_sec=10;
     //Se desbloquea mutex
     pthread_mutex_lock(mutex);
-    //Inicia pthread de poblaciones, se asume que al no haber empezado, las poblaciones activas son todas
-    for(int i = 0; i < manager->getActivePopulations(); i++){
-        //Inicia el pthread
+    //Itera creando la cantidad de poblaciones solicitada
+    for(int i = 0; i < INITIAL_NUMBER_OF_POPULATIONS; i++){
+        new(manager->getPopulation()+i) Population(i,manager->getActivePopulations());
         (manager->getPopulation()+i)->init_pthread();
     }
     //Este while corre hasta que se mueran todos

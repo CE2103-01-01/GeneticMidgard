@@ -141,13 +141,14 @@ void AgeManager::changeAge(){
 void* ageManagerThread(void* parameter){
     AgeManager* excecutioner = static_cast<AgeManager*>(parameter);
     //Reserva espacio para parametro de pthread
+    PopulationManager* manager = PopulationManager::getInstance(excecutioner->getGeneralMutex());
     void* populationManagerThreadParameters = malloc(sizeof(PThreadParam));
     //Crea parametro de pthread
     new(static_cast<PThreadParam*>(populationManagerThreadParameters))
-            PThreadParam(PopulationManager::getInstance(excecutioner->getGeneralMutex()),excecutioner->getGeneralMutex());
+            PThreadParam(NULL,excecutioner->getGeneralMutex());
     //Inicia el pthread del manejador de poblaciomnes
-    pthread_create(excecutioner->getPopulationManager()->get_pthread(),0,populationManagerThread,populationManagerThreadParameters);
-    pthread_join(*excecutioner->getPopulationManager()->get_pthread(),0);
+    pthread_create(manager->get_pthread(),0,populationManagerThread,populationManagerThreadParameters);
+    pthread_join(*(manager->get_pthread()),0);
 
 
     return NULL;

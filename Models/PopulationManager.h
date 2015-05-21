@@ -20,7 +20,7 @@ class PopulationManager {
         void thread();
         void killEmAll();
         bool isSomeoneAlive();
-        int getActivePopulations();
+        int* getActivePopulations();
         Population* getPopulation();
         static PopulationManager* getInstance(pthread_mutex_t*);
         static pthread_t* get_pthread();
