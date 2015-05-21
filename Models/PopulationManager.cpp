@@ -27,10 +27,10 @@ PopulationManager::PopulationManager(int numberOfPopulations, pthread_mutex_t* m
 /**@brief destructor
  */
 PopulationManager::~PopulationManager(){
-    free(population);
-    free(actualID);
-    free(managementThread);
-    free(activePopulations);
+    //free(population);
+    //free(actualID);
+    //free(managementThread);
+    //free(activePopulations);
 }
 
 /**@brief mezcla las poblaciones para generar una nueva

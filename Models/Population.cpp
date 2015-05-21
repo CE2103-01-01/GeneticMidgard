@@ -233,17 +233,17 @@ void* reproductionThread(void* parameter){
     LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
     new(laboratory) LifeLaboratory(population);
     //Se crea controlador de tiempo
-    struct timespec* timeController = static_cast<timespec*>(malloc(sizeof(timespec)));
-    timeController->tv_nsec=0;
-    timeController->tv_sec=1;
+    struct timespec timeController;
+    timeController.tv_nsec=0;
+    timeController.tv_sec=5;
     //Primera generacion
     laboratory->createPopulation();
     //Loop que se ejecutara mientras la poblacion viva
     while(!population->isDefunct()){
         laboratory->createGeneration();
-        nanosleep(timeController, NULL);
+        nanosleep(&timeController, NULL);
     }
-    free(timeController);
+    free(&timeController);
     population->delete_pthread();
     return 0;
 }
