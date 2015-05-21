@@ -11,7 +11,7 @@
 class Chromosome {
     unsigned char* geneticData;
 public:
-    Chromosome();
+    Chromosome(unsigned char*,unsigned char*,unsigned char*);
     Chromosome(unsigned char*);
     Chromosome(const Chromosome&);
     ~Chromosome();

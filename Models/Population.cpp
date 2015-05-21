@@ -13,48 +13,39 @@
 Population::Population(char populationTypeParam, int* activePopulationsOnManagerParam){
     //Reserva espacios
     colors = static_cast<unsigned char*>(malloc(3));
-    activePopulationsOnManager = activePopulationsOnManagerParam;
-    populationType = static_cast<char*>(malloc(sizeof(char)));
-    populationFitness = static_cast<float*>(malloc(sizeof(float)));
-    populationSize = static_cast<int*>(malloc(sizeof(int)));
-    fittest = static_cast<int*>(calloc(0,sizeof(int)*(SUBJECTS_BY_GENERATION/2)));
-    actualGeneration = static_cast<int*>(malloc(sizeof(int)));
-    populationTree = static_cast<Tree<Subject>*>(malloc(sizeof(Tree<Subject>)));
-    defunct = static_cast<bool*>(malloc(sizeof(bool)));
-    reproduction_pthread = 0;
-    //Llena espacios
     *(colors) = trueRandom::getRandom()%256;
     *(colors + 1) = trueRandom::getRandom()%256;
     *(colors + 2) = trueRandom::getRandom()%256;
+    activePopulationsOnManager = activePopulationsOnManagerParam;
+    populationType = static_cast<char*>(malloc(sizeof(char)));
     *populationType = populationTypeParam;
+    populationSize = static_cast<int*>(malloc(sizeof(int)));
     *populationSize = 0;
+    smallerIndexOnTree = static_cast<int*>(malloc(sizeof(int)));
+    *smallerIndexOnTree = 1;
+    fittest = static_cast<Subject**>(malloc(sizeof(Subject*) * 2 * SUBJECTS_BY_GENERATION));
+    actualGeneration = static_cast<int*>(malloc(sizeof(int)));
     *actualGeneration = 1;
-    *populationFitness = 0;
-    *defunct = false;
+    populationTree = static_cast<Tree<Subject>*>(malloc(sizeof(Tree<Subject>)));
     new(populationTree) Tree<Subject>();
+    defunct = static_cast<bool*>(malloc(sizeof(bool)));
+    *defunct = false;
+    reproduction_pthread = 0;
 }
 
 /**@brief: libera el espacio utilizado
  */
 Population::~Population() {
     free(fittest);
+    free(colors);
     free(populationTree);
     free(defunct);
     free(reproduction_pthread);
     free(actualGeneration);
     free(populationSize);
-    free(populationFitness);
     free(populationType);// tipo de la poblacion
+    free(smallerIndexOnTree);
     activePopulationsOnManager = 0;
-}
-
-/**@brief: calcula el fitness
- */
-void Population::calculateFitness(){
-    (*populationFitness) = 0;
-    for (int i = 1; i <= (*populationSize); i++) {
-        (*populationFitness) += populationTree->searchElement(i-1)->getFitness();
-    }
 }
 
 /**@brief: inicia el pthread
@@ -78,7 +69,7 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* c
             *populationSize
     );
     Subject* newMember = populationTree->searchElement(*populationSize);
-    (*populationFitness) += newMember->getFitness();
+    if(newMember->getFitness() > (*(fittest+2*SUBJECTS_BY_GENERATION-1))->getFitness()) updateFittest(newMember);
     newMember->start_p_thread();
 }
 
@@ -86,10 +77,51 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* c
  */
 void Population::createNewRandomMember() {
     (*populationSize)++;
-    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType), actualGeneration),*populationSize);
+    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType), actualGeneration, colors),*populationSize);
     Subject* newMember = populationTree->searchElement(*populationSize);
-    (*populationFitness) += newMember->getFitness();
     newMember->start_p_thread();
+}
+
+/**@brief: inserta un nuevo miembro random
+ * @param Subject* newMember: nuevo miembro
+ */
+void Population::updateFittest(Subject* newMember) {
+    //Se ingresa al metodo porque el parametro tiene mayor fitness que el ultimo, por eso se asigna para evitar
+    //comparaciones redundantes
+    *(fittest+2*SUBJECTS_BY_GENERATION-1) = newMember;
+    //Itera acomodando al nuevo miembro en la posicion correspondiente
+    for(int i = 2*SUBJECTS_BY_GENERATION-1; i>0; i--){
+        //Si el sujeto en i tiene mayor fitness que el de i-1, estan desordenados y se hace un swap
+        if((*(fittest+i))->getFitness() > (*(fittest+i-1))->getFitness()){
+            //Se crea un temporal con el sujeto en i-1
+            Subject* tmp = *(fittest+i-1);
+            //Se guarda el sujeto i en el campo i-1
+            *(fittest+i-1) = *(fittest+i);
+            //Se guarda el temporal en el campo i
+            *(fittest+i) = tmp;
+        }
+    }
+}
+
+/**@brief: inserta un nuevo miembro random
+ * @param Subject* newMember: nuevo miembro
+ */
+void Population::updateFittest() {
+    int deficit = 0;
+    //Itera acomodando al nuevo miembro en la posicion correspondiente
+    for(int i = 2*SUBJECTS_BY_GENERATION-1; i>0; i--){
+        //Si un miembro esta muerto
+        if(!((*(fittest+i))->isAlive())){
+            deficit++;
+            for(int j = i; j < 2*SUBJECTS_BY_GENERATION-1; j++){
+                //Se acomoda al muerto al final
+                Subject* tmp = *(fittest+j);
+                *(fittest+j) = *(fittest+j+1);
+                *(fittest+j+1) = tmp;
+            }
+        }
+    }
+    fillFittest(2*SUBJECTS_BY_GENERATION - deficit);
 }
 
 /**@brief: permite acceder a un individuo mediante su id
@@ -105,13 +137,6 @@ Subject* Population::getIndividual(int id) {
  */
 Tree<Subject>* Population::getPopulationTree(){
     return populationTree;
-}
-
-/**@brief devuelve el fitness de poblacion
- * @return int
- */
-float Population::getPopulationFitness(){
-    return *populationFitness;
 }
 
 /**@brief devuelve el tamano de poblacion
@@ -150,6 +175,26 @@ bool Population::isDefunct() {
     return *defunct;
 }
 
+/**@brief llena la lista de los mejores seres
+ */
+void Population::fillFittest(int indexOnFittest){
+    //Busca la cantidad de padres necesaria con mejor fitness
+    for(int i = indexOnFittest; i < 2 * SUBJECTS_BY_GENERATION; i++){
+        Subject* tmpSelection = populationTree->searchElement(*smallerIndexOnTree);
+        //Busca el mejor
+        for(int j = *smallerIndexOnTree+1; j < *populationSize; j++){
+            Subject* toEvaluate = populationTree->searchElement(j);
+            //Si el elemento es mejor y no ha sido seleccionado lo cambia
+            if(!toEvaluate->isSelected() && toEvaluate->isAlive() && toEvaluate->getFitness() > tmpSelection->getFitness()){ 
+                tmpSelection = toEvaluate;
+            }
+        }
+        //Agrega el temporal a la lista
+        *(fittest + i) = tmpSelection;
+    }
+    *smallerIndexOnTree = (*(fittest + 2*SUBJECTS_BY_GENERATION - 1))->getID()/10;
+}
+
 /**@brief bandera de extincion
  * @return bool
  */
@@ -186,10 +231,12 @@ void* reproductionThread(void* parameter){
     timeControler.tv_nsec=0;
     timeControler.tv_sec=1;
     //Primera generacion
-    laboratory->createPopulation(100);
+    laboratory->createPopulation(INITIAL_NUMBER_OF_SUBJECTS);
+    population->fillFittest(0);
     //Loop que se ejecutara mientras la poblacion viva
     int x = 0;
     while(!population->isDefunct()){
+        population->updateFittest();
         laboratory->createGeneration(SUBJECTS_BY_GENERATION);
         x++;
         //if(x==100) population->exterminate();

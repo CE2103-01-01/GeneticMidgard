@@ -9,18 +9,22 @@ using namespace constantsSubjectXML;
 
 /**Constructor
  * @brief Crea la cantidad de genes del archivo genes.xml con tamaño definido en Constants.h
+ * @param unsigned char* colors, colores rgb
  */
-Chromosome::Chromosome() {
+Chromosome::Chromosome(unsigned char* red, unsigned char* green, unsigned char* blue) {
     geneticData = static_cast<unsigned char*>(malloc(sizeof(unsigned char)*NUMBER_OF_GENES));
-    for (int i = 0; i < NUMBER_OF_GENES; i++) {
+    for (int i = 0; i < NUMBER_OF_GENES - 3; i++) {
         *(geneticData+i) = trueRandom::getRandom()%256;
     }
+    *(geneticData + POSITION_OF_GENE_RED) = *red;
+    *(geneticData + POSITION_OF_GENE_GREEN) = *green;
+    *(geneticData + POSITION_OF_GENE_BLUE) = *blue;
 }
 
 
 /**Constructor
  * @brief Crea la cantidad de genes del archivo genes.xml con tamaño definido en Constants.h
- * @param unsigned char genes[]: genes
+ * @param unsigned char* genes: genes
  */
 Chromosome::Chromosome(unsigned char* genes) {
     geneticData = static_cast<unsigned char*>(malloc(sizeof(unsigned char)*NUMBER_OF_GENES));

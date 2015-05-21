@@ -12,18 +12,21 @@ using namespace constantsSubjectXML;
 /** Constructor
  * @brief genera un individuo de primera generacion
  */
-Subject::Subject(long idParam, int* actualYearParam){
+Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors){
     //Ano actual
     actualYear = actualYearParam;
     //Crea y asigna id
     id = static_cast<long*>(malloc(sizeof(long)));
     *id = idParam;
+    //Crea bandera de seleccion
+    selected = static_cast<bool*>(malloc(sizeof(bool)));
+    *selected = false;
     //Crea y asigna generacion
     generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = 0;
     //Crea y asigna la informacion genetica
     geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
-    *geneticInformation = Chromosome();
+    *geneticInformation = Chromosome(colors, colors+1, colors+2);
     //Calcula fitness
     fitness = static_cast<float*>(malloc(sizeof(float)));
     calculateFitness();
@@ -49,6 +52,9 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     actualYear = actualYearParam;
     id = static_cast<long*>(malloc(sizeof(long)));
     *id = idParam;
+    //Crea bandera de seleccion
+    selected = static_cast<bool*>(malloc(sizeof(bool)));
+    *selected = false;
     //Crea y asigna generacion
     generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = generationParam;
@@ -87,6 +93,9 @@ Subject::Subject(const Subject& other){
     //Copia id
     id = static_cast<long*>(malloc(sizeof(long)));
     *id = *other.id;
+    //Cropia bandera de seleccion
+    selected = static_cast<bool*>(malloc(sizeof(bool)));
+    *selected = *(other.selected);
     //Copia generacion
     generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = *other.generation;
@@ -206,6 +215,20 @@ void Subject::attack(Subject* opponent){
  */
 bool Subject::isAlive(){
     return *(characteristics + POSITION_OF_CHARACTERISTIC_AGE) <= *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) > 0;
+}
+
+/** @brief Retorna true si el jugador esta en la lista de los mejores
+ * @return bool
+ */
+bool Subject::isSelected(){
+    return *selected;
+}
+
+/** @brief cambia la bandera de seleccion
+ * @param bool newFlag: nuevo valor
+ */
+void Subject::changeSelection(bool newFlag){
+    *selected = newFlag;
 }
 
 /** @brief Mata al jugador colocando en false la bander

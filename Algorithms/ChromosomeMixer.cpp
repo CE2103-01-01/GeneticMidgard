@@ -19,7 +19,7 @@ Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation, Chromosom
         //Se toma el gen del padre y madre
         unsigned char fatherGene = fatherGeneticInformation->getGene(i);
         unsigned char motherGene = motherGeneticInformation->getGene(i);
-        unsigned char tmpMask = (unsigned char)(rand()%256);
+        unsigned char tmpMask = (unsigned char)(trueRandom::getRandom()%256);
         //Se aplican y asignan las mascaras
         *(newGeneticMaterialOne + i) = (tmpMask & fatherGene)|(~tmpMask & motherGene);
         *(newGeneticMaterialTwo + i) = (~tmpMask & fatherGene)|(tmpMask & motherGene);

@@ -12,15 +12,14 @@
 class Population {
     unsigned char* colors;
     pthread_t* reproduction_pthread;
+    int* smallerIndexOnTree;
     int* activePopulationsOnManager;
-    int* fittest;
     int* actualGeneration;
     int* populationSize;
-    float* populationFitness;
     char* populationType;// tipo de la poblacion
     Tree<Subject>* populationTree; //lista de los individuos de la poblacion
+    Subject** fittest;
     bool* defunct;
-    void calculateFitness();
     void killEmAll();
 public:
     Population(char, int*); //constructor de la poblacion
@@ -29,7 +28,6 @@ public:
     Tree<Subject>* getPopulationTree();
     Subject* getIndividual(int);// obtiene un individuo por medio de indice
     int getPopulationSize();// obtiene la cantidad de personas en la poblacion
-    float getPopulationFitness();
     char getPopulationType();
     void updateGeneration();
     void createNewRandomMember();
@@ -38,6 +36,9 @@ public:
     void init_pthread();
     pthread_t* get_pthread();
     void delete_pthread();
+    void updateFittest(Subject*);
+    void updateFittest();
+    void fillFittest(int);
 };
 
 void* reproductionThread(void*);

@@ -58,7 +58,6 @@ void LifeLaboratory::selectParents(int numberOfParents, int* parents){
     //Accede al arbol de poblacion y al fitness promedio
     trueRandom::init();
     Tree<Subject>* populationTree = labRats->getPopulationTree();
-    float averageFitness = labRats->getPopulationFitness() / labRats->getPopulationSize();
     //Selecciona dos padres
     for(int i = 0; i < numberOfParents; i++){
         bool found = false;
