@@ -18,8 +18,6 @@ AgeManager::AgeManager(){
     //Mutex
     generalMutex = static_cast<pthread_mutex_t*>(malloc(sizeof(pthread_mutex_t)));
     pthread_mutex_init(generalMutex,NULL);
-    //manejador de poblaciones
-    populationManager = PopulationManager::getInstance(generalMutex);
     //Manejador de objetos moviles
     //objectManager = static_cast<movilObjectManager*>(malloc(sizeof(movilObjectManager)));
     //new(objectManager) movilObjectManager();
@@ -39,19 +37,106 @@ AgeManager::~AgeManager(){
 }
 
 void AgeManager::thread(){
+
 }
 
-void AgeManager::evaluateEvolution(){}
+/**@brief evalua una condicion en un sujeto
+ *
+ */
+bool AgeManager::evaluateSubject(Subject* toEvaluate){
+    switch(*actualAge){
+        case 0:
+            if(toEvaluate->getGeneticInformation()->getGene(POSITION_OF_GENE_SUPERSTITION) <= LIMIT_LEVEL_THREE) return false;
+        case 1:
+            if(toEvaluate->getGeneticInformation()->getGene(POSITION_OF_GENE_INTELLIGENCE) <= LIMIT_LEVEL_ONE) return false;
+        case 2:
+            if(toEvaluate->getGeneticInformation()->getGene(POSITION_OF_GENE_INTELLIGENCE) <= LIMIT_LEVEL_THREE) return false;
+        case 3:
+            for(int i = 0; i < constantsSubjectXML::NUMBER_OF_GENES - 3; i++){
+                if(toEvaluate->getGeneticInformation()->getGene(i) <= LIMIT_LEVEL_TWO) return false;
+            }
+        case 4:
+            for(int i = 0; i < constantsSubjectXML::NUMBER_OF_GENES - 3; i++){
+                if(toEvaluate->getGeneticInformation()->getGene(i) <= LIMIT_LEVEL_THREE) return false;
+            }
+    }
+    return true;
+}
 
+/**@brief evalua una condicion en los mejores miembros de las poblaciones, si se cumple en todos la edda cambia
+ */
+void AgeManager::evaluateEvolution(){
+    //bandera que corta el ciclo
+    bool flag = false;
+    //Itera en las poblaciones
+    for(int i = 0; i < INITIAL_NUMBER_OF_POPULATIONS + 1; i++){
+        //poblacion
+        Population* tmpPopulation = populationManager->getPopulation() + i;
+        //Se pregunta si la poblacion tomada no es vacia ni extinta
+        if(static_cast<unsigned char*>(static_cast<void*>(tmpPopulation))!=0 && !tmpPopulation->isDefunct()){
+            //Se revisa a los mejores
+            for(int i = 0; i < 2 * SUBJECTS_BY_GENERATION; i++){
+                //Si alguno no cumple se cortan ambos ciclos
+                if(!evaluateSubject(*(tmpPopulation->getFittest()+i))){
+                    flag = true;
+                    break;
+                }
+            }
+        }
+        //Si no se cumplio se finaliza
+        if(flag) break;
+    }
+    //Si se cumplio el parametro cambia la edda
+    if(!flag) changeAge();
+}
+
+/**@brief accede al mutex general
+ * @return pthread_mutex_t*
+ */
 pthread_mutex_t* AgeManager::getGeneralMutex(){
     return generalMutex;
 }
 
+/**@brief accede al pthread
+ * @return pthread_t*
+ */
+pthread_t* AgeManager::getManagementThread(){
+    return managementThread;
+}
+
+/**@brief accede al manejador de poblaciones
+ * @return PopulationManager*
+ */
 PopulationManager* AgeManager::getPopulationManager(){
     return populationManager;
 }
 
-void AgeManager::changeAge(){}
+/**@brief accede al manejador de objetos
+ * @return movilObjectManager*
+ */
+movilObjectManager* AgeManager::getMovilObjectManager(){
+    return objectManager;
+}
+
+/**@brief accede al sleep general
+ * @return long
+ */
+long AgeManager::getGeneralSleep(){
+    return *generalSleep;
+}
+
+/**@brief accede a la edda actual
+ * @return int
+ */
+int AgeManager::getActualAge(){
+    return *actualAge;
+}
+
+/**@brief cambia el calculo de fitness
+ */
+void AgeManager::changeAge(){
+    GeneralFitnessCalculator::getInstance()->changeEdda();
+}
 
 void* ageManagerThread(void* parameter){
     AgeManager* excecutioner = static_cast<AgeManager*>(parameter);
@@ -59,10 +144,11 @@ void* ageManagerThread(void* parameter){
     void* populationManagerThreadParameters = malloc(sizeof(PThreadParam));
     //Crea parametro de pthread
     new(static_cast<PThreadParam*>(populationManagerThreadParameters))
-            PThreadParam(excecutioner->getPopulationManager(),excecutioner->getGeneralMutex());
+            PThreadParam(PopulationManager::getInstance(excecutioner->getGeneralMutex()),excecutioner->getGeneralMutex());
     //Inicia el pthread del manejador de poblaciomnes
     pthread_create(excecutioner->getPopulationManager()->get_pthread(),0,populationManagerThread,populationManagerThreadParameters);
     pthread_join(*excecutioner->getPopulationManager()->get_pthread(),0);
+
 
     return NULL;
 }

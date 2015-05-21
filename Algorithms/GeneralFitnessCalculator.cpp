@@ -14,7 +14,6 @@ GeneralFitnessCalculator* GeneralFitnessCalculator::instance = 0;
  */
 GeneralFitnessCalculator::GeneralFitnessCalculator(){
     constants = static_cast<float*>(malloc(sizeof(float)*NUMBER_OF_GENES));
-
     rapidxml::xml_node<>* root_node;
     rapidxml::xml_document<> doc;
     rapidxml::file<> file( CONSTANT_XML_PATH );
@@ -26,6 +25,8 @@ GeneralFitnessCalculator::GeneralFitnessCalculator(){
         *(constants + forIteratorIndex++) = std::atof(node->value());
         node = node->next_sibling();
     }
+    ageIdentificator = static_cast<int*>(malloc(sizeof(int)));
+    *ageIdentificator = 0;
 }
 
 /**@brief calcula el fitness de un cromosoma
@@ -34,8 +35,8 @@ GeneralFitnessCalculator::GeneralFitnessCalculator(){
  */
 float GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
     float fitness = 0;
-    for(int i = 0; i < NUMBER_OF_GENES; i++){
-        fitness += *(constants+i) * (*chromosome).getGene(i);
+    for(int i = 0; i < NUMBER_OF_GENES - 3; i++){
+        fitness += *(constants+i) * chromosome->getGene(i);
     }
     return fitness;
 
@@ -54,20 +55,17 @@ GeneralFitnessCalculator* GeneralFitnessCalculator::getInstance(){
     return instance;
 }
 
-float GeneralFitnessCalculator::calculateFitness(std::string age, Chromosome *chromosome) {
-    if(ageIdentificator!=age){
-        rapidxml::xml_node<>* root_node;
-        rapidxml::xml_document<> doc;
-        rapidxml::file<> file( CONSTANT_XML_PATH );
-        doc.parse<0>( file.data() );
-        root_node = doc.first_node("CONSTANTS")->first_node("FitnessByAge")->first_node(age.c_str());
-        int forIteratorIndex = 0;
-        rapidxml::xml_node<>*node = root_node->first_node();
-        while(node) {
-            *(constants + forIteratorIndex++) = std::atof(node->value());
-            node = node->next_sibling();
-        }
-        ageIdentificator=age;
-        calculateFitness(chromosome);
+void GeneralFitnessCalculator::changeEdda() {
+    (*ageIdentificator)++;
+    rapidxml::xml_node<>* root_node;
+    rapidxml::xml_document<> doc;
+    rapidxml::file<> file( CONSTANT_XML_PATH );
+    doc.parse<0>( file.data() );
+    root_node = doc.first_node("CONSTANTS")->first_node("FitnessByAge")->first_node((CONSTANT_AGE+std::to_string(*ageIdentificator)).c_str());
+    int forIteratorIndex = 0;
+    rapidxml::xml_node<>*node = root_node->first_node();
+    while(node) {
+        *(constants + forIteratorIndex++) = std::atof(node->value());
+        node = node->next_sibling();
     }
 }

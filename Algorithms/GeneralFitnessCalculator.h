@@ -14,11 +14,11 @@ using namespace pugi;
 
 class GeneralFitnessCalculator {
     float* constants;
-    std::string ageIdentificator;
+    int* ageIdentificator;
     static GeneralFitnessCalculator* instance;
 public:
     GeneralFitnessCalculator();
-    float calculateFitness(std::string,Chromosome* chromosome);
+    void changeEdda();
     float calculateFitness(Chromosome* chromosome);
     static GeneralFitnessCalculator* getInstance();
 };

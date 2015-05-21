@@ -11,6 +11,10 @@
 #define INITIAL_NUMBER_OF_SUBJECTS 20
 #define SUBJECTS_BY_GENERATION 5
 
+#define LIMIT_LEVEL_ONE 100
+#define LIMIT_LEVEL_TWO 150
+#define LIMIT_LEVEL_THREE 200
+
 #define GENE_LEN_ON_BYTES 1
 #define POSITION_OF_GENE_LIFE 0
 #define POSITION_OF_GENE_ATTACK 1
@@ -48,6 +52,7 @@ namespace constants {
 
 namespace constantsSubjectXML {
     extern const char* CONSTANT_XML_PATH;
+    extern const char* CONSTANT_AGE;
     extern const char* CONSTANT_XML_ROOT;
     extern const char* GENES_XML_PATH;
     extern const char* GENES_XML_ROOT;

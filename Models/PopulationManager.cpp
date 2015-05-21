@@ -20,7 +20,7 @@ PopulationManager::PopulationManager(int numberOfPopulations, pthread_mutex_t* m
     //Inicia el ID de poblaciones
     *(actualID) = numberOfPopulations;
     //Reserva espacio para N+1 cantidad de poblaciones, donde N = numberOfPopulations
-    population = static_cast<Population*>(malloc(sizeof(Population)*numberOfPopulations + 1));
+    population = static_cast<Population*>(calloc(0,sizeof(Population)*numberOfPopulations + 1));
     //Itera creando la cantidad de poblaciones solicitada
     for(int i = 0; i < numberOfPopulations; i++){
         new(population+i) Population(i,activePopulations);

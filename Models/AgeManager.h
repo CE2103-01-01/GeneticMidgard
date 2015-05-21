@@ -18,11 +18,17 @@ class AgeManager {
     movilObjectManager* objectManager;
     void changeAge();
     void evaluateEvolution();
+    bool evaluateSubject(Subject*);
+
     public:
         AgeManager();
         ~AgeManager();
         PopulationManager* getPopulationManager();
+        movilObjectManager* getMovilObjectManager();
         pthread_mutex_t* getGeneralMutex();
+        pthread_t* getManagementThread();
+        long getGeneralSleep();
+        int getActualAge();
         void thread();
 };
 

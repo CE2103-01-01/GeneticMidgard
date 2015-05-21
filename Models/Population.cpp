@@ -21,8 +21,6 @@ Population::Population(char populationTypeParam, int* activePopulationsOnManager
     *populationType = populationTypeParam;
     populationSize = static_cast<int*>(malloc(sizeof(int)));
     *populationSize = 0;
-    smallerIndexOnTree = static_cast<int*>(malloc(sizeof(int)));
-    *smallerIndexOnTree = 1;
     fittest = static_cast<Subject**>(malloc(sizeof(Subject*) * 2 * SUBJECTS_BY_GENERATION));
     actualGeneration = static_cast<int*>(malloc(sizeof(int)));
     *actualGeneration = 1;
@@ -44,7 +42,6 @@ Population::~Population() {
     free(actualGeneration);
     free(populationSize);
     free(populationType);// tipo de la poblacion
-    free(smallerIndexOnTree);
     activePopulationsOnManager = 0;
 }
 
@@ -189,9 +186,9 @@ Subject** Population::getFittest() {
 void Population::fillFittest(int indexOnFittest){
     //Busca la cantidad de padres necesaria con mejor fitness
     for(int i = indexOnFittest; i < 2 * SUBJECTS_BY_GENERATION; i++){
-        Subject* tmpSelection = populationTree->searchElement(*smallerIndexOnTree);
+        Subject* tmpSelection = populationTree->searchElement(1);
         //Busca el mejor
-        for(int j = *smallerIndexOnTree+1; j < *populationSize; j++){
+        for(int j = 2; j <= *populationSize; j++){
             Subject* toEvaluate = populationTree->searchElement(j);
             //Si el elemento es mejor y no ha sido seleccionado lo cambia
             if(!toEvaluate->isSelected() && toEvaluate->isAlive() && toEvaluate->getFitness() > tmpSelection->getFitness()){ 
@@ -199,10 +196,9 @@ void Population::fillFittest(int indexOnFittest){
             }
         }
         //Agrega el temporal a la lista
-        tmpSelection->changeSelection(true);
         *(fittest + i) = tmpSelection;
+        tmpSelection->changeSelection(true);
     }
-    *smallerIndexOnTree = (*(fittest + 2*SUBJECTS_BY_GENERATION - 1))->getID()/10;
 }
 
 /**@brief bandera de extincion

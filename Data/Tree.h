@@ -11,7 +11,6 @@ template <class T> class Tree{
     pthread_mutex_t* mutexData;
     long* len;
     int* floors;
-    long* maximun;
     Leaf* root;
     void split(Leaf*);
     long max(int);
@@ -41,8 +40,6 @@ template <class T> Tree<T>::Tree(){
     *floors= 1;
     len = static_cast<long*>(malloc(sizeof(int)));
     *len = 0;
-    maximun = static_cast<long*>(malloc(sizeof(int)));
-    *maximun = max(*floors);
 }
 
 /** Destructor
@@ -52,7 +49,6 @@ template <class T> Tree<T>::~Tree(){
     free(len);
     free(root);
     free(floors);
-    free(maximun);
     free(mutexData);
 }
 
@@ -174,18 +170,15 @@ template <class T> T* Tree<T>::searchAndDo(long indexToSearch, void method(T*, v
  * @brief: calcula la ruta al indice recibido e inserta el dato
  */
 template <class T> void Tree<T>::insertElement(T param, long index){
-   // pthread_mutex_lock(mutexData);
-    if(index < *maximun){
+    if(index < max(*floors)){
         T* container = searchElement(index);
         new(container) T(param);
         (*len)++;
     }else{
         split(root);
         (*floors)++;
-        *maximun = max(*floors);
         insertElement(param,index);
     }
-  //  pthread_mutex_unlock(mutexData);
 }
 
 /** Inserta
@@ -223,7 +216,7 @@ template <class T> long Tree<T>::lenght(){
  * @brief: devuelve la cantidad de nodos maxima
  */
 template <class T> long Tree<T>::max(){
-    return *maximun;
+    return max(*floors);
 }
 
 
