@@ -31,7 +31,7 @@ Bitacora:
 26/04/2015
     Se incluyen librerias, se crea Subject 2h
 27/04/2015
-    Se investiga sobre formato tmx y se implementa una parte, se hace una parte del A* 
+    Se investiga sobre formato tmx y se implementa una parte, se hace una parte del A*
 29/04/2015
     Se usa cola de prioridades estilo STL , se crea el terreno en la logica que carga el tmx
 01/05/2015
