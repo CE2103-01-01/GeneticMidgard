@@ -19,9 +19,12 @@
 class Subject {
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
+    Subject* opponent;
     Chromosome* geneticInformation;
     Vector2D* position;
     pthread_t* lifeThread;
+    pthread_cond_t* condition;
+    pthread_mutex_t* mutex;
     int* actualYear;
     int* generation;
     long* id;
@@ -42,7 +45,7 @@ public:
     float getFitness();
     unsigned char getCharacteristic(int);
     void setCharacteristic(unsigned char, int);
-    void attack(Subject*);
+    void attack();
     void life(void);
     bool isAlive();
     bool isSelected();
@@ -50,6 +53,8 @@ public:
     void kill();
     pthread_t* get_p_thread();
     void start_p_thread();
+    void setOppenent(Subject*);
+    void delete_p_thread();
 };
 
 void* subjectLife(void*);

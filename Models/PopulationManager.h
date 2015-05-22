@@ -14,6 +14,7 @@ class PopulationManager {
     int* activePopulations;
     Population* population;
     Population* mergePopulations();
+    void init_war();
     public:
         PopulationManager(int,pthread_mutex_t*);
         ~PopulationManager();

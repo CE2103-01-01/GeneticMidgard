@@ -40,8 +40,11 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     //Asigna padres
     father = 0;
     mother = 0;
+    opponent = 0;
     //Coloca en 0 el puntero al thread
     lifeThread = 0;
+    mutex = 0;
+    condition = 0;
 }
 
 /** Constructor
@@ -78,8 +81,11 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     //Asigna padres
     father = fatherParam;
     mother = motherParam;
+    opponent = 0;
     //Coloca en 0 el puntero al thread
     lifeThread = 0;
+    mutex = 0;
+    condition = 0;
     }
 
 /** Constructor
@@ -88,15 +94,10 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
 Subject::Subject(const Subject& other){
     //Ano actual
     actualYear = other.actualYear;
-    //Crea la posicion
-    /*
-    position = static_cast<int*>(malloc(2 * sizeof(int)));
-    //Copia la posicion del otro
-    if(other.position != 0){
-        *(position) = *(other.position);
-        *(position + 1) = *(other.position + 1);
-    }
-     */
+    //crea posicion
+    position = static_cast<Vector2D*>(sizeof(Vector2D));
+    position->x = other.position->x;
+    position->y = other.position->y;
     //Copia id
     id = static_cast<long*>(malloc(sizeof(long)));
     *id = *other.id;
@@ -118,7 +119,10 @@ Subject::Subject(const Subject& other){
     }
     father = other.father;
     mother = other.mother;
+    opponent = 0;
     lifeThread = 0;
+    mutex = 0;
+    condition = 0;
 }
 
 /** Destructor
@@ -194,26 +198,28 @@ unsigned char Subject::getCharacteristic(int position){
 }
 
 /** @brief Ataca a un sujeto
- * @param Subject* opponent
  */
-void Subject::attack(Subject* opponent){
-    //Se suma el gen del ataque del atacante con la caracteristica arma
-    int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)
-                       + *(characteristics+POSITION_OF_CHARACTERISTIC_WEAPON);
-    //Se suma el gen de la defensa del oponente con la caracteristica armadura
-    int defenseResult = opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_ATTACK)
-                        + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
+void Subject::attack(){
+    if(opponent!=0){
+        //Se suma el gen del ataque del atacante con la caracteristica arma
+        int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)
+                           + *(characteristics+POSITION_OF_CHARACTERISTIC_WEAPON);
+        //Se suma el gen de la defensa del oponente con la caracteristica armadura
+        int defenseResult = opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_ATTACK)
+                            + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
 
-    //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
-    if(attackResult > defenseResult){
-        opponent->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
-    }//Si el primer elemento de la comparacion es menor, el ataque es menor que la defensa, por lo tanto no acierta
-    else if(attackResult < defenseResult){
-        this->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
-    }//Si los elementos son iguales, el ataque es igual que la defensa, por lo tanto el dano es mutuo
-    else{
-        opponent->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
-        this->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+        //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
+        if(attackResult > defenseResult){
+            opponent->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+        }//Si el primer elemento de la comparacion es menor, el ataque es menor que la defensa, por lo tanto no acierta
+        else if(attackResult < defenseResult){
+            this->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+        }//Si los elementos son iguales, el ataque es igual que la defensa, por lo tanto el dano es mutuo
+        else{
+            opponent->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+            this->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+        }
+        if(isAlive())opponent->attack();
     }
 }
 
@@ -244,38 +250,59 @@ void Subject::kill(){
     *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = 0;
 }
 
+/**@brief Agrega un oponente
+ * @param Subject* opponentParam: oponente a setear
+ */
+void Subject::setOppenent(Subject* opponentParam){
+    opponent = opponentParam;
+    pthread_cond_signal(condition);
+}
+
 /** @brief Mata al jugador colocando en false la bander
  */
 void Subject::life(){
     *(characteristics + POSITION_OF_CHARACTERISTIC_AGE) = *actualYear - *generation;
+    pthread_cond_wait(condition,mutex);
+    attack();
     std::cout << "Hello, my ID is: "<< *id <<std::endl;
 }
 
 /**@brief: accede al pthread
-/**@brief Metodo que inicia el pthread
  * @return pthread_t*
  */
 pthread_t* Subject::get_p_thread(){
     return lifeThread;
 
 }
-/**
- * @param Subject* subject: sujeto sobre el que se ejecuta
+
+/**@brief Metodo que inicia el pthread
  */
 void Subject::start_p_thread(){
     Vector2D positionsVector = Terrain::getRandomFreePosition();
     Terrain::set(positionsVector,*id);
-    /*
-    *(position) = positionsVector.x;
-    *(position + 1) = positionsVector.y;
-     * */
     //Thread message(std::bind(&createSubject,*id,*(position),*(position+1),*(characteristics+POSITION_OF_RED),
     //                           *(characteristics+POSITION_OF_GREEN),*(characteristics+POSITION_OF_BLUE)));
     //message.launch();
+    //Mutex
+    mutex = static_cast<pthread_mutex_t*>(malloc(sizeof(pthread_mutex_t)));
+    pthread_mutex_init(mutex,NULL);
+    //Condicion
+    condition = static_cast<pthread_cond_t*>(malloc(sizeof(pthread_cond_t)));
+    pthread_cond_init(condition,NULL);
+    //parametros
     void* parameters = malloc(sizeof(PThreadParam));
     new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,NULL);
+    //thread
     lifeThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
     pthread_create(lifeThread,NULL,subjectLife,parameters);
+}
+
+/**@brief Metodo que inicia el pthread
+ */
+void Subject::delete_p_thread(){
+    free(lifeThread);
+    free(condition);
+    free(mutex);
 }
 
 /**@brief metodo ejecutado por el pthread
@@ -297,5 +324,6 @@ void* subjectLife(void* parameter){
         nanosleep(&timeController, 0);
     }
     std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
+    excecutioner->delete_p_thread();
     return 0;
 }

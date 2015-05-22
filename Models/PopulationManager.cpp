@@ -40,10 +40,23 @@ Population* PopulationManager::mergePopulations(){
 
 }
 
+/**@brief metodo que inicia una guerra
+ */
+void PopulationManager::init_war(){
+    //Busca dos numeros random
+    int firstPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
+    int secondPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
+    while(firstPopulationNumber==secondPopulationNumber) secondPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
+    //Inicia las peleas
+    for(int i = 0; i < SUBJECTS_BY_GENERATION * 2; i++){
+        (*((population+firstPopulationNumber)->getFittest() + i))->setOppenent((*((population+secondPopulationNumber)->getFittest() + i)));
+    }
+}
+
 /**@brief metodo que ejecuta las acciones
  */
-void PopulationManager::thread(){
-    //TODO: implementar
+void PopulationManager::thread() {
+    if(trueRandom::getRandom()%RANDOM_WAR_LIMIT < constants::RANDOM_WAR_RANGE_BY_EDDA) init_war();
 }
 
 /**@brief devuelve true si hay personas vivas

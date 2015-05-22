@@ -10,6 +10,7 @@
 #define INITIAL_NUMBER_OF_POPULATIONS 5
 #define INITIAL_NUMBER_OF_SUBJECTS 20
 #define SUBJECTS_BY_GENERATION 5
+#define RANDOM_WAR_LIMIT 100
 
 #define LIMIT_LEVEL_ONE 100
 #define LIMIT_LEVEL_TWO 150
@@ -48,6 +49,7 @@ namespace constants {
     extern const std::string HOME_PATH;
     extern const std::string PROJECT_PATH;
     extern char const *const MAP_FILE;
+    extern int RANDOM_WAR_RANGE_BY_EDDA;
 }
 
 namespace constantsSubjectXML {
