@@ -206,14 +206,14 @@ void Subject::attack(){
 
     //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
     if(attackResult > defenseResult){
-        opponent->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+        opponent->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
     }//Si el primer elemento de la comparacion es menor, el ataque es menor que la defensa, por lo tanto no acierta
     else if(attackResult < defenseResult){
-        this->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+        this->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
     }//Si los elementos son iguales, el ataque es igual que la defensa, por lo tanto el dano es mutuo
     else{
-        opponent->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
-        this->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+        opponent->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
+        this->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
     }
     std::cout << *id  << " vs " << opponent->getID() << " = " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << "-" << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
 
@@ -310,7 +310,7 @@ void* subjectLife(void* parameter){
     //Crea estructura para tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=5;
+    timeController.tv_sec=2;
     //Este while corre hasta que se llame al metodo kill()
     while(excecutioner->isAlive()){
         //Espera un segundo
