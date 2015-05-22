@@ -5,6 +5,7 @@
 #include "../Data/Tree.h"
 #include "../Algorithms/GeneralFitnessCalculator.h"
 #include "Subject.h"
+#include "Terrain.h"
 
 #ifndef PROJECTMIDGARD_POPULATION_H
 #define PROJECTMIDGARD_POPULATION_H
@@ -21,6 +22,7 @@ class Population {
     Subject** fittest;
     bool* defunct;
     void killEmAll();
+    Vector2D* position;
 public:
     Population(char, int*); //constructor de la poblacion
     ~Population();// destructor por defecto

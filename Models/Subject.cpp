@@ -12,7 +12,7 @@ using namespace constantsSubjectXML;
 /** Constructor
  * @brief genera un individuo de primera generacion
  */
-Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors){
+Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vector2D basePosition){
     //Ano actual
     actualYear = actualYearParam;
     //Crea y asigna id
@@ -35,7 +35,8 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors){
     //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
     *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = (20 * geneticInformation->getGene(POSITION_OF_GENE_LIFE))/51;
     //Crea posicion
-    position = static_cast<int*>(calloc(0,2 * sizeof(int)));
+
+    *position = basePosition;
     //Asigna padres
     father = 0;
     mother = 0;
@@ -69,7 +70,11 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
     *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = (20 * geneticInformation->getGene(POSITION_OF_GENE_LIFE))/51;
     //Crea posicion
+    /*
     position = static_cast<int*>(calloc(0,2 * sizeof(int)));
+     */
+    position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
+    *position = Terrain::getRandomFreePositionNear(*fatherParam->position);
     //Asigna padres
     father = fatherParam;
     mother = motherParam;
@@ -84,12 +89,14 @@ Subject::Subject(const Subject& other){
     //Ano actual
     actualYear = other.actualYear;
     //Crea la posicion
+    /*
     position = static_cast<int*>(malloc(2 * sizeof(int)));
     //Copia la posicion del otro
     if(other.position != 0){
         *(position) = *(other.position);
         *(position + 1) = *(other.position + 1);
     }
+     */
     //Copia id
     id = static_cast<long*>(malloc(sizeof(long)));
     *id = *other.id;
@@ -258,8 +265,10 @@ pthread_t* Subject::get_p_thread(){
 void Subject::start_p_thread(){
     Vector2D positionsVector = Terrain::getRandomFreePosition();
     Terrain::set(positionsVector,*id);
+    /*
     *(position) = positionsVector.x;
     *(position + 1) = positionsVector.y;
+     * */
     //Thread message(std::bind(&createSubject,*id,*(position),*(position+1),*(characteristics+POSITION_OF_RED),
     //                           *(characteristics+POSITION_OF_GREEN),*(characteristics+POSITION_OF_BLUE)));
     //message.launch();

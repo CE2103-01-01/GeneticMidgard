@@ -8,6 +8,7 @@
 #include "Chromosome.h"
 #include "../Algorithms/GeneralFitnessCalculator.h"
 #include "../Data/PThreadParam.h"
+#include "Terrain.h"
 
 /** Clase Subject
  * @brief clase a la cual pertenecen todos los individuos vivos
@@ -19,8 +20,8 @@ class Subject {
     Subject* father; //padre del individuo
     Subject* mother; //padre del individuo
     Chromosome* geneticInformation;
+    Vector2D* position;
     pthread_t* lifeThread;
-    int* position;
     int* actualYear;
     int* generation;
     long* id;
@@ -29,7 +30,7 @@ class Subject {
     unsigned char* characteristics;//vida-experiencia-arma-armadura-profesion
     void calculateFitness();//funcion de calcular fitness y set fitness
 public:
-    Subject(long,int*,unsigned char*);
+    Subject(long,int*,unsigned char*,Vector2D);
     Subject(Subject*,Subject*,Chromosome*,long,long,int*);
     Subject(const Subject&);
     ~Subject();;

@@ -29,10 +29,12 @@ Population::Population(char populationTypeParam, int* activePopulationsOnManager
     defunct = static_cast<bool*>(malloc(sizeof(bool)));
     *defunct = false;
     reproduction_pthread = 0;
+    *position = (Terrain::getRandomFreePosition());
 }
 
 /**@brief: libera el espacio utilizado
  */
+/*
 Population::~Population() {
     free(fittest);
     free(colors);
@@ -44,6 +46,7 @@ Population::~Population() {
     free(populationType);// tipo de la poblacion
     activePopulationsOnManager = 0;
 }
+ */
 
 /**@brief: inicia el pthread
  */
@@ -74,7 +77,7 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* c
  */
 void Population::createNewRandomMember() {
     (*populationSize)++;
-    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType), actualGeneration, colors),*populationSize);
+    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType), actualGeneration, colors,Terrain::getRandomFreePositionNear(*position)),*populationSize);
     Subject* newMember = populationTree->searchElement(*populationSize);
     newMember->start_p_thread();
 }
