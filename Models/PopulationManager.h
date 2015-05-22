@@ -9,6 +9,7 @@
 
 class PopulationManager {
     static pthread_t* managementThread;
+    static pthread_mutex_t* mutex;
     static PopulationManager* singleton;
     int* actualID;
     int* activePopulations;
@@ -16,16 +17,16 @@ class PopulationManager {
     Population* mergePopulations();
     void init_war();
     public:
-        PopulationManager(int,pthread_mutex_t*);
+        PopulationManager(int);
         ~PopulationManager();
         void thread();
         void killEmAll();
         bool isSomeoneAlive();
-        int* getActivePopulations();
         Population* getPopulation();
-        static PopulationManager* getInstance(pthread_mutex_t*);
+        static PopulationManager* getInstance();
         static pthread_t* get_pthread();
         void delete_pthread();
+        void createLife();
 };
 
 void* populationManagerThread(void*);

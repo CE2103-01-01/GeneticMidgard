@@ -237,14 +237,14 @@ void* reproductionThread(void* parameter){
     //Se crea controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=5;
+    timeController.tv_sec=10;
     //Primera generacion
     laboratory->createPopulation();
     pthread_cond_signal(static_cast<PThreadParam*>(parameter)->getCondition());
     //Loop que se ejecutara mientras la poblacion viva
     while(!population->isDefunct()){
-        laboratory->createGeneration();
         nanosleep(&timeController, NULL);
+        laboratory->createGeneration();
     }
     free(&timeController);
     population->delete_pthread();

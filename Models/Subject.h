@@ -23,7 +23,6 @@ class Subject {
     Chromosome* geneticInformation;
     Vector2D* position;
     pthread_t* lifeThread;
-    pthread_cond_t* condition;
     pthread_mutex_t* mutex;
     int* actualYear;
     int* generation;
@@ -46,7 +45,7 @@ public:
     unsigned char getCharacteristic(int);
     void setCharacteristic(unsigned char, int);
     void attack();
-    void life(void);
+    void updateLife();
     bool isAlive();
     bool isSelected();
     void changeSelection(bool);
@@ -55,6 +54,7 @@ public:
     void start_p_thread();
     void setOppenent(Subject*);
     void delete_p_thread();
+    Subject* getOpponent();
 };
 
 void* subjectLife(void*);

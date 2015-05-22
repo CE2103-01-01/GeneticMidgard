@@ -33,7 +33,7 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     //Crea las caracteristicas
     characteristics = static_cast<unsigned char*>(calloc(0,NUMBER_OF_CHARACTERISTICS));
     //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
-    *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = (20 * geneticInformation->getGene(POSITION_OF_GENE_LIFE))/51;
+    *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = 100;
     //Crea posicion
     position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
     *position = basePosition;
@@ -44,7 +44,6 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     //Coloca en 0 el puntero al thread
     lifeThread = 0;
     mutex = 0;
-    condition = 0;
 }
 
 /** Constructor
@@ -71,7 +70,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     //Crea las caracteristicas
     characteristics = static_cast<unsigned char*>(calloc(0,NUMBER_OF_CHARACTERISTICS));
     //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
-    *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = (20 * geneticInformation->getGene(POSITION_OF_GENE_LIFE))/51;
+    *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = 100;
     //Crea posicion
     /*
     position = static_cast<int*>(calloc(0,2 * sizeof(int)));
@@ -85,7 +84,6 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     //Coloca en 0 el puntero al thread
     lifeThread = 0;
     mutex = 0;
-    condition = 0;
     }
 
 /** Constructor
@@ -119,10 +117,9 @@ Subject::Subject(const Subject& other){
     }
     father = other.father;
     mother = other.mother;
-    opponent = 0;
-    lifeThread = 0;
-    mutex = 0;
-    condition = 0;
+    opponent = other.opponent;
+    lifeThread = other.lifeThread;
+    mutex = other.mutex;
 }
 
 /** Destructor
@@ -173,7 +170,7 @@ long Subject::getGeneration(){
  * @return float
  */
 float Subject::getFitness(){
-    return 0;
+    return *fitness;
 }
 
 /** @brief Accede al ID
@@ -200,29 +197,26 @@ unsigned char Subject::getCharacteristic(int position){
 /** @brief Ataca a un sujeto
  */
 void Subject::attack(){
-    if(opponent!=0){
-        //Se suma el gen del ataque del atacante con la caracteristica arma
-        int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)
-                           + *(characteristics+POSITION_OF_CHARACTERISTIC_WEAPON);
-        //Se suma el gen de la defensa del oponente con la caracteristica armadura
-        int defenseResult = opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_ATTACK)
-                            + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
+    //Se suma el gen del ataque del atacante con la caracteristica arma
+    int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)
+                       + *(characteristics+POSITION_OF_CHARACTERISTIC_WEAPON);
+    //Se suma el gen de la defensa del oponente con la caracteristica armadura
+    int defenseResult = opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_ATTACK)
+                        + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
 
-        //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
-        if(attackResult > defenseResult){
-            opponent->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
-        }//Si el primer elemento de la comparacion es menor, el ataque es menor que la defensa, por lo tanto no acierta
-        else if(attackResult < defenseResult){
-            this->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
-        }//Si los elementos son iguales, el ataque es igual que la defensa, por lo tanto el dano es mutuo
-        else{
-            opponent->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
-            this->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
-        }
-        std::cout << "The life of " << *id  << " is: " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
-        std::cout << "The life of " << opponent->getID()  << " is: " << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
-        if(isAlive())opponent->attack();
+    //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
+    if(attackResult > defenseResult){
+        opponent->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+    }//Si el primer elemento de la comparacion es menor, el ataque es menor que la defensa, por lo tanto no acierta
+    else if(attackResult < defenseResult){
+        this->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+    }//Si los elementos son iguales, el ataque es igual que la defensa, por lo tanto el dano es mutuo
+    else{
+        opponent->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
+        this->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
     }
+    std::cout << *id  << " vs " << opponent->getID() << " = " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << "-" << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
+
 }
 
 /** @brief Retorna true si el jugador esta vivo, para ello la vida debe ser mayor a 0 y menor o igual a la edad
@@ -257,15 +251,19 @@ void Subject::kill(){
  */
 void Subject::setOppenent(Subject* opponentParam){
     opponent = opponentParam;
-    pthread_cond_signal(condition);
+    opponentParam->opponent = this;
+}
+
+/**@brief Metodo que inicia el pthread
+ */
+Subject* Subject::getOpponent(){
+    return opponent;
 }
 
 /** @brief Mata al jugador colocando en false la bander
  */
-void Subject::life(){
+void Subject::updateLife(){
     *(characteristics + POSITION_OF_CHARACTERISTIC_AGE) = *actualYear - *generation;
-    pthread_cond_wait(condition,mutex);
-    attack();
 }
 
 /**@brief: accede al pthread
@@ -287,12 +285,9 @@ void Subject::start_p_thread(){
     //Mutex
     mutex = static_cast<pthread_mutex_t*>(malloc(sizeof(pthread_mutex_t)));
     pthread_mutex_init(mutex,NULL);
-    //Condicion
-    condition = static_cast<pthread_cond_t*>(malloc(sizeof(pthread_cond_t)));
-    pthread_cond_init(condition,NULL);
     //parametros
     void* parameters = malloc(sizeof(PThreadParam));
-    new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,NULL,NULL);
+    new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,mutex,NULL);
     //thread
     lifeThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
     pthread_create(lifeThread,NULL,subjectLife,parameters);
@@ -302,7 +297,6 @@ void Subject::start_p_thread(){
  */
 void Subject::delete_p_thread(){
     free(lifeThread);
-    free(condition);
     free(mutex);
 }
 
@@ -315,14 +309,17 @@ void* subjectLife(void* parameter){
     Subject* excecutioner = static_cast<Subject*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
     //Crea estructura para tiempo
     struct timespec timeController;
-    timeController.tv_nsec=500000000;
-    timeController.tv_sec=1;
+    timeController.tv_nsec=0;
+    timeController.tv_sec=5;
     //Este while corre hasta que se llame al metodo kill()
     while(excecutioner->isAlive()){
-        //Llama al metodo de vida del sujeto
-        excecutioner->life();
         //Espera un segundo
-        nanosleep(&timeController, 0);
+        nanosleep(&timeController, NULL);
+        //Llama al metodo de vida del sujeto
+        excecutioner->updateLife();
+        if(excecutioner->getOpponent()!=NULL && excecutioner->getOpponent()->isAlive()){
+            excecutioner->attack();
+        }
     }
     std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
     excecutioner->delete_p_thread();
