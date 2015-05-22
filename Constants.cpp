@@ -14,6 +14,7 @@ namespace constants {
     extern const std::string PROJECT_PATH = HOME_PATH + "/Midgard";
     int creaDirA = mkdir(PROJECT_PATH.c_str(), 0777);
     extern char const *const MAP_FILE = "../res/mapa.tmx";
+    extern int RANDOM_WAR_RANGE_BY_EDDA = 50;
 }
 
 namespace constantsSubjectXML {

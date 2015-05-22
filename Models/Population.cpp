@@ -29,12 +29,12 @@ Population::Population(char populationTypeParam, int* activePopulationsOnManager
     defunct = static_cast<bool*>(malloc(sizeof(bool)));
     *defunct = false;
     reproduction_pthread = 0;
+    position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
     *position = (Terrain::getRandomFreePosition());
 }
 
 /**@brief: libera el espacio utilizado
  */
-/*
 Population::~Population() {
     free(fittest);
     free(colors);
@@ -46,14 +46,13 @@ Population::~Population() {
     free(populationType);// tipo de la poblacion
     activePopulationsOnManager = 0;
 }
- */
 
 /**@brief: inicia el pthread
  */
-void Population::init_pthread(){
+void Population::init_pthread(pthread_cond_t* managerConditionParam){
     reproduction_pthread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
     void* parameter = malloc(sizeof(PThreadParam));
-    new(static_cast<PThreadParam*>(parameter)) PThreadParam(this,NULL);
+    new(static_cast<PThreadParam*>(parameter)) PThreadParam(this,NULL,managerConditionParam);
     pthread_create(reproduction_pthread,NULL,reproductionThread,parameter);
 }
 
@@ -241,6 +240,7 @@ void* reproductionThread(void* parameter){
     timeController.tv_sec=5;
     //Primera generacion
     laboratory->createPopulation();
+    pthread_cond_signal(static_cast<PThreadParam*>(parameter)->getCondition());
     //Loop que se ejecutara mientras la poblacion viva
     while(!population->isDefunct()){
         laboratory->createGeneration();

@@ -35,7 +35,7 @@ public:
     void createNewRandomMember();
     bool isDefunct();
     void exterminate();
-    void init_pthread();
+    void init_pthread(pthread_cond_t*);
     pthread_t* get_pthread();
     void delete_pthread();
     void updateFittest(Subject*);

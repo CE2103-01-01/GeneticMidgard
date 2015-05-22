@@ -35,7 +35,7 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
     *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = (20 * geneticInformation->getGene(POSITION_OF_GENE_LIFE))/51;
     //Crea posicion
-
+    position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
     *position = basePosition;
     //Asigna padres
     father = 0;
@@ -95,7 +95,7 @@ Subject::Subject(const Subject& other){
     //Ano actual
     actualYear = other.actualYear;
     //crea posicion
-    position = static_cast<Vector2D*>(sizeof(Vector2D));
+    position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
     position->x = other.position->x;
     position->y = other.position->y;
     //Copia id
@@ -219,6 +219,8 @@ void Subject::attack(){
             opponent->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
             this->setCharacteristic(-1,POSITION_OF_CHARACTERISTIC_LIFE);
         }
+        std::cout << "The life of " << *id  << " is: " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
+        std::cout << "The life of " << opponent->getID()  << " is: " << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
         if(isAlive())opponent->attack();
     }
 }
@@ -264,7 +266,6 @@ void Subject::life(){
     *(characteristics + POSITION_OF_CHARACTERISTIC_AGE) = *actualYear - *generation;
     pthread_cond_wait(condition,mutex);
     attack();
-    std::cout << "Hello, my ID is: "<< *id <<std::endl;
 }
 
 /**@brief: accede al pthread
@@ -280,8 +281,8 @@ pthread_t* Subject::get_p_thread(){
 void Subject::start_p_thread(){
     Vector2D positionsVector = Terrain::getRandomFreePosition();
     Terrain::set(positionsVector,*id);
-    //Thread message(std::bind(&createSubject,*id,*(position),*(position+1),*(characteristics+POSITION_OF_RED),
-    //                           *(characteristics+POSITION_OF_GREEN),*(characteristics+POSITION_OF_BLUE)));
+    //Thread message(std::bind(&createSubject,*id,*(position),*(position+1),geneticInformation->getGene(POSITION_OF_GENE_RED),
+    //                         geneticInformation->getGene(POSITION_OF_GENE_GREEN),geneticInformation->getGene(POSITION_OF_GENE_BLUE)));
     //message.launch();
     //Mutex
     mutex = static_cast<pthread_mutex_t*>(malloc(sizeof(pthread_mutex_t)));
@@ -291,7 +292,7 @@ void Subject::start_p_thread(){
     pthread_cond_init(condition,NULL);
     //parametros
     void* parameters = malloc(sizeof(PThreadParam));
-    new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,NULL);
+    new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,NULL,NULL);
     //thread
     lifeThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
     pthread_create(lifeThread,NULL,subjectLife,parameters);

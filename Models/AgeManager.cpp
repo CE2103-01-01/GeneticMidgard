@@ -145,7 +145,7 @@ void* ageManagerThread(void* parameter){
     void* populationManagerThreadParameters = malloc(sizeof(PThreadParam));
     //Crea parametro de pthread
     new(static_cast<PThreadParam*>(populationManagerThreadParameters))
-            PThreadParam(NULL,excecutioner->getGeneralMutex());
+            PThreadParam(NULL,excecutioner->getGeneralMutex(),NULL);
     //Inicia el pthread del manejador de poblaciomnes
     pthread_create(manager->get_pthread(),0,populationManagerThread,populationManagerThreadParameters);
     pthread_join(*(manager->get_pthread()),0);

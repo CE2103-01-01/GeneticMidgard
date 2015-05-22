@@ -131,12 +131,16 @@ void* populationManagerThread(void* param){
     struct timespec timeController;
     timeController.tv_nsec=0;
     timeController.tv_sec=10;
+    //Condicion
+    pthread_cond_t* condition = static_cast<pthread_cond_t*>(malloc(sizeof(pthread_cond_t)));
+    pthread_cond_init(condition,NULL);
     //Se desbloquea mutex
     pthread_mutex_lock(mutex);
     //Itera creando la cantidad de poblaciones solicitada
     for(int i = 0; i < INITIAL_NUMBER_OF_POPULATIONS; i++){
         new(manager->getPopulation()+i) Population(i,manager->getActivePopulations());
-        (manager->getPopulation()+i)->init_pthread();
+        (manager->getPopulation()+i)->init_pthread(condition);
+        pthread_cond_wait(condition,mutex);
     }
     //Este while corre hasta que se mueran todos
     while(manager->isSomeoneAlive()){

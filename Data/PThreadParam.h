@@ -11,11 +11,13 @@
 class PThreadParam {
     void* excecutioner;
     pthread_mutex_t* mutex;
+    pthread_cond_t* condition;
     public:
-        PThreadParam(void*, pthread_mutex_t*);
+        PThreadParam(void*, pthread_mutex_t*, pthread_cond_t*);
         ~PThreadParam();
         void* getExcecutioner();
         pthread_mutex_t* getMutex();
+        pthread_cond_t* getCondition();
 };
 
 
