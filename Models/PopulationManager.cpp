@@ -48,7 +48,7 @@ Population* PopulationManager::mergePopulations(){
     //asi no se recorren sujetos que ya se incluyeron
     int* index = static_cast<int*>(calloc(0,sizeof(int) * INITIAL_NUMBER_OF_POPULATIONS));
    //Se busca a los mejores
-    for(int i=0; i<INITIAL_NUMBER_OF_SUBJECTS; i++){
+    for(int i=0; i<2*SUBJECTS_BY_GENERATION; i++){
         //Se toma un temporal en la primer poblacion y se compara con los demas
         Subject* tmp = *(population->getFittest() + *index);
         for(int j=1; j<INITIAL_NUMBER_OF_POPULATIONS; j++){
@@ -63,6 +63,7 @@ Population* PopulationManager::mergePopulations(){
         //Inserta al sujeto en la nueva poblacion
         (population + INITIAL_NUMBER_OF_POPULATIONS+1)->insertNewMember(tmp);
     }
+    (population + INITIAL_NUMBER_OF_POPULATIONS+1)->updateFittest();
     //killEmAll();
     (*activePopulations)=1;
     (*actualID)++;

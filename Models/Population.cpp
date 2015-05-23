@@ -72,7 +72,7 @@ void Population::insertNewMember(Subject* newMemberParam) {
     );
     Subject* selected = populationTree->searchElement(*populationSize);
     selected->start_p_thread();
-    updateFittest(selected);
+    *(fittest+*populationSize-1) = selected;
 }
 
 /**@brief: inserta un nuevo miembro random
@@ -136,7 +136,7 @@ void Population::updateGeneration() {
 /**@brief mata a todos los sujetos
  */
 void Population::killEmAll() {
-    for(int i = 0; i < INITIAL_NUMBER_OF_SUBJECTS; i++){
+    for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
         (*(fittest+i))->kill();
     }
 }
