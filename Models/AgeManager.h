@@ -14,6 +14,7 @@ class AgeManager {
     pthread_t* managementThread;
     pthread_cond_t* condition;
     int* actualAge;
+    int* years;
     void changeAge();
     void evaluateEvolution();
     bool evaluateSubject(Subject*);

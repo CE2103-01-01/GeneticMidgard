@@ -10,6 +10,9 @@ AgeManager::AgeManager(){
     //Edda actual
     actualAge = static_cast<int*>(malloc(sizeof(int)));
     *actualAge = 0;
+    //Edda actual
+    years = static_cast<int*>(malloc(sizeof(int)));
+    *years = 0;
     //Thread de manejo de eddas
     managementThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
     //Mutex
@@ -32,6 +35,7 @@ AgeManager::~AgeManager(){
  */
 void AgeManager::thread(){
     evaluateEvolution();
+    (*years)++;
 }
 
 /**@brief evalua una condicion en un sujeto
@@ -45,13 +49,13 @@ bool AgeManager::evaluateSubject(Subject* toEvaluate){
     }else if(*actualAge==2 && toEvaluate->getGeneticInformation()->getGene(POSITION_OF_GENE_INTELLIGENCE) < LIMIT_LEVEL_THREE){
         return false;
     }else if(*actualAge==3){
-            for(int i = 0; i < constantsSubjectXML::NUMBER_OF_GENES - 3; i++){
-                if(toEvaluate->getGeneticInformation()->getGene(i) < LIMIT_LEVEL_TWO) return false;
-            }
+        for(int i = 0; i < constantsSubjectXML::NUMBER_OF_GENES - 3; i++){
+            if(toEvaluate->getGeneticInformation()->getGene(i) < LIMIT_LEVEL_TWO) return false;
+        }
     }else if(*actualAge==4){
-            for(int i = 0; i < constantsSubjectXML::NUMBER_OF_GENES - 3; i++){
-                if(toEvaluate->getGeneticInformation()->getGene(i) < LIMIT_LEVEL_THREE) return false;
-            }
+        for(int i = 0; i < constantsSubjectXML::NUMBER_OF_GENES - 3; i++){
+            if(toEvaluate->getGeneticInformation()->getGene(i) < LIMIT_LEVEL_THREE) return false;
+        }
     }
     return true;
 }
@@ -80,7 +84,7 @@ void AgeManager::evaluateEvolution(){
         if(flag) break;
     }
     //Si se cumplio el parametro cambia la edda
-    if(!flag) changeAge();
+    if(!flag | *years > MAX_YEARS) changeAge();
 }
 
 /**@brief accede al mutex general
@@ -108,15 +112,21 @@ void AgeManager::delete_p_thread(){
  */
 void AgeManager::changeAge(){
     (*actualAge)++;
-    //Cambia la edda en el calculador de fitness
-    GeneralFitnessCalculator::getInstance()->changeEdda();
+    (*years) = 0;
     //Comprueba en que edda se encuentra
-    if(*actualAge == UNION_AGE){
+    if(*actualAge < UNION_AGE){
+        //Cambia la edda en el calculador de fitness
+        GeneralFitnessCalculator::getInstance()->changeEdda();
+        //En la edda de la union mezcla las poblaciones
+        PopulationManager::getInstance()->mergePopulations();
+    }else if(*actualAge == UNION_AGE){
+        //Cambia la edda en el calculador de fitness
+        GeneralFitnessCalculator::getInstance()->changeEdda();
         //En la edda de la union mezcla las poblaciones
         PopulationManager::getInstance()->mergePopulations();
     }else if(*actualAge == TWILIGHT_OF_THE_GODS_AGE){
         //En la edda de la pelea contra los dioses genera la pelea
-        std::cout<< "Se ha alcanzado la meta" <<std::endl;
+        std::cout<< "SE HA ALCANZADO LA META" <<std::endl;
         (PopulationManager::getInstance()->getPopulation()+INITIAL_NUMBER_OF_POPULATIONS+1)->exterminate();
     }
 }

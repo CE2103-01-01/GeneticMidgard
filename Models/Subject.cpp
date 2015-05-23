@@ -304,7 +304,7 @@ void* subjectLife(void* parameter){
             excecutioner->attack();
         }
     }
-    //std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
+    std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
     excecutioner->delete_p_thread();
     return 0;
 }
