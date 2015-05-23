@@ -18,7 +18,7 @@ GeneralFitnessCalculator::GeneralFitnessCalculator(){
     rapidxml::xml_document<> doc;
     rapidxml::file<> file( CONSTANT_XML_PATH );
     doc.parse<0>( file.data() );
-    root_node = doc.first_node("CONSTANTS")->first_node("Fitness");
+    root_node = doc.first_node("CONSTANTS")->first_node("FitnessByAge");
     int forIteratorIndex = 0;
     rapidxml::xml_node<>*node = root_node->first_node();
     while(node) {

@@ -5,20 +5,7 @@
         <object name="meat" characteristic="0" value="20"/>
     </MOVILOBJECT>
 
-    <Fitness>
-        <Inmune_system>0.3</Inmune_system>
-        <Intelligence>0.5</Intelligence>
-        <Attack>0.1</Attack>
-        <Defense>0.1</Defense>
-        <Vital_Energy>0.1</Vital_Energy>
-        <Blot>0.1</Blot>
-        <Runes>0.1</Runes>
-        <Superstition>1</Superstition>
-        <Red>0.1</Red>
-        <Green>0.1</Green>
-        <Blue>0.1</Blue>
-    </Fitness>
-    <FitnessByAgeZ>
+    <FitnessByAge>
         <age0>
             <Inmune_system>0.3</Inmune_system>
             <Intelligence>0.5</Intelligence>
@@ -58,7 +45,7 @@
             <Green>0.1</Green>
             <Blue>0.1</Blue>
         </age2>
-    </FitnessByAgeZ>
+    </FitnessByAge>
 
     <Dwarves>
         <warrior age="1" experience="1" health="2" attack="3" speed="2" defense="1" intelligence="5" magic="1" runes="1" energy="2" blot="1" superstition="1"/>
