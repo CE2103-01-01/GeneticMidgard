@@ -51,15 +51,13 @@ Population::~Population() {
  * @param Chromosome* chromosome: cromosoma del individuo
  */
 void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* chromosome) {
-    (*populationSize)++;
-    populationTree->insertElement(
-            Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType),  actualGeneration),
-            *populationSize
-    );
-    Subject* newMember = populationTree->searchElement(*populationSize);
-    if(newMember->getFitness() >= (*(fittest+2*SUBJECTS_BY_GENERATION-1))->getFitness()) {
-        newMember->start_p_thread();
-        updateFittest(newMember);
+    Subject newMember = Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType), actualGeneration);
+    if(newMember.getFitness() >= (*(fittest+2*SUBJECTS_BY_GENERATION-1))->getFitness()) {
+        (*populationSize)++;
+        populationTree->insertElement(newMember, *populationSize);
+        Subject* selected = populationTree->searchElement(*populationSize);
+        selected->start_p_thread();
+        updateFittest(selected);
     }
 }
 
@@ -133,8 +131,8 @@ void Population::updateGeneration() {
 /**@brief mata a todos los sujetos
  */
 void Population::killEmAll() {
-    for(int i = 1; i <= *populationSize; i++){
-        populationTree->searchElement(i)->kill();
+    for(int i = 0; i < INITIAL_NUMBER_OF_SUBJECTS; i++){
+        (*(fittest+i))->kill();
     }
 }
 

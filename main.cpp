@@ -10,7 +10,8 @@ int main()
 
     //SocketLogic::getInstance();
 
-    AgeManager manager = AgeManager();
+    AgeManager* manager = static_cast<AgeManager*>(malloc(sizeof(AgeManager)));
+    new(manager) AgeManager();
 
     return 0;
 }

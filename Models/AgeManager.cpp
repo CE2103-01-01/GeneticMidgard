@@ -117,17 +117,19 @@ void AgeManager::changeAge(){
     if(*actualAge < UNION_AGE){
         //Cambia la edda en el calculador de fitness
         GeneralFitnessCalculator::getInstance()->changeEdda();
-        //En la edda de la union mezcla las poblaciones
-        PopulationManager::getInstance()->mergePopulations();
     }else if(*actualAge == UNION_AGE){
         //Cambia la edda en el calculador de fitness
         GeneralFitnessCalculator::getInstance()->changeEdda();
         //En la edda de la union mezcla las poblaciones
-        PopulationManager::getInstance()->mergePopulations();
+        //PopulationManager::getInstance()->mergePopulations();
     }else if(*actualAge == TWILIGHT_OF_THE_GODS_AGE){
         //En la edda de la pelea contra los dioses genera la pelea
         std::cout<< "SE HA ALCANZADO LA META" <<std::endl;
-        (PopulationManager::getInstance()->getPopulation()+INITIAL_NUMBER_OF_POPULATIONS+1)->exterminate();
+        for(int i = 0; i < INITIAL_NUMBER_OF_POPULATIONS; i++){
+            if(!(PopulationManager::getInstance()->getPopulation()+i)->isDefunct()){
+                (PopulationManager::getInstance()->getPopulation()+i)->exterminate();
+            }
+        }
     }
 }
 
@@ -143,20 +145,20 @@ void AgeManager::initPopulationManager(){
 /**@brief pthread del manejador de eddas
  */
 void* ageManagerThread(void* parameter){
+    //Extrae el parametro
     AgeManager* excecutioner = static_cast<AgeManager*>(parameter);
-
     //Ejecuta el metodo del hilo hasta que esten todos extintos
     pthread_mutex_lock(excecutioner->getGeneralMutex());
-
+    //Inicializa el manager de poblacion
     excecutioner->initPopulationManager();
-
+    //Ejecute metodo del thread
     while(PopulationManager::getInstance()->getActivePopulations() > 0){
         pthread_cond_wait(excecutioner->getGeneralCondition(),excecutioner->getGeneralMutex());
         excecutioner->thread();
     }
+    //Desbloquea mutex
     pthread_mutex_unlock(excecutioner->getGeneralMutex());
-    PopulationManager::getInstance()->killEmAll();
-    //Borra el thread
+
     excecutioner->delete_p_thread();
     return NULL;
 }

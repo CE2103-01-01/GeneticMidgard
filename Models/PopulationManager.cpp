@@ -34,7 +34,6 @@ PopulationManager::PopulationManager(int numberOfPopulations){
 PopulationManager::~PopulationManager(){
     free(population);
     free(actualID);
-    free(managementThread);
     free(activePopulations);
 }
 
@@ -174,7 +173,7 @@ void PopulationManager::createLife(){
 /**@brief mata a todos
  */
 void PopulationManager::killEmAll(){
-    //Inicia pthread de poblaciones, se asume que al no haber empezado, las poblaciones activas son todas
+    //Inicia pthread de poblaif(populationTree->searchElement(i)->isAlive()) ciones, se asume que al no haber empezado, las poblaciones activas son todas
     for(int i = 0; i < *actualID; i++){
         if(!(population+i)->isDefunct()){
             //Inicia el pthread
