@@ -3,6 +3,7 @@
 //
 
 #include "PopulationManager.h"
+#include "../Algorithms/lifeLaboratory.h"
 
 PopulationManager* PopulationManager::singleton = 0;
 pthread_t* PopulationManager::managementThread = 0;
@@ -71,10 +72,8 @@ Population* PopulationManager::mergePopulations(){
     //Elimina los sujetos y poblaciones viejas
     for(int i=0; i<INITIAL_NUMBER_OF_POPULATIONS+1; i++){
         (population+i)->exterminate();
-        (population+i)->delete_pthread();
     }
-    //Inicia el pthread de la nueva poblacion
-    (population + INITIAL_NUMBER_OF_POPULATIONS+1)->init_pthread(condition);
+    (*actualID)++;
     pthread_cond_wait(condition,mutex);
     //Se borra condicion
     free(condition);
@@ -83,20 +82,25 @@ Population* PopulationManager::mergePopulations(){
 /**@brief metodo que ejecuta las acciones
  */
 void PopulationManager::thread() {
+    for(int i = 0; i < *actualID; i++){
+        if(!(population+i)->isDefunct()){
+            LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
+            new(laboratory) LifeLaboratory((population+i));
+            //Primera generacion
+            laboratory->createGeneration();
+            free(laboratory);
+        }
+    }
     if(trueRandom::getRandom()%RANDOM_WAR_LIMIT < constants::RANDOM_WAR_RANGE_BY_EDDA) {
         //Busca dos numeros random
         int firstPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
         int secondPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
         //Se asegura que no sea la misma poblacion
         while(firstPopulationNumber==secondPopulationNumber) secondPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
-        //Se desbloquea mutex
-        pthread_mutex_lock(mutex);
         //Inicia las peleas
         for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
             (*((population+firstPopulationNumber)->getFittest() + i))->setOppenent((*((population+secondPopulationNumber)->getFittest() + i)));
         }
-        //Se desbloquea mutex
-        pthread_mutex_unlock(mutex);
     }
 }
 
@@ -105,6 +109,13 @@ void PopulationManager::thread() {
  */
 bool PopulationManager::isSomeoneAlive(){
     return (*activePopulations > 0);
+}
+
+/**@brief devuelve el id actual
+ * @return int
+ */
+int PopulationManager::getActualID(){
+    return *actualID;
 }
 
 /**@brief accede a las poblaciones actuales
@@ -149,21 +160,15 @@ void PopulationManager::delete_pthread(){
 }
 
 void PopulationManager::createLife(){
-    //Se bloquea mutex
-    pthread_mutex_lock(mutex);
-    //Se crea condicion
-    pthread_cond_t* condition = static_cast<pthread_cond_t*>(malloc(sizeof(pthread_cond_t)));
-    pthread_cond_init(condition,NULL);
     //Itera creando la cantidad de poblaciones solicitada
     for(int i = 0; i < INITIAL_NUMBER_OF_POPULATIONS; i++){
         new(population+i) Population(i,activePopulations);
-        (population+i)->init_pthread(condition);
-        pthread_cond_wait(condition,mutex);
+        LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
+        new(laboratory) LifeLaboratory(population+i);
+        //Primera generacion
+        laboratory->createPopulation();
+        free(laboratory);
     }
-    //Se borra condicion
-    free(condition);
-    //Se desbloquea mutex
-    pthread_mutex_unlock(mutex);
 }
 
 /**@brief mata a todos
@@ -174,8 +179,6 @@ void PopulationManager::killEmAll(){
         if(!(population+i)->isDefunct()){
             //Inicia el pthread
             (population+i)->exterminate();
-            //Hace que se espere la finalizacion del pthread
-            free((population+i)->get_pthread());
             //Disminuye contador
             (*activePopulations)--;
         }
@@ -190,13 +193,18 @@ void* populationManagerThread(void* param){
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=5;
+    timeController.tv_sec=2;
+    pthread_mutex_lock(static_cast<PThreadParam*>(param)->getMutex());
     manager->createLife();
     pthread_cond_signal(static_cast<PThreadParam*>(param)->getCondition());
+    pthread_mutex_unlock(static_cast<PThreadParam*>(param)->getMutex());
     //Este while corre hasta que se mueran todos
     while(manager->isSomeoneAlive()){
+        pthread_mutex_lock(static_cast<PThreadParam*>(param)->getMutex());
         //Ejecuta el metodo
         manager->thread();
+        pthread_cond_signal(static_cast<PThreadParam*>(param)->getCondition());
+        pthread_mutex_unlock(static_cast<PThreadParam*>(param)->getMutex());
         //Espera un segundo
         nanosleep(&timeController, NULL);
     }

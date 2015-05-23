@@ -12,6 +12,7 @@
 class AgeManager {
     pthread_mutex_t* generalMutex;
     pthread_t* managementThread;
+    pthread_cond_t* condition;
     int* actualAge;
     void changeAge();
     void evaluateEvolution();
@@ -21,6 +22,7 @@ class AgeManager {
         AgeManager();
         ~AgeManager();
         pthread_mutex_t* getGeneralMutex();
+        pthread_cond_t* getGeneralCondition();
         void thread();
         void delete_p_thread();
         void initPopulationManager();

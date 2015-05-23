@@ -28,6 +28,7 @@ class PopulationManager {
         void createLife();
         Population* mergePopulations();
         int getActivePopulations();
+        int getActualID();
 };
 
 void* populationManagerThread(void*);

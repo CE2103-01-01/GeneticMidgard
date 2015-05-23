@@ -12,8 +12,6 @@
 
 class Population {
     unsigned char* colors;
-    pthread_t* reproduction_pthread;
-    int* smallerIndexOnTree;
     int* activePopulationsOnManager;
     int* actualGeneration;
     int* populationSize;
@@ -32,11 +30,8 @@ public:
     void updateGeneration();
     void updateFittest(Subject*);
     void updateFittest();
-    void delete_pthread();
     void exterminate();
     bool isDefunct();
-    void init_pthread(pthread_cond_t*);
-    pthread_t* get_pthread();
     void fillFittest(int);
     Subject** getFittest();
 };

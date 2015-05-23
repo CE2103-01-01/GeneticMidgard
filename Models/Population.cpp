@@ -28,7 +28,6 @@ Population::Population(char populationTypeParam, int* activePopulationsOnManager
     new(populationTree) Tree<Subject>();
     defunct = static_cast<bool*>(malloc(sizeof(bool)));
     *defunct = false;
-    reproduction_pthread = 0;
     position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
     *position = (Terrain::getRandomFreePosition());
 }
@@ -40,20 +39,10 @@ Population::~Population() {
     free(colors);
     free(populationTree);
     free(defunct);
-    free(reproduction_pthread);
     free(actualGeneration);
     free(populationSize);
     free(populationType);// tipo de la poblacion
     activePopulationsOnManager = 0;
-}
-
-/**@brief: inicia el pthread
- */
-void Population::init_pthread(pthread_cond_t* managerConditionParam){
-    reproduction_pthread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
-    void* parameter = malloc(sizeof(PThreadParam));
-    new(static_cast<PThreadParam*>(parameter)) PThreadParam(this,NULL,managerConditionParam);
-    pthread_create(reproduction_pthread,NULL,reproductionThread,parameter);
 }
 
 /**@brief: inserta un nuevo miembro
@@ -203,43 +192,4 @@ void Population::exterminate(){
     killEmAll();
     *defunct = true;
     (*activePopulationsOnManager)--;
-}
-
-/**Accede al pthread
- * return pthread_t*
- */
-pthread_t* Population::get_pthread(){
-    return reproduction_pthread;
-}
-
-/**@brief elimina el pthread
- */
-void Population::delete_pthread(){
-    free(reproduction_pthread);
-}
-
-/**@brief Metodo del pthread
- * @param void* populationParameter: poblacion
- */
-void* reproductionThread(void* parameter){
-    //Se obtiene la poblacion
-    Population* population = static_cast<Population*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
-    //Se crea el laboratorio
-    LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
-    new(laboratory) LifeLaboratory(population);
-    //Se crea controlador de tiempo
-    struct timespec timeController;
-    timeController.tv_nsec=0;
-    timeController.tv_sec=10;
-    //Primera generacion
-    laboratory->createPopulation();
-    pthread_cond_signal(static_cast<PThreadParam*>(parameter)->getCondition());
-    //Loop que se ejecutara mientras la poblacion viva
-    while(!population->isDefunct()){
-        nanosleep(&timeController, NULL);
-        laboratory->createGeneration();
-    }
-    free(&timeController);
-    population->delete_pthread();
-    return 0;
 }

@@ -289,10 +289,11 @@ void Subject::delete_p_thread(){
 void* subjectLife(void* parameter){
     //Castea el parametro y extrae el sujeto
     Subject* excecutioner = static_cast<Subject*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
+    std::cout << "Hello, I am: " << excecutioner->getID() <<std::endl;
     //Crea estructura para tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=2;
+    timeController.tv_sec=5;
     //Este while corre hasta que se llame al metodo kill()
     while(excecutioner->isAlive()){
         //Espera un segundo

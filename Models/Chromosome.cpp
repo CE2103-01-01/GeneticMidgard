@@ -57,7 +57,7 @@ Chromosome::~Chromosome(){
  */
 unsigned char Chromosome::getGene(int geneNumber) {
     if(geneNumber < NUMBER_OF_GENES){
-        return geneticData[geneNumber];
+        return *(geneticData+geneNumber);
     }else{
         return 0;
     }
