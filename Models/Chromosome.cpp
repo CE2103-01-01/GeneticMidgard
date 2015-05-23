@@ -14,7 +14,7 @@ using namespace constantsSubjectXML;
 Chromosome::Chromosome(unsigned char* red, unsigned char* green, unsigned char* blue) {
     geneticData = static_cast<unsigned char*>(malloc(sizeof(unsigned char)*NUMBER_OF_GENES));
     for (int i = 0; i < NUMBER_OF_GENES - 3; i++) {
-        *(geneticData+i) = trueRandom::getRandom()%256;
+        *(geneticData+i) = trueRandom::getRandom()%255 + 1;
     }
     *(geneticData + POSITION_OF_GENE_RED) = *red;
     *(geneticData + POSITION_OF_GENE_GREEN) = *green;
