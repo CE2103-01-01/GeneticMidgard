@@ -289,7 +289,7 @@ void Subject::delete_p_thread(){
 void* subjectLife(void* parameter){
     //Castea el parametro y extrae el sujeto
     Subject* excecutioner = static_cast<Subject*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
-    std::cout << "Hello, I am: " << ((int)excecutioner->getGeneticInformation()->getGene(POSITION_OF_GENE_SUPERSTITION)) <<std::endl;
+    std::cout << "Hello, I am: " << excecutioner->getID() <<std::endl;
     //Crea estructura para tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;

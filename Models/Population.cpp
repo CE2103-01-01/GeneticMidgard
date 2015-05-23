@@ -58,7 +58,6 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* c
     );
     Subject* newMember = populationTree->searchElement(*populationSize);
     if(newMember->getFitness() > (*(fittest+2*SUBJECTS_BY_GENERATION-1))->getFitness()) updateFittest(newMember);
-    newMember->start_p_thread();
 }
 
 /**@brief: inserta un nuevo miembro
@@ -83,6 +82,7 @@ void Population::createNewRandomMember() {
  * @param Subject* newMember: nuevo miembro
  */
 void Population::updateFittest(Subject* newMember) {
+    newMember->start_p_thread();
     //Se ingresa al metodo porque el parametro tiene mayor fitness que el ultimo, por eso se asigna para evitar
     //comparaciones redundantes
     *(fittest+2*SUBJECTS_BY_GENERATION-1) = newMember;
