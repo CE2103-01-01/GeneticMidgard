@@ -66,8 +66,13 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* c
  */
 void Population::insertNewMember(Subject* newMemberParam) {
     (*populationSize)++;
-    populationTree->insertElement(Subject(*newMemberParam),*populationSize);
-    populationTree->searchElement(*populationSize)->start_p_thread();
+    populationTree->insertElement(
+            Subject(newMemberParam, newMemberParam, newMemberParam->getGeneticInformation(),
+            (*actualGeneration), (*populationSize)*10 + (*populationType), actualGeneration), *populationSize
+    );
+    Subject* selected = populationTree->searchElement(*populationSize);
+    selected->start_p_thread();
+    updateFittest(selected);
 }
 
 /**@brief: inserta un nuevo miembro random

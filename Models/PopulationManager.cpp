@@ -19,13 +19,13 @@ PopulationManager::PopulationManager(int numberOfPopulations){
     //Reserva espacio para el contador de poblaciones
     activePopulations = static_cast<int*>(malloc(sizeof(int)));
     //Inicia el contador de poblaciones
-    *(activePopulations) = numberOfPopulations;
+    *(activePopulations) = INITIAL_NUMBER_OF_POPULATIONS;
     //Reserva espacio para el ID de poblaciones
     actualID = static_cast<int*>(malloc(sizeof(int)));
     //Inicia el ID de poblaciones
     *(actualID) = numberOfPopulations;
     //Reserva espacio para N+1 cantidad de poblaciones, donde N = numberOfPopulations
-    population = static_cast<Population*>(calloc(0,sizeof(Population)*numberOfPopulations + 1));
+    population = static_cast<Population*>(malloc(sizeof(Population)*INITIAL_NUMBER_OF_POPULATIONS + 1));
     managementThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
 }
 
@@ -43,11 +43,6 @@ PopulationManager::~PopulationManager(){
 Population* PopulationManager::mergePopulations(){
     //Se bloquea mutex
     pthread_mutex_lock(mutex);
-    //Se crea ondicion
-    pthread_cond_t* condition = static_cast<pthread_cond_t*>(malloc(sizeof(pthread_cond_t)));
-    pthread_cond_init(condition,NULL);
-    //Se crea la nueva poblacion y se aumenta el numero
-    (*activePopulations++);
     new(population + INITIAL_NUMBER_OF_POPULATIONS+1) Population(INITIAL_NUMBER_OF_POPULATIONS+1, activePopulations);
     //Se crea tabla de indices que ayuda a saber cual fue el ultimo indice en los fittest que se recorrio
     //asi no se recorren sujetos que ya se incluyeron
@@ -56,7 +51,7 @@ Population* PopulationManager::mergePopulations(){
     for(int i=0; i<INITIAL_NUMBER_OF_SUBJECTS; i++){
         //Se toma un temporal en la primer poblacion y se compara con los demas
         Subject* tmp = *(population->getFittest() + *index);
-        for(int j=1; j<INITIAL_NUMBER_OF_POPULATIONS+1; j++){
+        for(int j=1; j<INITIAL_NUMBER_OF_POPULATIONS; j++){
             //Evalua cual tiene mayor fitness
             if((*((population+j)->getFittest() + *(index+j)))->getFitness() > tmp->getFitness()){
                 //Si el temporal actual tiene menor fitness lo cambia
@@ -68,26 +63,29 @@ Population* PopulationManager::mergePopulations(){
         //Inserta al sujeto en la nueva poblacion
         (population + INITIAL_NUMBER_OF_POPULATIONS+1)->insertNewMember(tmp);
     }
-    //Elimina los sujetos y poblaciones viejas
-    for(int i=0; i<INITIAL_NUMBER_OF_POPULATIONS+1; i++){
-        (population+i)->exterminate();
-    }
+    //killEmAll();
+    (*activePopulations)=1;
     (*actualID)++;
-    pthread_cond_wait(condition,mutex);
-    //Se borra condicion
-    free(condition);
 }
 
 /**@brief metodo que ejecuta las acciones
  */
 void PopulationManager::thread() {
-    for(int i = 0; i < *actualID; i++){
-        if(!(population+i)->isDefunct()){
-            LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
-            new(laboratory) LifeLaboratory((population+i));
-            //Primera generacion
-            laboratory->createGeneration();
-            free(laboratory);
+    if(*actualID > INITIAL_NUMBER_OF_POPULATIONS){
+        LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
+        new(laboratory) LifeLaboratory((population+*actualID));
+        //Primera generacion
+        laboratory->createGeneration();
+        free(laboratory);
+    }else{
+        for(int i = 0; i < *actualID; i++){
+            if(!(population+i)->isDefunct()){
+                LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
+                new(laboratory) LifeLaboratory((population+i));
+                //Primera generacion
+                laboratory->createGeneration();
+                free(laboratory);
+            }
         }
     }
     if(trueRandom::getRandom()%RANDOM_WAR_LIMIT < constants::RANDOM_WAR_RANGE_BY_EDDA) {
@@ -95,10 +93,13 @@ void PopulationManager::thread() {
         int firstPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
         int secondPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
         //Se asegura que no sea la misma poblacion
-        while(firstPopulationNumber==secondPopulationNumber) secondPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
+        while(firstPopulationNumber==secondPopulationNumber){
+            secondPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
+        }
         //Inicia las peleas
         for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
-            (*((population+firstPopulationNumber)->getFittest() + i))->setOppenent((*((population+secondPopulationNumber)->getFittest() + i)));
+            (*((population+firstPopulationNumber)->getFittest() + i))
+                    ->setOppenent((*((population+secondPopulationNumber)->getFittest() + i)));
         }
     }
 }

@@ -121,14 +121,12 @@ void AgeManager::changeAge(){
         //Cambia la edda en el calculador de fitness
         GeneralFitnessCalculator::getInstance()->changeEdda();
         //En la edda de la union mezcla las poblaciones
-        //PopulationManager::getInstance()->mergePopulations();
+        PopulationManager::getInstance()->mergePopulations();
     }else if(*actualAge == TWILIGHT_OF_THE_GODS_AGE){
         //En la edda de la pelea contra los dioses genera la pelea
         std::cout<< "SE HA ALCANZADO LA META" <<std::endl;
         for(int i = 0; i < INITIAL_NUMBER_OF_POPULATIONS; i++){
-            if(!(PopulationManager::getInstance()->getPopulation()+i)->isDefunct()){
-                (PopulationManager::getInstance()->getPopulation()+i)->exterminate();
-            }
+            (PopulationManager::getInstance()->getPopulation()+i)->exterminate();
         }
     }
 }
