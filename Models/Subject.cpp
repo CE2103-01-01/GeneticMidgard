@@ -65,10 +65,6 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     characteristics = static_cast<unsigned char*>(calloc(0,NUMBER_OF_CHARACTERISTICS));
     //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
     *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = 100;
-    //Crea posicion
-    /*
-    position = static_cast<int*>(calloc(0,2 * sizeof(int)));
-     */
     position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
     *position = Terrain::getRandomFreePositionNear(*fatherParam->position);
     //Asigna padres
@@ -210,7 +206,7 @@ void Subject::attack(){
         opponent->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
         this->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
     }
-    //std::cout << *id  << " vs " << opponent->getID() << " = " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << "-" << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
+    std::cout << *id  << " vs " << opponent->getID() << " = " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << "-" << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
 
 }
 
