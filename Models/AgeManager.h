@@ -12,10 +12,7 @@
 class AgeManager {
     pthread_mutex_t* generalMutex;
     pthread_t* managementThread;
-    long* generalSleep;
     int* actualAge;
-    PopulationManager* populationManager;
-    movilObjectManager* objectManager;
     void changeAge();
     void evaluateEvolution();
     bool evaluateSubject(Subject*);
@@ -23,13 +20,10 @@ class AgeManager {
     public:
         AgeManager();
         ~AgeManager();
-        PopulationManager* getPopulationManager();
-        movilObjectManager* getMovilObjectManager();
         pthread_mutex_t* getGeneralMutex();
-        pthread_t* getManagementThread();
-        long getGeneralSleep();
-        int getActualAge();
         void thread();
+        void delete_p_thread();
+        void initPopulationManager();
 };
 
 void* ageManagerThread(void*);

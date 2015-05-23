@@ -18,9 +18,6 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     //Crea y asigna id
     id = static_cast<long*>(malloc(sizeof(long)));
     *id = idParam;
-    //Crea bandera de seleccion
-    selected = static_cast<bool*>(malloc(sizeof(bool)));
-    *selected = false;
     //Crea y asigna generacion
     generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = 0;
@@ -55,9 +52,6 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     actualYear = actualYearParam;
     id = static_cast<long*>(malloc(sizeof(long)));
     *id = idParam;
-    //Crea bandera de seleccion
-    selected = static_cast<bool*>(malloc(sizeof(bool)));
-    *selected = false;
     //Crea y asigna generacion
     generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = generationParam;
@@ -99,9 +93,6 @@ Subject::Subject(const Subject& other){
     //Copia id
     id = static_cast<long*>(malloc(sizeof(long)));
     *id = *other.id;
-    //Cropia bandera de seleccion
-    selected = static_cast<bool*>(malloc(sizeof(bool)));
-    *selected = *(other.selected);
     //Copia generacion
     generation = static_cast<int*>(malloc(sizeof(int)));
     *generation = *other.generation;
@@ -131,6 +122,10 @@ Subject::~Subject(){
     free(fitness);
     free(geneticInformation);
     free(position);
+    actualYear = 0;
+    father = 0;
+    mother = 0;
+    opponent = 0;
 }
 
 /** @brief Accede al padre
@@ -226,20 +221,6 @@ bool Subject::isAlive(){
     return *(characteristics + POSITION_OF_CHARACTERISTIC_AGE) <= *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) > 0;
 }
 
-/** @brief Retorna true si el jugador esta en la lista de los mejores
- * @return bool
- */
-bool Subject::isSelected(){
-    return *selected;
-}
-
-/** @brief cambia la bandera de seleccion
- * @param bool newFlag: nuevo valor
- */
-void Subject::changeSelection(bool newFlag){
-    *selected = newFlag;
-}
-
 /** @brief Mata al jugador colocando en false la bander
  */
 void Subject::kill(){
@@ -250,6 +231,7 @@ void Subject::kill(){
  * @param Subject* opponentParam: oponente a setear
  */
 void Subject::setOppenent(Subject* opponentParam){
+    if(opponent!=NULL) opponent->opponent = NULL;
     opponent = opponentParam;
     opponentParam->opponent = this;
 }

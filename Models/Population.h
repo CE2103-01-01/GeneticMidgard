@@ -21,25 +21,22 @@ class Population {
     Tree<Subject>* populationTree; //lista de los individuos de la poblacion
     Subject** fittest;
     bool* defunct;
-    void killEmAll();
     Vector2D* position;
+    void killEmAll();
 public:
     Population(char, int*); //constructor de la poblacion
     ~Population();// destructor por defecto
-    void insertNewMember(Subject*, Subject*, Chromosome*);
-    Tree<Subject>* getPopulationTree();
-    Subject* getIndividual(int);// obtiene un individuo por medio de indice
-    int getPopulationSize();// obtiene la cantidad de personas en la poblacion
-    char getPopulationType();
-    void updateGeneration();
     void createNewRandomMember();
-    bool isDefunct();
-    void exterminate();
-    void init_pthread(pthread_cond_t*);
-    pthread_t* get_pthread();
-    void delete_pthread();
+    void insertNewMember(Subject*, Subject*, Chromosome*);
+    void insertNewMember(Subject*);
+    void updateGeneration();
     void updateFittest(Subject*);
     void updateFittest();
+    void delete_pthread();
+    void exterminate();
+    bool isDefunct();
+    void init_pthread(pthread_cond_t*);
+    pthread_t* get_pthread();
     void fillFittest(int);
     Subject** getFittest();
 };

@@ -41,7 +41,43 @@ PopulationManager::~PopulationManager(){
  * @return Population*
  */
 Population* PopulationManager::mergePopulations(){
-
+    //Se bloquea mutex
+    pthread_mutex_lock(mutex);
+    //Se crea ondicion
+    pthread_cond_t* condition = static_cast<pthread_cond_t*>(malloc(sizeof(pthread_cond_t)));
+    pthread_cond_init(condition,NULL);
+    //Se crea la nueva poblacion y se aumenta el numero
+    (*activePopulations++);
+    new(population + INITIAL_NUMBER_OF_POPULATIONS+1) Population(INITIAL_NUMBER_OF_POPULATIONS+1, activePopulations);
+    //Se crea tabla de indices que ayuda a saber cual fue el ultimo indice en los fittest que se recorrio
+    //asi no se recorren sujetos que ya se incluyeron
+    int* index = static_cast<int*>(calloc(0,sizeof(int) * INITIAL_NUMBER_OF_POPULATIONS));
+   //Se busca a los mejores
+    for(int i=0; i<INITIAL_NUMBER_OF_SUBJECTS; i++){
+        //Se toma un temporal en la primer poblacion y se compara con los demas
+        Subject* tmp = *(population->getFittest() + *index);
+        for(int j=1; j<INITIAL_NUMBER_OF_POPULATIONS+1; j++){
+            //Evalua cual tiene mayor fitness
+            if((*((population+j)->getFittest() + *(index+j)))->getFitness() > tmp->getFitness()){
+                //Si el temporal actual tiene menor fitness lo cambia
+                tmp = *((population+j)->getFittest() + *(index+j));
+            }
+        }
+        //Suma uno al indice correspondiente a la poblacion del sujeto
+        (*(index + tmp->getID()%10))++;
+        //Inserta al sujeto en la nueva poblacion
+        (population + INITIAL_NUMBER_OF_POPULATIONS+1)->insertNewMember(tmp);
+    }
+    //Elimina los sujetos y poblaciones viejas
+    for(int i=0; i<INITIAL_NUMBER_OF_POPULATIONS+1; i++){
+        (population+i)->exterminate();
+        (population+i)->delete_pthread();
+    }
+    //Inicia el pthread de la nueva poblacion
+    (population + INITIAL_NUMBER_OF_POPULATIONS+1)->init_pthread(condition);
+    pthread_cond_wait(condition,mutex);
+    //Se borra condicion
+    free(condition);
 }
 
 /**@brief metodo que ejecuta las acciones
@@ -56,7 +92,7 @@ void PopulationManager::thread() {
         //Se desbloquea mutex
         pthread_mutex_lock(mutex);
         //Inicia las peleas
-        for(int i = 0; i < SUBJECTS_BY_GENERATION * 2; i++){
+        for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
             (*((population+firstPopulationNumber)->getFittest() + i))->setOppenent((*((population+secondPopulationNumber)->getFittest() + i)));
         }
         //Se desbloquea mutex
@@ -85,6 +121,13 @@ pthread_t* PopulationManager::get_pthread(){
     return managementThread;
 }
 
+/**@brief accede al thread
+ * return pthread_t*
+ */
+int PopulationManager::getActivePopulations(){
+    return *activePopulations;
+}
+
 /**@brief metodo singleton
  * @param pthread_mutex_t* mutex: mutex de memoria, solo se utiliza la primera vez
  * @return PopulationManager*
@@ -108,7 +151,7 @@ void PopulationManager::delete_pthread(){
 void PopulationManager::createLife(){
     //Se bloquea mutex
     pthread_mutex_lock(mutex);
-    //Se crea ondicion
+    //Se crea condicion
     pthread_cond_t* condition = static_cast<pthread_cond_t*>(malloc(sizeof(pthread_cond_t)));
     pthread_cond_init(condition,NULL);
     //Itera creando la cantidad de poblaciones solicitada
@@ -128,12 +171,14 @@ void PopulationManager::createLife(){
 void PopulationManager::killEmAll(){
     //Inicia pthread de poblaciones, se asume que al no haber empezado, las poblaciones activas son todas
     for(int i = 0; i < *actualID; i++){
-        //Inicia el pthread
-        (population+i)->exterminate();
-        //Hace que se espere la finalizacion del pthread
-        free((population+i)->get_pthread());
-        //Disminuye contador
-        (*activePopulations)--;
+        if(!(population+i)->isDefunct()){
+            //Inicia el pthread
+            (population+i)->exterminate();
+            //Hace que se espere la finalizacion del pthread
+            free((population+i)->get_pthread());
+            //Disminuye contador
+            (*activePopulations)--;
+        }
     }
 }
 
@@ -147,6 +192,7 @@ void* populationManagerThread(void* param){
     timeController.tv_nsec=0;
     timeController.tv_sec=5;
     manager->createLife();
+    pthread_cond_signal(static_cast<PThreadParam*>(param)->getCondition());
     //Este while corre hasta que se mueran todos
     while(manager->isSomeoneAlive()){
         //Ejecuta el metodo

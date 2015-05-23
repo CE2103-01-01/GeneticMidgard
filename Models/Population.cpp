@@ -72,6 +72,15 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* c
     newMember->start_p_thread();
 }
 
+/**@brief: inserta un nuevo miembro
+ * @param Subject* nuevo miembro
+ */
+void Population::insertNewMember(Subject* newMemberParam) {
+    (*populationSize)++;
+    populationTree->insertElement(Subject(*newMemberParam),*populationSize);
+    populationTree->searchElement(*populationSize)->start_p_thread();
+}
+
 /**@brief: inserta un nuevo miembro random
  */
 void Population::createNewRandomMember() {
@@ -108,49 +117,19 @@ void Population::updateFittest(Subject* newMember) {
 void Population::updateFittest() {
     int deficit = 0;
     //Itera acomodando al nuevo miembro en la posicion correspondiente
-    for(int i = 2*SUBJECTS_BY_GENERATION-1; i>0; i--){
+    for(int i = 2*SUBJECTS_BY_GENERATION-1; i>=0; i--){
         //Si un miembro esta muerto
         if(!((*(fittest+i))->isAlive())){
-            (*(fittest+i))->changeSelection(false);
             deficit++;
-            for(int j = i; j < 2*SUBJECTS_BY_GENERATION-1; j++){
+            for(int j = i+1; j < 2*SUBJECTS_BY_GENERATION-deficit; j++){
                 //Se acomoda al muerto al final
                 Subject* tmp = *(fittest+j);
-                *(fittest+j) = *(fittest+j+1);
-                *(fittest+j+1) = tmp;
+                *(fittest+j) = *(fittest+j-1);
+                *(fittest+j-1) = tmp;
             }
         }
     }
     fillFittest(2*SUBJECTS_BY_GENERATION - deficit);
-}
-
-/**@brief: permite acceder a un individuo mediante su id
- * @param int id: identificacion del personaje, formato NumeroNacimiento-NumeroPoblacion
- * @return Subject*
- */
-Subject* Population::getIndividual(int id) {
-    return populationTree->searchElement((id/10));
-}
-
-/**@brief devuelve el arbol de poblacion
- * @return Tree<Subject>*
- */
-Tree<Subject>* Population::getPopulationTree(){
-    return populationTree;
-}
-
-/**@brief devuelve el tamano de poblacion
- * @return int
- */
-int Population::getPopulationSize(){
-    return *populationSize;
-}
-
-/**@brief devuelve el tipo de poblacion
- * @return char
- */
-char Population::getPopulationType() {
-    return *populationType;
 }
 
 /**@brief devuelve el tipo de poblacion
@@ -185,21 +164,35 @@ Subject** Population::getFittest() {
 
 /**@brief llena la lista de los mejores seres
  */
-void Population::fillFittest(int indexOnFittest){
-    //Busca la cantidad de padres necesaria con mejor fitness
-    for(int i = indexOnFittest; i < 2 * SUBJECTS_BY_GENERATION; i++){
-        Subject* tmpSelection = populationTree->searchElement(1);
-        //Busca el mejor
-        for(int j = 2; j <= *populationSize; j++){
-            Subject* toEvaluate = populationTree->searchElement(j);
-            //Si el elemento es mejor y no ha sido seleccionado lo cambia
-            if(!toEvaluate->isSelected() && toEvaluate->isAlive() && toEvaluate->getFitness() > tmpSelection->getFitness()){ 
-                tmpSelection = toEvaluate;
+void Population::fillFittest(int deficit){
+    if(*populationSize > INITIAL_NUMBER_OF_SUBJECTS){
+        //Busca la cantidad de padres necesaria con mejor fitness
+        for(int i = 0; i < SUBJECTS_BY_GENERATION; i++){
+            //Pregunta si esta lleno el espacio de los muertos y compara uno a uno los nuevos sujetos con los mejores
+            //Hace cambios si el nacimiento es mejor o hubo muertos
+            if(populationTree->searchElement(*populationSize - SUBJECTS_BY_GENERATION+i)->getFitness()
+               >= (*(fittest + 2*SUBJECTS_BY_GENERATION-1))->getFitness() | i < deficit) {
+                //Mata al menor
+                (*(fittest + 2*SUBJECTS_BY_GENERATION-1))->kill();
+                //Coloca al nuevo mejor en el lugar del muerto
+                (*(fittest + 2*SUBJECTS_BY_GENERATION-1)) = populationTree->searchElement(*populationSize - SUBJECTS_BY_GENERATION + i);
+                //Busca la posicion real del nuevo miembro
+                for(int j = 2*SUBJECTS_BY_GENERATION-1; j > 0; j--){
+                    //Si la posicion anterior es mejor, hace el cambio
+                    if((*(fittest + j))->getFitness() > (*(fittest + j-1))->getFitness()){
+                        //Toma temporal y hace swap
+                        Subject* tmp = *(fittest + j-1);
+                        *(fittest + j-1) = *(fittest + j);
+                        *(fittest + j) = tmp;
+                    }
+                }
             }
         }
-        //Agrega el temporal a la lista
-        *(fittest + i) = tmpSelection;
-        tmpSelection->changeSelection(true);
+    }else{
+        //Busca la cantidad de padres necesaria con mejor fitness
+        for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
+            *(fittest+i) = populationTree->searchElement(i+1);
+        }
     }
 }
 

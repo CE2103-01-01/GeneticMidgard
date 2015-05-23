@@ -28,7 +28,6 @@ class Subject {
     int* generation;
     long* id;
     float* fitness;
-    bool* selected;
     unsigned char* characteristics;//vida-experiencia-arma-armadura-profesion
     void calculateFitness();//funcion de calcular fitness y set fitness
 public:
@@ -47,8 +46,6 @@ public:
     void attack();
     void updateLife();
     bool isAlive();
-    bool isSelected();
-    void changeSelection(bool);
     void kill();
     pthread_t* get_p_thread();
     void start_p_thread();
