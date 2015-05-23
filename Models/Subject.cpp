@@ -210,7 +210,7 @@ void Subject::attack(){
         opponent->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
         this->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
     }
-    std::cout << *id  << " vs " << opponent->getID() << " = " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << "-" << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
+    //std::cout << *id  << " vs " << opponent->getID() << " = " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << "-" << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
 
 }
 
@@ -289,7 +289,7 @@ void Subject::delete_p_thread(){
 void* subjectLife(void* parameter){
     //Castea el parametro y extrae el sujeto
     Subject* excecutioner = static_cast<Subject*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
-    std::cout << "Hello, I am: " << excecutioner->getID() <<std::endl;
+    std::cout << "Hello, I am: " << ((int)excecutioner->getCharacteristic(POSITION_OF_GENE_SUPERSTITION)) <<std::endl;
     //Crea estructura para tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
@@ -304,7 +304,7 @@ void* subjectLife(void* parameter){
             excecutioner->attack();
         }
     }
-    std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
+    //std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
     excecutioner->delete_p_thread();
     return 0;
 }
