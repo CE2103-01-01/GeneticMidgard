@@ -22,6 +22,7 @@ class SocketGUI {
     void init();
     void receiving();
     static void manageMessage(std::string);
+    Mutex send;
 public:
     static SocketGUI* getInstance();
     void updateSpeed(unsigned char);
