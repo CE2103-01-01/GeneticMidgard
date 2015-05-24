@@ -40,7 +40,9 @@ void SocketLogic::updateSubject(unsigned int idSubject, unsigned int x, unsigned
     writer.String("y"); writer.Uint(y);
     writer.EndObject();
     packet<<s.GetString();
+    send.lock();
     client.send(packet);
+    send.unlock();
 }
 
 void SocketLogic::createSubject(unsigned int idSubject, unsigned int x, unsigned int y, unsigned int r, unsigned int g,
@@ -60,7 +62,9 @@ void SocketLogic::createSubject(unsigned int idSubject, unsigned int x, unsigned
     writer.EndObject();
     std::string tmp = s.GetString();
     packet<<tmp;
+    send.lock();
     client.send(packet);
+    send.unlock();
 }
 
 void SocketLogic::changeEdda(std::string edda) {
@@ -73,7 +77,9 @@ void SocketLogic::changeEdda(std::string edda) {
     writer.String("id"); writer.String(edda.c_str());
     writer.EndObject();
     packet<<s.GetString();
+    send.lock();
     client.send(packet);
+    send.unlock();
 }
 
 void SocketLogic::createObject(unsigned int idObject, std::string type, unsigned int x, unsigned int y) {
@@ -89,7 +95,9 @@ void SocketLogic::createObject(unsigned int idObject, std::string type, unsigned
     writer.String("y"); writer.Uint(y);
     writer.EndObject();
     packet<<s.GetString();
+    send.lock();
     client.send(packet);
+    send.unlock();
 }
 
 void SocketLogic::deleteObject(unsigned int idObject) {
@@ -102,7 +110,9 @@ void SocketLogic::deleteObject(unsigned int idObject) {
     writer.String("id"); writer.Uint(idObject);
     writer.EndObject();
     packet<<s.GetString();
+    send.lock();
     client.send(packet);
+    send.unlock();
 }
 
 void createSubject(unsigned int idSubject, unsigned int x, unsigned int y, unsigned int r, unsigned int g,

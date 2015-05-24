@@ -254,9 +254,8 @@ pthread_t* Subject::get_p_thread(){
 void Subject::start_p_thread(){
     Vector2D positionsVector = Terrain::getRandomFreePosition();
     Terrain::set(positionsVector,*id);
-    //Thread message(std::bind(&createSubject,*id,*(position),*(position+1),geneticInformation->getGene(POSITION_OF_GENE_RED),
-    //                         geneticInformation->getGene(POSITION_OF_GENE_GREEN),geneticInformation->getGene(POSITION_OF_GENE_BLUE)));
-    //message.launch();
+    createSubject(*id,position->x,position->y,geneticInformation->getGene(POSITION_OF_GENE_RED),
+                             geneticInformation->getGene(POSITION_OF_GENE_GREEN),geneticInformation->getGene(POSITION_OF_GENE_BLUE));
     //Mutex
     //parametros
     void* parameters = malloc(sizeof(PThreadParam));

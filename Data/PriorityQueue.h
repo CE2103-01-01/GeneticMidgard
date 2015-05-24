@@ -12,6 +12,7 @@ template<class T>class NodeQ;
 template<class T>
 class PriorityQueue {
 private:
+    pthread_mutex_t mutexData = PTHREAD_MUTEX_INITIALIZER;
     NodeQ<T>* _head;
     unsigned int lenght;
     void pushNode(NodeQ<T>*);
@@ -45,11 +46,15 @@ public:
 #endif //PROJECTMIDGARD_PRIORITYQUEUE_H
 template<class T>
 void PriorityQueue<T>::push(T *dato) {
+    pthread_mutex_lock( &mutexData );
     pushNode(new NodeQ<T>(dato));
+    pthread_mutex_unlock( &mutexData );
 }
 template<class T>
 void PriorityQueue<T>::push(T dato) {
+    pthread_mutex_lock( &mutexData );
     pushNode(new NodeQ<T>(dato));
+    pthread_mutex_unlock( &mutexData );
 }
 /**
  * Metodo para insertar en cola de prioridad
@@ -85,15 +90,20 @@ void PriorityQueue<T>::pushNode(NodeQ<T>* node) {
 
 template<class T>
 T PriorityQueue<T>::top() {
-    return *(_head->getData());
+    pthread_mutex_lock( &mutexData );
+    T returnVal = *(_head->getData());
+    pthread_mutex_unlock( &mutexData );
+    return returnVal;
 }
 
 template<class T>
 void PriorityQueue<T>::pop() {
+    pthread_mutex_lock( &mutexData );
     NodeQ<T> * headTemp = _head;//Nodo para liberarlo
     _head = _head->getNextNode();
     lenght--;//Actualiza largo
     free(headTemp);//GarbageCollection
+    pthread_mutex_unlock( &mutexData );
 }
 
 template<class T>
