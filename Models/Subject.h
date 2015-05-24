@@ -23,7 +23,6 @@ class Subject {
     Chromosome* geneticInformation;
     Vector2D* position;
     pthread_t* lifeThread;
-    pthread_mutex_t* mutex;
     int* actualYear;
     int* generation;
     long* id;
@@ -52,6 +51,7 @@ public:
     void setOppenent(Subject*);
     void delete_p_thread();
     Subject* getOpponent();
+    void printParents();
 };
 
 void* subjectLife(void*);

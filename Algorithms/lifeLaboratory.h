@@ -10,7 +10,7 @@
 #include "../Data/DoubleList.h"
 
 class LifeLaboratory {
-    Population* labRats;
+    Population* population;
     void fillGeneration();
 public:
     LifeLaboratory(Population*);

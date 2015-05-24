@@ -15,6 +15,7 @@ class PopulationManager {
     int* activePopulations;
     Population* population;
     void init_war();
+    void reproduce();
     public:
         PopulationManager(int);
         ~PopulationManager();
@@ -26,7 +27,7 @@ class PopulationManager {
         static pthread_t* get_pthread();
         void delete_pthread();
         void createLife();
-        Population* mergePopulations();
+        void mergePopulations();
         int getActivePopulations();
         int getActualID();
 };

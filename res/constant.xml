@@ -8,81 +8,75 @@
     <FitnessByAge>
         <age0>
             <Inmune_system>0.3</Inmune_system>
-            <Intelligence>0.5</Intelligence>
             <Attack>0.1</Attack>
             <Defense>0.1</Defense>
+            <Magic>0.1</Magic>
+            <Intelligence>0.5</Intelligence>
+            <Superstition>1</Superstition>
+            <Speed>0.1</Speed>
             <Vital_Energy>0.1</Vital_Energy>
             <Blot>0.1</Blot>
             <Runes>0.1</Runes>
-            <Superstition>1</Superstition>
-            <Red>0.1</Red>
-            <Green>0.1</Green>
-            <Blue>0.1</Blue>
         </age0>
         <age1>
             <Inmune_system>0.3</Inmune_system>
-            <Intelligence>0.5</Intelligence>
             <Attack>0.1</Attack>
             <Defense>0.1</Defense>
+            <Magic>0.1</Magic>
+            <Intelligence>0.5</Intelligence>
+            <Superstition>1</Superstition>
+            <Speed>0.1</Speed>
             <Vital_Energy>0.1</Vital_Energy>
             <Blot>0.1</Blot>
             <Runes>0.1</Runes>
-            <Superstition>0.1</Superstition>
-            <Red>0.1</Red>
-            <Green>0.1</Green>
-            <Blue>0.1</Blue>
         </age1>
         <age2>
             <Inmune_system>0.3</Inmune_system>
-            <Intelligence>0.5</Intelligence>
             <Attack>0.1</Attack>
             <Defense>0.1</Defense>
+            <Magic>0.1</Magic>
+            <Intelligence>0.5</Intelligence>
+            <Superstition>1</Superstition>
+            <Speed>0.1</Speed>
             <Vital_Energy>0.1</Vital_Energy>
             <Blot>0.1</Blot>
             <Runes>0.1</Runes>
-            <Superstition>0.1</Superstition>
-            <Red>0.1</Red>
-            <Green>0.1</Green>
-            <Blue>0.1</Blue>
         </age2>
         <age3>
             <Inmune_system>0.3</Inmune_system>
-            <Intelligence>0.5</Intelligence>
             <Attack>0.1</Attack>
             <Defense>0.1</Defense>
+            <Magic>0.1</Magic>
+            <Intelligence>0.5</Intelligence>
+            <Superstition>1</Superstition>
+            <Speed>0.1</Speed>
             <Vital_Energy>0.1</Vital_Energy>
             <Blot>0.1</Blot>
             <Runes>0.1</Runes>
-            <Superstition>0.1</Superstition>
-            <Red>0.1</Red>
-            <Green>0.1</Green>
-            <Blue>0.1</Blue>
         </age3>
         <age4>
             <Inmune_system>0.3</Inmune_system>
-            <Intelligence>0.5</Intelligence>
             <Attack>0.1</Attack>
             <Defense>0.1</Defense>
+            <Magic>0.1</Magic>
+            <Intelligence>0.5</Intelligence>
+            <Superstition>1</Superstition>
+            <Speed>0.1</Speed>
             <Vital_Energy>0.1</Vital_Energy>
             <Blot>0.1</Blot>
             <Runes>0.1</Runes>
-            <Superstition>0.1</Superstition>
-            <Red>0.1</Red>
-            <Green>0.1</Green>
-            <Blue>0.1</Blue>
         </age4>
         <age5>
             <Inmune_system>0.3</Inmune_system>
-            <Intelligence>0.5</Intelligence>
             <Attack>0.1</Attack>
             <Defense>0.1</Defense>
+            <Magic>0.1</Magic>
+            <Intelligence>0.5</Intelligence>
+            <Superstition>1</Superstition>
+            <Speed>0.1</Speed>
             <Vital_Energy>0.1</Vital_Energy>
             <Blot>0.1</Blot>
             <Runes>0.1</Runes>
-            <Superstition>0.1</Superstition>
-            <Red>0.1</Red>
-            <Green>0.1</Green>
-            <Blue>0.1</Blue>
         </age5>
     </FitnessByAge>
 

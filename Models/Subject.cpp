@@ -40,7 +40,6 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     opponent = 0;
     //Coloca en 0 el puntero al thread
     lifeThread = 0;
-    mutex = 0;
 }
 
 /** Constructor
@@ -73,7 +72,6 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     opponent = 0;
     //Coloca en 0 el puntero al thread
     lifeThread = 0;
-    mutex = 0;
     }
 
 /** Constructor
@@ -106,7 +104,6 @@ Subject::Subject(const Subject& other){
     mother = other.mother;
     opponent = other.opponent;
     lifeThread = other.lifeThread;
-    mutex = other.mutex;
 }
 
 /** Destructor
@@ -261,11 +258,9 @@ void Subject::start_p_thread(){
     //                         geneticInformation->getGene(POSITION_OF_GENE_GREEN),geneticInformation->getGene(POSITION_OF_GENE_BLUE)));
     //message.launch();
     //Mutex
-    mutex = static_cast<pthread_mutex_t*>(malloc(sizeof(pthread_mutex_t)));
-    pthread_mutex_init(mutex,NULL);
     //parametros
     void* parameters = malloc(sizeof(PThreadParam));
-    new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,mutex,NULL);
+    new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,NULL,NULL);
     //thread
     lifeThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
     pthread_create(lifeThread,NULL,subjectLife,parameters);
@@ -275,7 +270,6 @@ void Subject::start_p_thread(){
  */
 void Subject::delete_p_thread(){
     free(lifeThread);
-    free(mutex);
 }
 
 /**@brief metodo ejecutado por el pthread

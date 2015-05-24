@@ -23,7 +23,7 @@ PopulationManager::PopulationManager(int numberOfPopulations){
     //Reserva espacio para el ID de poblaciones
     actualID = static_cast<int*>(malloc(sizeof(int)));
     //Inicia el ID de poblaciones
-    *(actualID) = numberOfPopulations;
+    *(actualID) = INITIAL_NUMBER_OF_POPULATIONS;
     //Reserva espacio para N+1 cantidad de poblaciones, donde N = numberOfPopulations
     population = static_cast<Population*>(malloc(sizeof(Population)*INITIAL_NUMBER_OF_POPULATIONS + 1));
     managementThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
@@ -40,10 +40,10 @@ PopulationManager::~PopulationManager(){
 /**@brief mezcla las poblaciones para generar una nueva
  * @return Population*
  */
-Population* PopulationManager::mergePopulations(){
+void PopulationManager::mergePopulations(){
     //Se bloquea mutex
     pthread_mutex_lock(mutex);
-    new(population + INITIAL_NUMBER_OF_POPULATIONS+1) Population(INITIAL_NUMBER_OF_POPULATIONS+1, activePopulations);
+    new(population + INITIAL_NUMBER_OF_POPULATIONS+1) Population(INITIAL_NUMBER_OF_POPULATIONS, activePopulations);
     //Se crea tabla de indices que ayuda a saber cual fue el ultimo indice en los fittest que se recorrio
     //asi no se recorren sujetos que ya se incluyeron
     int* index = static_cast<int*>(calloc(0,sizeof(int) * INITIAL_NUMBER_OF_POPULATIONS));
@@ -69,9 +69,26 @@ Population* PopulationManager::mergePopulations(){
     (*actualID)++;
 }
 
-/**@brief metodo que ejecuta las acciones
+/**Inicia la guerra
  */
-void PopulationManager::thread() {
+void PopulationManager::init_war(){
+    //Busca dos numeros random
+    int firstPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
+    int secondPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
+    //Se asegura que no sea la misma poblacion
+    while(firstPopulationNumber==secondPopulationNumber){
+        secondPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
+    }
+    //Inicia las peleas
+    for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
+        (*((population+firstPopulationNumber)->getFittest() + i))
+                ->setOppenent((*((population+secondPopulationNumber)->getFittest() + i)));
+    }
+}
+
+/**Reproduce a las poblaciones
+ */
+void PopulationManager::reproduce(){
     if(*actualID > INITIAL_NUMBER_OF_POPULATIONS){
         LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
         new(laboratory) LifeLaboratory((population+*actualID));
@@ -89,20 +106,13 @@ void PopulationManager::thread() {
             }
         }
     }
-    if(trueRandom::getRandom()%RANDOM_WAR_LIMIT < constants::RANDOM_WAR_RANGE_BY_EDDA) {
-        //Busca dos numeros random
-        int firstPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
-        int secondPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
-        //Se asegura que no sea la misma poblacion
-        while(firstPopulationNumber==secondPopulationNumber){
-            secondPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
-        }
-        //Inicia las peleas
-        for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
-            (*((population+firstPopulationNumber)->getFittest() + i))
-                    ->setOppenent((*((population+secondPopulationNumber)->getFittest() + i)));
-        }
-    }
+}
+
+/**@brief metodo que ejecuta las acciones
+ */
+void PopulationManager::thread() {
+    reproduce();
+    if(trueRandom::getRandom()%RANDOM_WAR_LIMIT < constants::RANDOM_WAR_RANGE_BY_EDDA) init_war();
 }
 
 /**@brief devuelve true si hay personas vivas

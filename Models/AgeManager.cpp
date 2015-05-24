@@ -46,7 +46,7 @@ bool AgeManager::evaluateSubject(Subject* toEvaluate){
         return false;
     }else if(*actualAge==1 && toEvaluate->getGeneticInformation()->getGene(POSITION_OF_GENE_INTELLIGENCE) < LIMIT_LEVEL_ONE){
         return false;
-    }else if(*actualAge==2 && toEvaluate->getGeneticInformation()->getGene(POSITION_OF_GENE_INTELLIGENCE) < LIMIT_LEVEL_THREE){
+    }else if(*actualAge==2 && toEvaluate->getGeneticInformation()->getGene(POSITION_OF_GENE_INTELLIGENCE) < LIMIT_LEVEL_TWO){
         return false;
     }else if(*actualAge==3){
         for(int i = 0; i < constantsSubjectXML::NUMBER_OF_GENES - 3; i++){

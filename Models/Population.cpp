@@ -105,8 +105,7 @@ void Population::updateFittest(Subject* newMember) {
     }
 }
 
-/**@brief: inserta un nuevo miembro random
- * @param Subject* newMember: nuevo miembro
+/**@brief: busca los muertos
  */
 void Population::updateFittest() {
     int deficit = 0;

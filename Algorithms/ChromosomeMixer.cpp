@@ -21,8 +21,8 @@ Chromosome* ChromosomeMixer::mix(Chromosome* fatherGeneticInformation, Chromosom
         unsigned char motherGene = motherGeneticInformation->getGene(i);
         unsigned char tmpMask = (unsigned char)(trueRandom::getRandom()%256);
         //Se aplican y asignan las mascaras
-        *(newGeneticMaterialOne + i) = (tmpMask & fatherGene)|(~tmpMask & motherGene);
-        *(newGeneticMaterialTwo + i) = (~tmpMask & fatherGene)|(tmpMask & motherGene);
+        *(newGeneticMaterialOne + i) = (tmpMask & fatherGene)^(~tmpMask & motherGene);
+        *(newGeneticMaterialTwo + i) = (~tmpMask & fatherGene)^(tmpMask & motherGene);
     }
     Chromosome* optionOne = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
     new(optionOne) Chromosome(newGeneticMaterialOne);
