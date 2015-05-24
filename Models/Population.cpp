@@ -162,7 +162,8 @@ void Population::fillFittest(){
             if(populationTree->searchElement(*populationSize - i)->isSelected()) break;
             //Pregunta si esta lleno el espacio de los muertos y compara uno a uno los nuevos sujetos con los mejores
             //Hace cambios si el nacimiento es mejor o hubo muertos
-            if(populationTree->searchElement(*populationSize - i)->getFitness()
+            if(!(*(fittest + 2*SUBJECTS_BY_GENERATION-1))->isAlive() |
+               populationTree->searchElement(*populationSize - i)->getFitness()
                >= (*(fittest + 2*SUBJECTS_BY_GENERATION-1))->getFitness()) {
                 //Mata al menor
                 (*(fittest + 2*SUBJECTS_BY_GENERATION-1))->kill();
