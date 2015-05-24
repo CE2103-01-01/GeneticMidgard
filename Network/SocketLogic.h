@@ -23,18 +23,17 @@ class SocketLogic {
     Mutex send;
 public:
     static SocketLogic* getInstance();
-    void updateSubject(unsigned int idSubject, unsigned int x, unsigned int y);
-    void createSubject(unsigned int idSubject, unsigned int x, unsigned int y,
-                       unsigned int r, unsigned int g, unsigned int b);
-    void createObject(unsigned int idObject, std::string tipo, unsigned int x, unsigned int y);
-    void deleteObject(unsigned int idObject);
-    void changeEdda(std::string edda);
-    void battleDetails(unsigned int idBattle, char* somedata);//TODO-roberto definir info de peleas
+    void updateSubject(unsigned int, unsigned int, unsigned int);
+    void createSubject(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
+    void createObject(unsigned int, std::string, unsigned int, unsigned int);
+    void deleteObject(unsigned int);
+    void changeEdda(std::string);
+    void battleDetails(unsigned int, char*);//TODO-roberto definir info de peleas
 
 
 };
 
-void createSubject(unsigned int idSubject, unsigned int x, unsigned int y,
-                   unsigned int r, unsigned int g, unsigned int b);
+void createSubject(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
+void deleteSubject(unsigned int idSubject);
 
 #endif //PROJECTMIDGARDLOGIC_SOCKETLOGIC_H

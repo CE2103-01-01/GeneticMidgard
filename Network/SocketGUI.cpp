@@ -57,7 +57,6 @@ void SocketGUI::manageMessage(std::string string) {
     std::string action = document.FindMember("action")->value.GetString();
     if (action == "createSubject")
     {
-
         unsigned int id = document.FindMember("id")->value.GetUint();
         unsigned int x = document.FindMember("x")->value.GetUint();
         unsigned int y = document.FindMember("y")->value.GetUint();
@@ -75,6 +74,11 @@ void SocketGUI::manageMessage(std::string string) {
     else if (action == "changeEdda")
     {
         //std::cout << "changeEdda: " << std::endl;
+    }
+    else if (action == "deleteObject")
+    {
+        unsigned int id = document.FindMember("id")->value.GetUint();
+        Map::getInstance()->getPoblacion()->deletePerson(id);
     }
 
     (Map::getInstance()->needToPaint) = true;

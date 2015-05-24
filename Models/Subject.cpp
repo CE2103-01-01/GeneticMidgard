@@ -210,7 +210,6 @@ void Subject::attack(){
         this->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
     }
     //std::cout << *id  << " vs " << opponent->getID() << " = " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << "-" << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
-
 }
 
 /** @brief Retorna true si el jugador esta vivo, para ello la vida debe ser mayor a 0 y menor o igual a la edad
@@ -230,9 +229,7 @@ void Subject::kill(){
  * @param Subject* opponentParam: oponente a setear
  */
 void Subject::setOppenent(Subject* opponentParam){
-    if(opponent!=NULL) opponent->opponent = NULL;
     opponent = opponentParam;
-    opponentParam->opponent = this;
 }
 
 /**@brief Metodo que inicia el pthread
@@ -268,14 +265,18 @@ pthread_t* Subject::get_p_thread(){
 
 }
 
+/**@brief envia create al socket
+ */
+void Subject::create(){
+    createSubject(*id,position->x,position->y,geneticInformation->getGene(POSITION_OF_GENE_RED),
+                  geneticInformation->getGene(POSITION_OF_GENE_GREEN),geneticInformation->getGene(POSITION_OF_GENE_BLUE));
+}
+
 /**@brief Metodo que inicia el pthread
  */
 void Subject::start_p_thread(){
     Vector2D positionsVector = Terrain::getRandomFreePosition();
     Terrain::set(positionsVector,*id);
-    createSubject(*id,position->x,position->y,geneticInformation->getGene(POSITION_OF_GENE_RED),
-                             geneticInformation->getGene(POSITION_OF_GENE_GREEN),geneticInformation->getGene(POSITION_OF_GENE_BLUE));
-    //Mutex
     //parametros
     void* parameters = malloc(sizeof(PThreadParam));
     new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,NULL,NULL);
@@ -288,6 +289,7 @@ void Subject::start_p_thread(){
  */
 void Subject::delete_p_thread(){
     free(lifeThread);
+    //deleteSubject(*id); //TODO revisar
 }
 void Subject::optionSelection() {
     int value =trueRandom::randRange(0,100);
@@ -302,6 +304,7 @@ void* subjectLife(void* parameter){
     //Castea el parametro y extrae el sujeto
     Subject* excecutioner = static_cast<Subject*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
     //std::cout << "Hello, I am: " << excecutioner->getID() <<std::endl;
+    excecutioner->create();
     //Crea estructura para tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
@@ -312,9 +315,11 @@ void* subjectLife(void* parameter){
         nanosleep(&timeController, NULL);
         //Llama al metodo de vida del sujeto
         excecutioner->updateLife();
+        //Si existe oponente ataca
         if(excecutioner->getOpponent()!=NULL && excecutioner->getOpponent()->isAlive()){
             excecutioner->attack();
-        }
+            excecutioner->setOppenent(NULL);
+        }//Si no existe oponente selecciona random un objeto
         else{
             //excecutioner->optionSelection();
         }

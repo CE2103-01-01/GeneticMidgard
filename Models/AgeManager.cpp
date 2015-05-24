@@ -28,7 +28,7 @@ AgeManager::AgeManager(){
 /**Destructor
  */
 AgeManager::~AgeManager(){
-    free(actualAge);
+    //free(actualAge);
 }
 
 /**@brief metodo del thread que evalua las eddas

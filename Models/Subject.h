@@ -56,6 +56,7 @@ public:
     void printParents();
     void changeSelection(bool);
     bool isSelected();
+    void create();
 };
 
 void* subjectLife(void*);

@@ -119,7 +119,7 @@ template <class T> T* Tree<T>::searchElement(long index){
         //Toma el contenedor, es decir el elemento
         T* elementToReturn = static_cast<T*>(tmpLeaf->getContainers() + (*path)*sizeof(T));
         //Libera el espacio de la ruta
-        //free(path);
+        free(path);
         //retorna el elemento
         return elementToReturn;
     }else{
