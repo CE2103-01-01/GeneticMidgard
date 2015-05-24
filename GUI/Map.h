@@ -28,6 +28,8 @@ static const char *const IMAGE_NODE = "image";
 static const char *const TILE_NODE = "tile";
 
 static const char *const TILESET_PATH = "../res/";
+static const char *const ALPHA_PERSON = "PersonaAlpha";
+
 #include <iostream>
 #include <string.h>
 #include <SFML/Graphics.hpp>

@@ -46,19 +46,22 @@ Map::Map() {
     //create Poblacion
     if(!texture.loadFromFile(tilesetPath)) abort();
     unsigned int personGid;
+    unsigned int personAlphaGid;
     rapidxml::xml_node<> *terrain_node = root_node->first_node(TILESET_NODE)->first_node(TERRAINS)->first_node(
             TERRAIN_NODE);
     while (terrain_node)
     {
         if(!strcmp(terrain_node->first_attribute(NAME)->value(), PERSONA_TERRAIN))
             personGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value())+1;// Ojo el mas 1 para pasar de id a gid
-            terrain_node = terrain_node->next_sibling();
+        else if(!strcmp(terrain_node->first_attribute(NAME)->value(), ALPHA_PERSON))
+            personAlphaGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value())+1;// Ojo el mas 1 para pasar de id a gid
+        terrain_node = terrain_node->next_sibling();
     }
     Texture texturePerson;
     if (!texturePerson.loadFromFile(tilesetPath,getTileRect(personGid))) abort();
     Texture texturePersonLayer;
-    if (!texturePersonLayer.loadFromFile(tilesetPath,getTileRect(1852))) abort();
-
+    if (!texturePersonLayer.loadFromFile(tilesetPath,getTileRect(personAlphaGid))) abort();
+    if(personGid==0||personAlphaGid==0) cerr<<"Error Textura de Personas no definida"<<endl;
     poblacion = new Poblacion(texturePerson,texturePersonLayer);
     needToPaint = true;
 }

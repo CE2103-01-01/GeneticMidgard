@@ -20,6 +20,7 @@ class SocketLogic {
     TcpSocket client;
     void init();
     static bool initialized;
+    Mutex send;
 public:
     static SocketLogic* getInstance();
     void updateSubject(unsigned int idSubject, unsigned int x, unsigned int y);
