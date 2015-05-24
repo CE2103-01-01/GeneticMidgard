@@ -184,7 +184,7 @@ void Population::fillFittest(){
         }
         //Busca la cantidad de padres necesaria con mejor fitness
         for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
-            std::cout<< i << " " << *(fittest+i) <<std::endl;
+            std::cout<< i << " " << (*(fittest+i))->getID() <<std::endl;
         }
     }else{
         //Busca la cantidad de padres necesaria con mejor fitness
@@ -194,7 +194,7 @@ void Population::fillFittest(){
         }
         //Busca la cantidad de padres necesaria con mejor fitness
         for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
-            std::cout<< i << " " << *(fittest+i) <<std::endl;
+            std::cout<< i << " " << (*(fittest+i))->getID() <<std::endl;
         }
     }
 }
