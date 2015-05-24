@@ -47,7 +47,7 @@ void SocketGUI::receiving() {
             break;
         }
         packet>>message;
-        std::cout << "Received: " << message<< std::endl;
+        //std::cout << "Received: " << message<< std::endl;
         Thread thread(std::bind(&SocketGUI::manageMessage, message));
         thread.launch();
     }
@@ -72,15 +72,15 @@ void SocketGUI::manageMessage(std::string string) {
     }
     else if (action == "updateSubject")
     {
-        std::cout << "updateSubject: " << std::endl;
+        //std::cout << "updateSubject: " << std::endl;
     }
     else if (action == "changeEdda")
     {
-        std::cout << "changeEdda: " << std::endl;
+        //std::cout << "changeEdda: " << std::endl;
     }
 
     (Map::getInstance()->needToPaint) = true;
-    std::cout << "Flag to paint" << std::endl;
+    //std::cout << "Flag to paint" << std::endl;
 }
 
 void SocketGUI::updateSpeed(unsigned char speed) {

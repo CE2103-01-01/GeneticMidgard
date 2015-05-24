@@ -204,7 +204,7 @@ void* populationManagerThread(void* param){
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=2;
+    timeController.tv_sec=10;
     pthread_mutex_lock(static_cast<PThreadParam*>(param)->getMutex());
     manager->createLife();
     pthread_cond_signal(static_cast<PThreadParam*>(param)->getCondition());

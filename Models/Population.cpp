@@ -51,9 +51,12 @@ Population::~Population() {
  * @param Chromosome* chromosome: cromosoma del individuo
  */
 void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* chromosome) {
-    Subject newMember = Subject(father, mother, chromosome, (*actualGeneration), (*populationSize)*10 + (*populationType), actualGeneration);
     (*populationSize)++;
-    populationTree->insertElement(newMember, *populationSize);
+    populationTree->insertElement(Subject(father, mother, chromosome, (*actualGeneration),
+                                          (*populationSize)*SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID + (*populationType),
+                                          actualGeneration),
+                                  *populationSize
+                                 );
     Subject* selected = populationTree->searchElement(*populationSize);
     selected->start_p_thread();
     updateFittest(selected);
@@ -65,9 +68,11 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* c
 void Population::insertNewMember(Subject* newMemberParam) {
     (*populationSize)++;
     populationTree->insertElement(
-            Subject(newMemberParam, newMemberParam, newMemberParam->getGeneticInformation(),
-            (*actualGeneration), (*populationSize)*10 + (*populationType), actualGeneration), *populationSize
-    );
+            Subject(newMemberParam, newMemberParam, newMemberParam->getGeneticInformation(), (*actualGeneration),
+                    (*populationSize)*SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID + (*populationType), actualGeneration
+                   ),
+            *populationSize
+            );
     Subject* selected = populationTree->searchElement(*populationSize);
     selected->start_p_thread();
     *(fittest+*populationSize-1) = selected;
@@ -77,7 +82,11 @@ void Population::insertNewMember(Subject* newMemberParam) {
  */
 void Population::createNewRandomMember() {
     (*populationSize)++;
-    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType), actualGeneration, colors,Terrain::getFreePositionNear(*position)),*populationSize);
+    populationTree->insertElement(Subject((*populationSize)*SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID + (*populationType),
+                                           actualGeneration, colors, Terrain::getFreePositionNear(*position)
+                                         ),
+                                  *populationSize
+                                 );
     Subject* newMember = populationTree->searchElement(*populationSize);
     newMember->start_p_thread();
 }
@@ -182,19 +191,11 @@ void Population::fillFittest(){
                 }
             }
         }
-        //Busca la cantidad de padres necesaria con mejor fitness
-        for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
-            std::cout<< i << " " << (*(fittest+i))->getID() <<std::endl;
-        }
     }else{
         //Busca la cantidad de padres necesaria con mejor fitness
         for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
             *(fittest+i) = populationTree->searchElement(i+1);
             (*(fittest+i))->changeSelection(true);
-        }
-        //Busca la cantidad de padres necesaria con mejor fitness
-        for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
-            std::cout<< i << " " << (*(fittest+i))->getID() <<std::endl;
         }
     }
 }

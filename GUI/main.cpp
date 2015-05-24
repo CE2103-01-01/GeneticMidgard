@@ -64,9 +64,9 @@ int main()
     while (window.isOpen())
     {
         ManageEvents(socketThread,window);
-        std::cout << "Need to Paint? " << std::endl;
+        //std::cout << "Need to Paint? " << std::endl;
         if(!(Map::getInstance()->needToPaint)) continue;
-        std::cout << "Painting " << std::endl;
+        //std::cout << "Painting " << std::endl;
         mapText.clear();
         window.clear();
         //Render mAP
