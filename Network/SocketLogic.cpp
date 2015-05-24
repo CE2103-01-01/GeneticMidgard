@@ -7,6 +7,7 @@
 
 bool SocketLogic::initialized  = false;
 void SocketLogic::init() {
+    if(!NETWORK_ACTIVATED) return;
     initialized = true;
     if (listener.listen(PORT) != sf::Socket::Done)
     {
@@ -29,6 +30,7 @@ SocketLogic::SocketLogic() {
 }
 
 void SocketLogic::updateSubject(unsigned int idSubject, unsigned int x, unsigned int y) {
+    if(!NETWORK_ACTIVATED) return;
     send.lock();
     if(!initialized) return;
     Packet packet;
@@ -47,6 +49,7 @@ void SocketLogic::updateSubject(unsigned int idSubject, unsigned int x, unsigned
 
 void SocketLogic::createSubject(unsigned int idSubject, unsigned int x, unsigned int y, unsigned int r, unsigned int g,
                                 unsigned int b) {
+    if(!NETWORK_ACTIVATED) return;
     send.lock();
     if(!initialized) return;
     Packet packet;
@@ -68,6 +71,7 @@ void SocketLogic::createSubject(unsigned int idSubject, unsigned int x, unsigned
 }
 
 void SocketLogic::changeEdda(std::string edda) {
+    if(!NETWORK_ACTIVATED) return;
     send.lock();
     if(!initialized) return;
     Packet packet;
@@ -83,6 +87,7 @@ void SocketLogic::changeEdda(std::string edda) {
 }
 
 void SocketLogic::createObject(unsigned int idObject, std::string type, unsigned int x, unsigned int y) {
+    if(!NETWORK_ACTIVATED) return;
     send.lock();
     if(!initialized) return;
     Packet packet;
@@ -101,6 +106,7 @@ void SocketLogic::createObject(unsigned int idObject, std::string type, unsigned
 }
 
 void SocketLogic::deleteObject(unsigned int idObject) {
+    if(!NETWORK_ACTIVATED) return;
     send.lock();
     if(!initialized) return;
     Packet packet;

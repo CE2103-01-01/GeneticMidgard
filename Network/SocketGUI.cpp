@@ -20,7 +20,10 @@ SocketGUI *SocketGUI::getInstance() {
     return singleton;
 }
 
+
+
 void SocketGUI::init() {
+    if(!NETWORK_ACTIVATED) return;
     initialized = true;
     std::cout<< "Waiting connection..."<<std:: endl;
     while (true) {
@@ -45,7 +48,7 @@ void SocketGUI::receiving() {
             break;
         }
         packet>>message;
-        //std::cout << "Received: " << message<< std::endl;
+        std::cout << "Received: " << message<< std::endl;
         Thread thread(std::bind(&SocketGUI::manageMessage, message));
         thread.launch();
     }
@@ -57,6 +60,7 @@ void SocketGUI::manageMessage(std::string string) {
     std::string action = document.FindMember("action")->value.GetString();
     if (action == "createSubject")
     {
+
         unsigned int id = document.FindMember("id")->value.GetUint();
         unsigned int x = document.FindMember("x")->value.GetUint();
         unsigned int y = document.FindMember("y")->value.GetUint();
@@ -69,23 +73,23 @@ void SocketGUI::manageMessage(std::string string) {
     }
     else if (action == "updateSubject")
     {
-        //std::cout << "updateSubject: " << std::endl;
+        std::cout << "updateSubject: " << std::endl;
+        unsigned int id = document.FindMember("id")->value.GetUint();
+        unsigned int x = document.FindMember("x")->value.GetUint();
+        unsigned int y = document.FindMember("y")->value.GetUint();
+        Map::getInstance()->getPoblacion()->updateId(id,x,y);
     }
     else if (action == "changeEdda")
     {
-        //std::cout << "changeEdda: " << std::endl;
-    }
-    else if (action == "deleteObject")
-    {
-        unsigned int id = document.FindMember("id")->value.GetUint();
-        Map::getInstance()->getPoblacion()->deletePerson(id);
+        std::cout << "changeEdda: " << std::endl;
     }
 
     (Map::getInstance()->needToPaint) = true;
-    //std::cout << "Flag to paint" << std::endl;
+    std::cout << "Flag to paint" << std::endl;
 }
 
 void SocketGUI::updateSpeed(unsigned char speed) {
+    if(!NETWORK_ACTIVATED) return;
     if (!initialized) return;
     Packet packet;
     StringBuffer s;
@@ -95,5 +99,7 @@ void SocketGUI::updateSpeed(unsigned char speed) {
     writer.String("speed"); writer.Uint(speed);
     writer.EndObject();
     packet<<s.GetString();
+    send.lock();
     socket.send(packet);
+    send.unlock();
 }
