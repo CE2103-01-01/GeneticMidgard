@@ -289,7 +289,7 @@ void Subject::start_p_thread(){
  */
 void Subject::delete_p_thread(){
     free(lifeThread);
-    //deleteSubject(*id); //TODO revisar
+    deleteSubject(*id); //TODO revisar
 }
 void Subject::optionSelection() {
     int value =trueRandom::randRange(0,100);
