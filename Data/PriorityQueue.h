@@ -45,8 +45,7 @@ public:
 #endif //PROJECTMIDGARD_PRIORITYQUEUE_H
 template<class T>
 void PriorityQueue<T>::push(T *dato) {
-
-
+    pushNode(new NodeQ<T>(dato));
 }
 template<class T>
 void PriorityQueue<T>::push(T dato) {

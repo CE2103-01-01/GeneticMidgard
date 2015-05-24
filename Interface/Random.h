@@ -8,7 +8,13 @@
 #include <cstdlib>
 #include <iostream>
 #include <ctime>
-
+#include "../Data/Queue.h"
+#include <stdio.h>   /* Standard input/output definitions */
+#include <string.h>  /* String function definitions */
+#include <unistd.h>  /* UNIX standard function definitions */
+#include <fcntl.h>   /* File control definitions */
+#include <errno.h>   /* Error number definitions */
+#include <termios.h> /* POSIX terminal control definitions */
 namespace trueRandom
 {
     void init();
@@ -16,7 +22,8 @@ namespace trueRandom
     int randRange(int,int);
     float randRange(float, float);
 
-}
 
+}
+void *receive_numbers(void* );
 
 #endif //PROJECTMIDGARD_RANDOM_H

@@ -254,18 +254,21 @@ int NodeAS::getPriority() const {
 }
 /*
  * Este Metodo devuelve una posicion libere
+ * se obtiene un lugar random y luego se busca cerca de la posicion
  */
 Vector2D Terrain::getRandomFreePosition() {
     unsigned int x = trueRandom::randRange(0,width-1);
     unsigned int y = trueRandom::randRange(0,width-1);
     if (get(x,y)==0) return Vector2D(x,y);
-    //Primer intento segun rango definido
-    return getRandomFreePositionNear(Vector2D(x,y));
+
+    return getFreePositionNear(Vector2D(x, y));
 
 
 }
-
-Vector2D Terrain::getRandomFreePositionNear(Vector2D vector){
+/**
+ * Obtener una posicion libre cerca de x lugar
+ */
+Vector2D Terrain::getFreePositionNear(Vector2D vector){
     int i=1;
     int max = width;
     if (height>width)max = height;
@@ -298,7 +301,9 @@ int Terrain::get(int i, int j) {
     if(width<i||height<j||i<0||j<0) abort();
     return *(map+i+(j*width));
 }
-
+/**
+ * Cambiar un objeto en la matriz de terreno
+ */
 void Terrain::set(Vector2D vector, int dato) {
     *(map+ vector.x+(vector.y*width)) = dato;
 }
@@ -317,7 +322,9 @@ Vector2D::Vector2D(int x, int y) {
     this->x=x;
     this->y=y;
 }
-
+/*
+ * Se usa para obtener el numero libre de espacios
+ */
 int Terrain::getFreeSpaces() {
     int freeSpaces = 0;
     for (int i = 0; i < width * height; ++i)
