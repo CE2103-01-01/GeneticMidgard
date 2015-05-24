@@ -32,7 +32,7 @@ void LifeLaboratory::createPopulation() {
         //Creael sujeto
         population->createNewRandomMember();
     }
-    population->fillFittest(NULL);
+    population->fillFittest();
 }
 
 /** Metodo que llena una nueva generacion

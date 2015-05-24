@@ -32,7 +32,7 @@ public:
     void updateFittest();
     void exterminate();
     bool isDefunct();
-    void fillFittest(int);
+    void fillFittest();
     Subject** getFittest();
 };
 

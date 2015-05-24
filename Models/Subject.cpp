@@ -15,6 +15,8 @@ using namespace constantsSubjectXML;
 Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vector2D basePosition){
     //Ano actual
     actualYear = actualYearParam;
+    selected = static_cast<bool*>(malloc(sizeof(bool)));
+    *selected = false;
     //Crea y asigna id
     id = static_cast<long*>(malloc(sizeof(long)));
     *id = idParam;
@@ -49,6 +51,8 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
                  long generationParam, long idParam, int* actualYearParam){
     //Ano actual
     actualYear = actualYearParam;
+    selected = static_cast<bool*>(malloc(sizeof(bool)));
+    *selected = false;
     id = static_cast<long*>(malloc(sizeof(long)));
     *id = idParam;
     //Crea y asigna generacion
@@ -80,6 +84,8 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
 Subject::Subject(const Subject& other){
     //Ano actual
     actualYear = other.actualYear;
+    selected = static_cast<bool*>(malloc(sizeof(bool)));
+    *selected = *other.selected;
     //crea posicion
     position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
     position->x = other.position->x;
@@ -203,7 +209,7 @@ void Subject::attack(){
         opponent->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
         this->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
     }
-    std::cout << *id  << " vs " << opponent->getID() << " = " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << "-" << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
+    //std::cout << *id  << " vs " << opponent->getID() << " = " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << "-" << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
 
 }
 
@@ -233,6 +239,19 @@ void Subject::setOppenent(Subject* opponentParam){
  */
 Subject* Subject::getOpponent(){
     return opponent;
+}
+
+/** @brief cambia bandera de seleccionado
+ */
+void Subject::changeSelection(bool selecteParam){
+    *selected = selecteParam;
+}
+
+/** @brief Accede a bandera de seleccionado
+ * @return bool
+ */
+bool Subject::isSelected(){
+    return *selected;
 }
 
 /** @brief Mata al jugador colocando en false la bander
@@ -279,7 +298,7 @@ void Subject::delete_p_thread(){
 void* subjectLife(void* parameter){
     //Castea el parametro y extrae el sujeto
     Subject* excecutioner = static_cast<Subject*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
-    std::cout << "Hello, I am: " << excecutioner->getID() <<std::endl;
+    //std::cout << "Hello, I am: " << excecutioner->getID() <<std::endl;
     //Crea estructura para tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
@@ -294,7 +313,7 @@ void* subjectLife(void* parameter){
             excecutioner->attack();
         }
     }
-    std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
+    //std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
     excecutioner->delete_p_thread();
     return 0;
 }
