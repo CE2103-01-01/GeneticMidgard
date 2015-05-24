@@ -79,7 +79,7 @@ void Population::insertNewMember(Subject* newMemberParam) {
  */
 void Population::createNewRandomMember() {
     (*populationSize)++;
-    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType), actualGeneration, colors,Terrain::getRandomFreePositionNear(*position)),*populationSize);
+    populationTree->insertElement(Subject((*populationSize)*10 + (*populationType), actualGeneration, colors,Terrain::getFreePositionNear(*position)),*populationSize);
     Subject* newMember = populationTree->searchElement(*populationSize);
     newMember->start_p_thread();
 }

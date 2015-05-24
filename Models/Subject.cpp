@@ -65,7 +65,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
     *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = 100;
     position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
-    *position = Terrain::getRandomFreePositionNear(*fatherParam->position);
+    *position = Terrain::getFreePositionNear(*fatherParam->position);
     //Asigna padres
     father = fatherParam;
     mother = motherParam;
