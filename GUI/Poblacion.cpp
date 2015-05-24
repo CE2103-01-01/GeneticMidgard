@@ -11,7 +11,7 @@ void Poblacion::drawPoblacion(RenderTarget &target, const IntRect &rect) {
 
     while (iter->exists()) {
         Person *next = iter->next();
-        if(rect.contains(Vector2i(next->x,next->y)))continue;
+       // if(rect.contains(Vector2i(next->x,next->y)))continue;
         Sprite sprite;
         sprite.setTexture(texturePerson);
         sprite.setPosition(sf::Vector2f(Map::getInstance()->getTileWidth() * next->x, Map::getInstance()->getTileHeight() * next->y));
