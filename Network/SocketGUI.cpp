@@ -20,8 +20,6 @@ SocketGUI *SocketGUI::getInstance() {
     return singleton;
 }
 
-
-
 void SocketGUI::init() {
     initialized = true;
     std::cout<< "Waiting connection..."<<std:: endl;
