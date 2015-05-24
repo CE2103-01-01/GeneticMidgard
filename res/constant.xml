@@ -1,10 +1,19 @@
 <?xml version="1.0"?>
 <CONSTANTS>
     <MOVILOBJECT>
-        <object name="apple" characteristic="0" value="5"/>
-        <object name="meat" characteristic="0" value="20"/>
+        <movilObject characteristic ="3" value="5"/>
+        <movilObject characteristic ="4" value="5"/>
+        <movilObject characteristic ="3" value="10"/>
+        <movilObject characteristic ="4" value="10"/>
+        <movilObject characteristic ="3" value="15"/>
+        <movilObject characteristic ="4" value="15"/>
+        <movilObject characteristic ="3" value="20"/>
+        <movilObject characteristic ="4" value="20"/>
+        <movilObject characteristic ="3" value="25"/>
+        <movilObject characteristic ="4" value="25"/>
+        <movilObject characteristic ="3" value="30"/>
+        <movilObject characteristic ="4" value="30"/>
     </MOVILOBJECT>
-
     <FitnessByAge>
         <age0>
             <Inmune_system>0.3</Inmune_system>

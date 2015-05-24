@@ -9,21 +9,33 @@
 #include "Subject.h"
 #include "Terrain.h"
 
+
+void* managerThread(void*);
+
+class movilObject;
 /** Clase movilObjectManager
  * @brief clase a la cual pertenecen todos los objetos
  * @caracteristicas: depende parametros de archivo xml
  *
 */
-class movilObject;
+
 class movilObjectManager{
 private:
     int objectCounter;
     DoubleList<movilObject> listObject;
     DoubleList<xml_node> listXmlData;
+    int listSize;
+    static movilObjectManager* instance;
 public:
+    static movilObjectManager* getInstance();
     movilObjectManager();
     void createObject();
-    void decreseCounter();
+    void update();
+    void decreseCounter(movilObject);
+    void obtainData();
+    bool needsToUpdate();
+    movilObject getDataByPosistion(Vector2D);
+    movilObject getRandomObject();
 };
 /** Clase movilObject
  * @brief clase de los objetos generado por el Manager
@@ -35,12 +47,12 @@ private:
     movilObjectManager* manager;
     Vector2D* position;
     int effect;
-    std::string type;
     int object;
     bool use;
     int id;
 public:
-    movilObject(movilObjectManager*,std::string,int,int,int,int,int);
+    bool operator ==(movilObject);
+    movilObject(movilObjectManager*,int,int,int,int,int);
     ~movilObject();
     void applyEffect(Subject* person);
     int getId();

@@ -55,7 +55,8 @@ GeneralFitnessCalculator* GeneralFitnessCalculator::getInstance(){
     //Retorna la instancia, ya sea guardada o recien creada
     return instance;
 }
-
+/**@brief modifica el identificador de edda
+ */
 void GeneralFitnessCalculator::changeEdda() {
     (*ageIdentificator)++;
     rapidxml::xml_node<>* root_node;

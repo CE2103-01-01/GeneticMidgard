@@ -289,6 +289,10 @@ void Subject::start_p_thread(){
 void Subject::delete_p_thread(){
     free(lifeThread);
 }
+void Subject::optionSelection() {
+    int value =trueRandom::randRange(0,100);
+
+}
 
 /**@brief metodo ejecutado por el pthread
  * @param void* parameter: es el PThreadParam que contiene los datos necesarios para la ejecucion
@@ -311,8 +315,12 @@ void* subjectLife(void* parameter){
         if(excecutioner->getOpponent()!=NULL && excecutioner->getOpponent()->isAlive()){
             excecutioner->attack();
         }
+        else{
+            //excecutioner->optionSelection();
+        }
     }
     //std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
     excecutioner->delete_p_thread();
     return 0;
 }
+

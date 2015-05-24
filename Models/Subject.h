@@ -52,6 +52,7 @@ public:
     void setOppenent(Subject*);
     void delete_p_thread();
     Subject* getOpponent();
+    void optionSelection();
     void printParents();
     void changeSelection(bool);
     bool isSelected();

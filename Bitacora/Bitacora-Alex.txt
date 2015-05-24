@@ -19,3 +19,13 @@
 01/05/15
     Crear la class GeneralFitnessCalculator, implementar la clase de movilObject y movilObjectManager modificacion en
     el archivo cmake, agregar datos al archivo de constants xml. 3 H
+
+02/05/15
+    correccion de la clase GeneralFitnessCalulator
+
+13/05/15
+    implementar el calculo de fitness by edda
+19/05/15
+    modificaciones en el manager, genes y caracteristicas
+22/05/15
+    implementar ataque de los individuos y posicion de los individuos
