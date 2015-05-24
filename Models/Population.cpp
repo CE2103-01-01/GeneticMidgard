@@ -171,11 +171,11 @@ void Population::fillFittest(){
                 //Coloca al nuevo mejor en el lugar del muerto
                 (*(fittest + 2*SUBJECTS_BY_GENERATION-1)) = populationTree->searchElement(*populationSize - SUBJECTS_BY_GENERATION + i);
                 //Busca la posicion real del nuevo miembro
-                for(int j = 2*SUBJECTS_BY_GENERATION-1; j > 0; j--){
+                for(int j = 2*SUBJECTS_BY_GENERATION-2; j > 0; j--){
                     //Si la posicion anterior es mejor, hace el cambio
                     if((*(fittest + j))->getFitness() > (*(fittest + j-1))->getFitness()){
                         //Toma temporal y hace swap
-                        Subject* tmp = *(fittest + j-1);
+                        Subject* tmp = (*(fittest + j-1));
                         *(fittest + j-1) = *(fittest + j);
                         *(fittest + j) = tmp;
                     }
