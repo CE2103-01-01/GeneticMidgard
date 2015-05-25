@@ -39,11 +39,28 @@ Map::Map() {
         int trees = 2000;
         for (rapidxml::xml_node<> *tile_node = data_node->first_node(TILE_NODE); tile_node;
              tile_node = tile_node->next_sibling()) {
-            if(rand()%100 == 0 && trees>0){
-                *(terrain[pos] + i) = 37;
-                trees--;
-            }else{
+
+            if(trees==0){
                 *(terrain[pos] + i) = 1;
+            }else{
+                int coin = rand()%300;
+                switch(coin){
+                    case 0:
+                        *(terrain[pos] + i) = 37;
+                        trees--;
+                        break;
+                    case 1:
+                        *(terrain[pos] + i) = 36;
+                        trees--;
+                        break;
+                    case 2:
+                        *(terrain[pos] + i) = 19;
+                        trees--;
+                        break;
+                    default:
+                        *(terrain[pos] + i) = 1;
+                        break;
+                }
             }
             i++;// contador para el puntero
         }
