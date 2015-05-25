@@ -8,7 +8,7 @@ int main()
     Terrain::initArray();
     trueRandom::init();
 
-    //SocketLogic::getInstance();
+    SocketLogic::getInstance();
 
     AgeManager* manager = static_cast<AgeManager*>(malloc(sizeof(AgeManager)));
     new(manager) AgeManager();

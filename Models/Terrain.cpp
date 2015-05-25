@@ -258,7 +258,7 @@ int NodeAS::getPriority() const {
  */
 Vector2D Terrain::getRandomFreePosition() {
     unsigned int x = trueRandom::randRange(0,width-1);
-    unsigned int y = trueRandom::randRange(0,width-1);
+    unsigned int y = trueRandom::randRange(0,height-1);
     if (get(x,y)==0) return Vector2D(x,y);
 
     return getFreePositionNear(Vector2D(x, y));
