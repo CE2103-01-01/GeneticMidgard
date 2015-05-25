@@ -14,6 +14,16 @@ God::God() {
     }
 }
 
+/**@brief Constructor de copia
+ * @param const God& other: dios a copiar
+ */
+God::God(const God& other){
+    attributes = static_cast<unsigned char*>(malloc(NUMBER_OF_ATTRIBUTES));
+    for(int i = 0; i < NUMBER_OF_ATTRIBUTES; i++){
+        *(attributes + i) = *(other.attributes+i);
+    }
+}
+
 /**@brief Destructor
  */
 God::~God() {
