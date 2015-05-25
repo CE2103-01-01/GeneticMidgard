@@ -8,8 +8,8 @@
  * @param unsigned char id: identificacion
  */
 God::God() {
-    attributes = static_cast<unsigned char*>(malloc(NUMBER_OF_ATtRIBUTES));
-    for(int i = 0; i < NUMBER_OF_AtTRIBUTES; i++){
+    attributes = static_cast<unsigned char*>(malloc(NUMBER_OF_ATTRIBUTES));
+    for(int i = 0; i < NUMBER_OF_ATTRIBUTES; i++){
         *(attributes + i) = trueRandom::getRandom()%56 + 200;
     }
 }

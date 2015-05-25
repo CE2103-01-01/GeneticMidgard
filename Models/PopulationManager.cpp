@@ -108,10 +108,10 @@ void PopulationManager::initFinalWar(){
             if(coin<tmpGodAttack){
                 //Si el ataque es mayor, acierta
                 if(tmpGodAttack>tmpSubjectDefense) {
-                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,tmpGodAttack-tmpSubjectDefense);
+                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,tmpSubjectDefense-tmpGodAttack);
                 }//Si el ataque es igual que la defensa, ambos golpean
                 else if(tmpGodAttack==tmpSubjectDefense){
-                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,tmpGodAttack);
+                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,-tmpGodAttack);
                     tmpGod->decreseLife(tmpSubjectDefense);
                 }//Si el ataque es menor  que la defensa, lo golpean
                 else{
@@ -124,11 +124,11 @@ void PopulationManager::initFinalWar(){
                     tmpGod->decreseLife(tmpSubjectAttack-tmpGodDefense);
                 }//Si el ataque es igual que la defensa, ambos golpean
                 else if(tmpSubjectAttack==tmpGodDefense){
-                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,tmpGodDefense);
+                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,-tmpGodDefense);
                     tmpGod->decreseLife(tmpSubjectAttack);
                 }//Si el ataque es menor que la defensa, lo golpean
                 else{
-                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,tmpGodDefense-tmpSubjectAttack);
+                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,tmpSubjectAttack-tmpGodDefense);
                 }
             }
         }
