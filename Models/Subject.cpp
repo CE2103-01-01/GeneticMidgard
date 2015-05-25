@@ -278,6 +278,7 @@ void Subject::start_p_thread(){
     Vector2D positionsVector = Terrain::getRandomFreePosition();
     Terrain::set(positionsVector,*id);
     //parametros
+    create();
     void* parameters = malloc(sizeof(PThreadParam));
     new(static_cast<PThreadParam*>(parameters)) PThreadParam(this,NULL,NULL);
     //thread
@@ -289,7 +290,7 @@ void Subject::start_p_thread(){
  */
 void Subject::delete_p_thread(){
     free(lifeThread);
-    //deleteSubject(*id); //TODO revisar
+    deleteSubject(*id); //TODO revisar
 }
 void Subject::optionSelection() {
     int value =trueRandom::randRange(0,100);
@@ -304,7 +305,6 @@ void* subjectLife(void* parameter){
     //Castea el parametro y extrae el sujeto
     Subject* excecutioner = static_cast<Subject*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
     //std::cout << "Hello, I am: " << excecutioner->getID() <<std::endl;
-    excecutioner->create();
     //Crea estructura para tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
