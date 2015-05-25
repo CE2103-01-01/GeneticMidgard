@@ -52,10 +52,10 @@ int main()
     unsigned int size = SIZE_MINIMAP;
     minimap = View(Vector2f(mapa->width*mapa->tileWidth/2,mapa->height*mapa->tileHeight/2),Vector2f(static_cast<float>(size), static_cast<float>(window.getSize().y*size/window.getSize().x)));
     minimap.setViewport(sf::FloatRect(1.f-static_cast<float>(minimap.getSize().x)/window.getSize().x-0.02f, 1.f-static_cast<float>(minimap.getSize().y)/window.getSize().y-0.02f, static_cast<float>(minimap.getSize().x)/window.getSize().x, static_cast<float>(minimap.getSize().y)/window.getSize().y));
-    minimap.zoom(12.f);
+    minimap.zoom(14.f);
     mapView.setViewport(FloatRect(0.0f,0.0f,1.0f,1.0f));
     RenderTexture mapText;
-    if(!mapText.create(mapa->getHeight()*mapa->getTileHeight(),mapa->getWidth()*mapa->getTileWidth())) abort;
+    if(!mapText.create(mapa->getWidth()*mapa->getTileWidth(), mapa->getHeight()*mapa->getTileHeight())) abort;
     int lengthSlider = 100;
     slider = Slider(Vector2f(widthScreen*0.5-lengthSlider, heightScreen*0.02), lengthSlider);
 
@@ -66,6 +66,7 @@ int main()
         ManageEvents(socketThread,window);
         //std::cout << "Need to Paint? " << std::endl;
         if(!(Map::getInstance()->needToPaint)) continue;
+        (Map::getInstance()->needToPaint) = false;
         //std::cout << "Painting " << std::endl;
         mapText.clear();
         window.clear();
@@ -74,14 +75,15 @@ int main()
         mapa->renderMap(mapText, getRenderArea());
         mapText.display();
         //Draw map and miniMap
-        window.draw(Sprite(mapText.getTexture()));
+        Sprite mapSprite = Sprite(mapText.getTexture());
+        window.draw(mapSprite);
         window.setView(minimap);
-        window.draw(Sprite(mapText.getTexture()));
+        mapSprite.setColor(Color(235,235,255,245));
+        window.draw(mapSprite);
         //Draw Slider
         window.setView(fixed);
         slider.drawSlider(window);
         window.display();
-        (Map::getInstance()->needToPaint) = false;
     }
 
     return 0;
@@ -197,12 +199,13 @@ void ManageEvents(Thread &socketThread, RenderWindow &window) {
 
             else if(event.key.code == Keyboard::I)
             {
-                mapView.zoom(0.5f);
+                mapView.zoom(0.8f);
                 checkViewLimits();
             }
             else if(event.key.code == Keyboard::O)
             {
-                mapView.zoom(2.0f);
+                mapView.zoom(1.25f);
+                if (mapView.getSize().x>xMax) mapView.setSize(xMax,yMax);
                 checkViewLimits();
             }
 

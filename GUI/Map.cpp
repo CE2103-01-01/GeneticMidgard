@@ -112,6 +112,7 @@ void Map::renderMap(RenderTarget& renderArea, const IntRect &rect) {
             int *layerData = (terrain[layer]);
             for (i = leftBound; i < rect.width/tileWidth+1 && i<width ; ++i) {
                 for (j = topBound; j < rect.height/tileHeight+1 && j < height; ++j) {
+
                     int gid = *(layerData + i + (width * j));
                     if (!gid) continue;
                     Sprite sprite;
