@@ -271,8 +271,8 @@ Vector2D Terrain::getRandomFreePosition() {
 Vector2D Terrain::getFreePositionNear(Vector2D vector){
     while(true){
         //Tira dos numeros random que indican el offset a probar
-        int randomX = rand()%POSITION_RANDOM_RANGE;
-        int randomY = rand()%POSITION_RANDOM_RANGE;
+        int randomX = rand()%POSITION_RANDOM_RANGE + 1;
+        int randomY = rand()%POSITION_RANDOM_RANGE + 1;
         //Tira mas random para seleccionar si el offset es negativo o positivo
         if(rand()%2) randomX=-randomX;
         if(rand()%2) randomY=-randomY;
