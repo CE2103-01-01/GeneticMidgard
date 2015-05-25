@@ -39,7 +39,7 @@ Map::Map() {
         int trees = 2000;
         for (rapidxml::xml_node<> *tile_node = data_node->first_node(TILE_NODE); tile_node;
              tile_node = tile_node->next_sibling()) {
-            if(rand()%50 == 0 && trees>0){
+            if(rand()%100 == 0 && trees>0){
                 *(terrain[pos] + i) = 37;
                 trees--;
             }else{
