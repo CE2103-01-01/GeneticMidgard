@@ -33,6 +33,8 @@ public:
     int y;
 };
 class Terrain{
+private:
+    static pthread_mutex_t mutexMap;
 public:
     static int width;
     static int height;

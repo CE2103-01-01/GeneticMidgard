@@ -14,10 +14,12 @@ using namespace std;
 int Terrain::width = 0;
 int Terrain::height = 0;
 int *Terrain::map = 0;
+pthread_mutex_t Terrain::mutexMap = PTHREAD_MUTEX_INITIALIZER;
 /*
  * Se usa este metodo para cargar el xml a memoria
  */
 void Terrain::initArray() {
+    pthread_mutex_lock(&mutexMap);
     rapidxml::xml_node<>* root_node;
     rapidxml::xml_document<> doc;
     rapidxml::file<> file( constants::MAP_FILE );
@@ -41,11 +43,13 @@ void Terrain::initArray() {
         *(map +i) = graphicID;
         i++;// contador para el puntero
     }
+    pthread_mutex_unlock(&mutexMap);
 }
 /*
  * Visualiza el mapa
  */
 void Terrain::printArray() {
+    pthread_mutex_lock(&mutexMap);
     int* mapArray = map -1;
     for (int i = 1; i < width * height+1; ++i)
     {
@@ -55,6 +59,7 @@ void Terrain::printArray() {
         //if(*(map+i)!=0)cout<<i%80<<","<<i/80<<endl;print objects
         if(i%width==0)cout<<endl;
     }
+    pthread_mutex_unlock(&mutexMap);
 }
 /*
  * Algoritmo A* para paths
@@ -84,7 +89,7 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
             open_Nodes_map[x][y]=0;
         }
     }
-
+    pthread_mutex_lock(&mutexMap);
     // create the start NodeAS and push into list of open Nodes
     n0=new NodeAS(start.x, start.y, 0, 0);
     n0->updatePriority(finish.x, finish.y);
@@ -136,6 +141,7 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
             delete n0;
             // empty the leftover Nodes
             while(!priorityQueue[pqi].empty()) priorityQueue[pqi].pop();
+            pthread_mutex_unlock(&mutexMap);
             return path;
         }
 
@@ -197,6 +203,7 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
         }
         delete n0; // garbage collection
     }
+    pthread_mutex_unlock(&mutexMap);
     return DoubleList<Vector2D>();
 
 
@@ -269,6 +276,7 @@ Vector2D Terrain::getRandomFreePosition() {
  * Obtener una posicion libre cerca de x lugar
  */
 Vector2D Terrain::getFreePositionNear(Vector2D vector){
+    
     while(true){
         //Tira dos numeros random que indican el offset a probar
         int randomX = rand()%POSITION_RANDOM_RANGE + 1;
@@ -290,19 +298,26 @@ int Terrain::get(Vector2D vector) {
 }
 
 int Terrain::get(int i, int j) {
+    pthread_mutex_lock(&mutexMap);
     if(width<i||height<j||i<0||j<0) abort();
-    return *(map+i+(j*width));
+    int data = *(map+i+(j*width));
+    pthread_mutex_unlock(&mutexMap);
+    return data;
 }
 /**
  * Cambiar un objeto en la matriz de terreno
  */
 void Terrain::set(Vector2D vector, int dato) {
+    pthread_mutex_lock(&mutexMap);
     *(map+ vector.x+(vector.y*width)) = dato;
+    pthread_mutex_unlock(&mutexMap);
 }
 
 void Terrain::set(int i, int j, int dato) {
+    pthread_mutex_lock(&mutexMap);
     if(width<i||height<j||i<0||j<0) abort();
     *(map+i+(j*width)) = dato;
+    pthread_mutex_unlock(&mutexMap);
 }
 
 Vector2D::Vector2D(const Vector2D& other) {
