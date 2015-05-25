@@ -35,5 +35,6 @@ public:
 
 void createSubject(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 void deleteSubject(unsigned int idSubject);
+void updateSubject(unsigned int, unsigned int, unsigned int);
 
 #endif //PROJECTMIDGARDLOGIC_SOCKETLOGIC_H

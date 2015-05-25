@@ -191,6 +191,22 @@ unsigned char Subject::getCharacteristic(int position){
 /** @brief Ataca a un sujeto
  */
 void Subject::attack(){
+    DoubleList<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);
+    Node<Vector2D>* actualNode = path.getNode(NULL);
+    Vector2D tmpOpponentPosition = *opponent->position;
+    while(actualNode!=NULL && !(position->x <= opponent->position->x-5 && position->x >= opponent->position->x+5
+          && position->y <= opponent->position->y-5 && position->y >= opponent->position->y+5))
+    {
+        if(tmpOpponentPosition.x != opponent->position->x || tmpOpponentPosition.y != opponent->position->y){
+            path = Terrain::findPathAS(*position,*opponent->position);
+            actualNode = path.getNode(NULL);
+        }
+        position->x = actualNode->getData()->x;
+        position->y = actualNode->getData()->y;
+        updateSubject(*id,position->y,position->x);
+        actualNode=actualNode->getNextNode();
+        std::cout << "SE MOVIO" << std::endl;
+    }
     //Se suma el gen del ataque del atacante con la caracteristica arma
     int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)
                        + *(characteristics+POSITION_OF_CHARACTERISTIC_WEAPON);

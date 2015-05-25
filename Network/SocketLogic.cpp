@@ -132,3 +132,7 @@ void createSubject(unsigned int idSubject, unsigned int x, unsigned int y, unsig
 void deleteSubject(unsigned int idSubject) {
     SocketLogic::getInstance()->deleteObject(idSubject);
 }
+
+void updateSubject(unsigned int idSubject, unsigned int x, unsigned int y){
+    SocketLogic::getInstance()->updateSubject(idSubject, x, y);
+}

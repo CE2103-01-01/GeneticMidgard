@@ -1,6 +1,6 @@
 project(ProjectMidgardGUI)
-add_executable(ProjectMidgardGUI main.cpp Constants.h Map.cpp Map.h
-                                ../Network/SocketGUI.cpp ../Network/SocketGUI.h Poblacion.cpp Poblacion.h Slider.cpp Slider.h ../Network/SocketConfig.h ../Data/Queue.h)
+add_executable(ProjectMidgardGUI main.cpp
+                                 Constants.h Map.cpp Map.h ../Network/SocketGUI.cpp ../Network/SocketGUI.h Poblacion.cpp Poblacion.h Slider.cpp Slider.h ../Network/SocketConfig.h ../Data/Queue.h)
 
 if(SFML_FOUND)
   include_directories(${SFML_INCLUDE_DIR})

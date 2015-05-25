@@ -4,11 +4,12 @@
 
 
 #include "Map.h"
+#include "../Interface/Random.h"
 
 Map *Map::singleton = NULL;
 
 Map::Map() {
-
+    std::srand(std::time(NULL));
     rapidxml::xml_node<> *root_node;
     rapidxml::xml_document<> doc;
     rapidxml::file<> file(MAP_LOCATION);
@@ -35,10 +36,15 @@ Map::Map() {
 
         rapidxml::xml_node<> *data_node = layer_node->first_node(DATA_NODE);
         int i = 0;//para puntero
+        int trees = 2000;
         for (rapidxml::xml_node<> *tile_node = data_node->first_node(TILE_NODE); tile_node;
              tile_node = tile_node->next_sibling()) {
-
-            *(terrain[pos] + i) = std::atoi(tile_node->first_attribute("gid")->value());
+            if(rand()%50 == 0 && trees>0){
+                *(terrain[pos] + i) = 37;
+                trees--;
+            }else{
+                *(terrain[pos] + i) = 1;
+            }
             i++;// contador para el puntero
         }
         pos++;

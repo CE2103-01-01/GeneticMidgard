@@ -32,7 +32,7 @@ public:
     int x;
     int y;
 };
-class Terrain {
+class Terrain{
 public:
     static int width;
     static int height;
@@ -40,14 +40,13 @@ public:
     static void initArray();
     static int getFreeSpaces();
     static void printArray();
-    static DoubleList<Vector2D> findPathAS(const Vector2D &start, const Vector2D &finish);
+    static DoubleList<Vector2D> findPathAS(const Vector2D& start, const Vector2D& finish);
     static Vector2D getRandomFreePosition();
     static Vector2D getFreePositionNear(Vector2D);
     static int get(Vector2D);
     static int get(int,int);
     static void set(Vector2D, int);
     static void set(int, int, int);
-
 };
 
 class NodeAS {
