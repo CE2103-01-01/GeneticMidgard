@@ -22,6 +22,8 @@ static char const *const TILE_NODE = "tile";
 #include "../Data/PriorityQueue.h"
 #include "../Data/DoubleList.h"
 
+#define POSITION_RANDOM_RANGE 10
+
 class Vector2D
 {
 public:

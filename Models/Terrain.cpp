@@ -269,28 +269,20 @@ Vector2D Terrain::getRandomFreePosition() {
  * Obtener una posicion libre cerca de x lugar
  */
 Vector2D Terrain::getFreePositionNear(Vector2D vector){
-    int i=1;
-    int max = width;
-    if (height>width)max = height;
-    int x,y;
-    while (i<max){
-        for (int switchXY = 0; switchXY < 2; ++switchXY) {//Switch between X axis wall and Y axis walls
-            for (int Wall = -i; Wall <= i; Wall += 2 * i) {// Switch Between two parallel walls
-                if(switchXY ==0) x = vector.x + Wall;
-                else y = vector.y + Wall;
-                for (int positionThroughWall = -i; positionThroughWall < i; ++positionThroughWall) {
-                    if(switchXY ==0) y = vector.y + positionThroughWall;
-                    else x = vector.x+ positionThroughWall;
-                    if (!(x < 0 || x >= width || y < 0 || y >= width || get(x, y) != 0)) {//Free Valid Space
-                        return Vector2D(x, y);
-                    }
-                }
-            }
+    while(true){
+        //Tira dos numeros random que indican el offset a probar
+        int randomX = rand()%POSITION_RANDOM_RANGE;
+        int randomY = rand()%POSITION_RANDOM_RANGE;
+        //Tira mas random para seleccionar si el offset es negativo o positivo
+        if(rand()%2) randomX=-randomX;
+        if(rand()%2) randomY=-randomY;
+        randomX+=vector.x;
+        randomY+=vector.y;
+        //Verifica si la posicion esta vacia, de ser asi la retorna
+        if(0<=randomX<=width && 0<=randomY<=height && get(randomX,randomY)==0){
+            return Vector2D(randomX, randomY);
         }
-        i++;
     }
-    std::cout << "No hay espacio disponible en la matriz" << std::endl;
-    return Vector2D(-1,-1);
 }
 
 int Terrain::get(Vector2D vector) {
