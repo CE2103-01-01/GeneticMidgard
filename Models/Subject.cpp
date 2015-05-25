@@ -271,6 +271,10 @@ bool Subject::isSelected(){
  */
 void Subject::updateLife(){
     *(characteristics + POSITION_OF_CHARACTERISTIC_AGE) = *actualYear - *generation;
+    Vector2D positionsVector = Terrain::getRandomFreePosition();
+    position->x = positionsVector.x;
+    position->y = positionsVector.y;
+    updateSubject(*id, position->x, position->y);
 }
 
 /**@brief: accede al pthread
@@ -333,7 +337,7 @@ void* subjectLife(void* parameter){
         excecutioner->updateLife();
         //Si existe oponente ataca
         if(excecutioner->getOpponent()!=NULL && excecutioner->getOpponent()->isAlive()){
-            excecutioner->attack();
+            //excecutioner->attack();
             excecutioner->setOppenent(NULL);
         }//Si no existe oponente selecciona random un objeto
         else{
