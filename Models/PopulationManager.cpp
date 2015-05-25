@@ -4,6 +4,7 @@
 
 #include "PopulationManager.h"
 #include "../Algorithms/lifeLaboratory.h"
+#include "God.h"
 
 PopulationManager* PopulationManager::singleton = 0;
 pthread_t* PopulationManager::managementThread = 0;
@@ -83,6 +84,56 @@ void PopulationManager::init_war(){
     for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
         (*((population+firstPopulationNumber)->getFittest() + i))
                 ->setOppenent((*((population+secondPopulationNumber)->getFittest() + i)));
+    }
+}
+
+/**Inicia la ultima guerra
+ */
+void PopulationManager::initFinalWar(){
+    for(int i = 0; i < INITIAL_NUMBER_OF_SUBJECTS; i++){
+        //Toma un sujeto y crea un dios temporal
+        God* tmpGod = static_cast<God*>(malloc(sizeof(God)));
+        new(tmpGod) God();
+        Subject* tmpSubject = *((population+INITIAL_NUMBER_OF_POPULATIONS)->getFittest()+i);
+        //Toma las caracteristicas de interes
+        unsigned char tmpGodAttack = tmpGod->getAttribute(POSITION_OF_GOD_ATTRIBUTE_ATTACK);
+        unsigned char tmpGodDefense = tmpGod->getAttribute(POSITION_OF_GOD_ATTRIBUTE_DEFENSE);
+        unsigned char tmpSubjectAttack = tmpSubject->getGeneticInformation()->getGene(POSITION_OF_GENE_ATTACK);
+        unsigned char tmpSubjectDefense = tmpSubject->getGeneticInformation()->getGene(POSITION_OF_GENE_DEFENSE);
+        //Itera hasta que alguno muera
+        while(tmpGod->isAlive() && tmpSubject->isAlive()){
+            //Tira moneda al aire
+            int coin = trueRandom::getRandom()%(tmpGodAttack+tmpSubjectAttack);
+            //Si es menor que el ataque del dios, ataca el dios
+            if(coin<tmpGodAttack){
+                //Si el ataque es mayor, acierta
+                if(tmpGodAttack>tmpSubjectDefense) {
+                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,tmpGodAttack-tmpSubjectDefense);
+                }//Si el ataque es igual que la defensa, ambos golpean
+                else if(tmpGodAttack==tmpSubjectDefense){
+                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,tmpGodAttack);
+                    tmpGod->decreseLife(tmpSubjectDefense);
+                }//Si el ataque es menor  que la defensa, lo golpean
+                else{
+                    tmpGod->decreseLife(tmpSubjectDefense-tmpGodAttack);
+                }
+            }//Si es mayor que el ataque del dios, ataca el sujeto
+            else{
+                //Si el ataque es mayor que la defensa, acierta
+                if(tmpSubjectAttack>tmpGodDefense) {
+                    tmpGod->decreseLife(tmpSubjectAttack-tmpGodDefense);
+                }//Si el ataque es igual que la defensa, ambos golpean
+                else if(tmpSubjectAttack==tmpGodDefense){
+                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,tmpGodDefense);
+                    tmpGod->decreseLife(tmpSubjectAttack);
+                }//Si el ataque es menor que la defensa, lo golpean
+                else{
+                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,tmpGodDefense-tmpSubjectAttack);
+                }
+            }
+        }
+        //Libera espacio
+        free(tmpGod);
     }
 }
 

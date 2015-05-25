@@ -30,6 +30,7 @@ class PopulationManager {
         void mergePopulations();
         int getActivePopulations();
         int getActualID();
+        void initFinalWar();
 };
 
 void* populationManagerThread(void*);
