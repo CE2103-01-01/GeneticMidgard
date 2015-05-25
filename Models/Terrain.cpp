@@ -279,7 +279,7 @@ Vector2D Terrain::getFreePositionNear(Vector2D vector){
         randomX+=vector.x;
         randomY+=vector.y;
         //Verifica si la posicion esta vacia, de ser asi la retorna
-        if(0<=randomX<=width && 0<=randomY<=height && get(randomX,randomY)==0){
+        if(0<=randomX && randomX<width && 0<=randomY && randomY<height && get(randomX,randomY)==0){
             return Vector2D(randomX, randomY);
         }
     }
