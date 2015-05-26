@@ -146,7 +146,7 @@ void* ageManagerThread(void* parameter){
     //Extrae el parametro
     AgeManager* excecutioner = static_cast<AgeManager*>(parameter);
     //Ejecuta el metodo del hilo hasta que esten todos extintos
-    pthread_mutex_lock(excecutioner->getGeneralMutex());
+    //pthread_mutex_lock(excecutioner->getGeneralMutex());
     //Inicializa el manager de poblacion
     excecutioner->initPopulationManager();
     //Ejecute metodo del thread
@@ -155,7 +155,7 @@ void* ageManagerThread(void* parameter){
         excecutioner->thread();
     }
     //Desbloquea mutex
-    pthread_mutex_unlock(excecutioner->getGeneralMutex());
+    //pthread_mutex_unlock(excecutioner->getGeneralMutex());
 
     excecutioner->delete_p_thread();
     return NULL;
