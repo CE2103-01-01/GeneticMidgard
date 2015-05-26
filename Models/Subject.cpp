@@ -271,10 +271,6 @@ bool Subject::isSelected(){
  */
 void Subject::updateLife(){
     *(characteristics + POSITION_OF_CHARACTERISTIC_AGE) = *actualYear - *generation;
-    Vector2D positionsVector = Terrain::getRandomFreePosition();
-    position->x = positionsVector.x;
-    position->y = positionsVector.y;
-    updateSubject(*id, position->x, position->y);
 }
 
 /**@brief: accede al pthread
@@ -310,7 +306,7 @@ void Subject::start_p_thread(){
  */
 void Subject::delete_p_thread(){
     free(lifeThread);
-    deleteSubject(*id); //TODO revisar
+    deleteSubject(*id);
 }
 void Subject::optionSelection() {
     int value =trueRandom::randRange(0,100);
