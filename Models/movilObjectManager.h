@@ -5,10 +5,11 @@
 #ifndef PROJECTMIDGARD_MOVILOBJECTMANAGER_H
 #define PROJECTMIDGARD_MOVILOBJECTMANAGER_H
 
+#define OBJECT_ID 8888
+#define OBJECT_ID_MULTIPLIER  10000
 
 #include "Subject.h"
 #include "Terrain.h"
-
 
 void* managerThread(void*);
 
@@ -20,7 +21,7 @@ class movilObject;
 */
 
 class movilObjectManager{
-private:
+    int idCounter;
     int objectCounter;
     DoubleList<movilObject> listObject;
     DoubleList<xml_node> listXmlData;
@@ -29,7 +30,6 @@ private:
 public:
     static movilObjectManager* getInstance();
     movilObjectManager();
-    void createObject();
     void update();
     void decreseCounter(movilObject);
     void obtainData();
@@ -59,6 +59,7 @@ public:
     std::string getType();
     int get_X_Position();
     int get_Y_Position();
+    Vector2D* getVector();
 
 };
 

@@ -6,18 +6,6 @@
 
 int main()
 {
-    const char* newText = "some text";
-    int size = 9;
-    int id = 1;
-    FileManager::writeFile(newText, id, size);
-
-    char* readedText = static_cast<char*>(malloc(size));
-    FileManager::readFile(readedText, id, size);
-
-    for(int i = 0; i < size; i++){
-        std::cout << *(readedText + i);
-    }
-    std::cout << std::endl;
     Terrain::initArray();
     trueRandom::init();
 

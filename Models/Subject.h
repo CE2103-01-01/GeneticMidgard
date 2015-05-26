@@ -32,6 +32,7 @@ class Subject {
     bool* selected;
     unsigned char* characteristics;//vida-experiencia-arma-armadura-profesion
     void calculateFitness();//funcion de calcular fitness y set fitness
+    void findPath(Vector2D*);
 public:
     Subject(long,int*,unsigned char*,Vector2D);
     Subject(Subject*,Subject*,Chromosome*,long,long,int*);

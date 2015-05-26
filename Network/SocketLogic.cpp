@@ -109,7 +109,7 @@ void SocketLogic::changeEdda(std::string edda) {
     send.unlock();
 }
 
-void SocketLogic::createObject(unsigned int idObject, std::string type, unsigned int x, unsigned int y) {
+void SocketLogic::createObject(unsigned int idObject,  unsigned int x, unsigned int y) {
     if(!NETWORK_ACTIVATED) return;
     if(!initialized) return;
     Packet packet;
@@ -118,7 +118,6 @@ void SocketLogic::createObject(unsigned int idObject, std::string type, unsigned
     writer.StartObject();
     writer.String("action"); writer.String("createObject");
     writer.String("id"); writer.Uint(idObject);
-    writer.String("type"); writer.String(type.c_str());
     writer.String("x"); writer.Uint(x);
     writer.String("y"); writer.Uint(y);
     writer.EndObject();
@@ -198,4 +197,16 @@ void updateSubject(unsigned int idSubject, unsigned int x, unsigned int y){
 
 void lifeUpdate(unsigned int idSubject, int lifeUpdate) {
     SocketLogic::getInstance()->lifeUpdate(idSubject, lifeUpdate);
+}
+
+void deleteObject(unsigned int id){
+    SocketLogic::getInstance()->deleteObject(id);
+}
+
+void createObject(unsigned int idObject, unsigned int x, unsigned int y) {
+    SocketLogic::getInstance()->createObject(idObject,x,y);
+}
+
+void changeEdda(std::string edda) {
+    SocketLogic::getInstance()->changeEdda(edda);
 }

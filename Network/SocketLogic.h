@@ -31,7 +31,7 @@ public:
     void createSubject(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
     void lifeUpdate(unsigned int, int);
     void deleteSubject(unsigned int);
-    void createObject(unsigned int, std::string, unsigned int, unsigned int);
+    void createObject(unsigned int, unsigned int, unsigned int);
     void deleteObject(unsigned int);
     void changeEdda(std::string);
     void battleDetails(unsigned int, char*);//TODO-roberto definir info de peleas
@@ -39,9 +39,13 @@ public:
 
 };
 
+void createObject(unsigned int, unsigned int, unsigned int);
+void deleteObject(unsigned int);
 void createSubject(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 void deleteSubject(unsigned int idSubject);
 void updateSubject(unsigned int, unsigned int, unsigned int);
 void lifeUpdate(unsigned int, int);
+void changeEdda(std::string);
+void battleDetails(unsigned int, char*);
 
 #endif //PROJECTMIDGARDLOGIC_SOCKETLOGIC_H

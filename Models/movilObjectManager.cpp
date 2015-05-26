@@ -3,6 +3,7 @@
 //
 
 #include "movilObjectManager.h"
+#include "../Network/SocketLogic.h"
 
 
 using namespace pugi;
@@ -37,11 +38,12 @@ void movilObjectManager::update(){
         movilObject object = movilObject(this, (*listXmlData.getNode(objectNumber)->getData())
                 .attribute("characteristic")
                 .as_int(), (*listXmlData.getNode(objectNumber)->getData())
-                                                 .attribute("value").as_int(), i, position.x, position.y);
-        objectCounter++;
+                                                 .attribute("value").as_int(), idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
+                                         position.x, position.y);
         listObject.append(object);
-        Terrain::set(position, -100);
-
+        Terrain::set(position, object.getId());
+        objectCounter++;
+        idCounter++;
     }
 }
 
@@ -69,6 +71,7 @@ movilObjectManager* movilObjectManager::getInstance() {
  * @brief se genera objetos de forma random desde los datos de xml
  */
 movilObjectManager::movilObjectManager() {
+    idCounter = 0;
     xml_document objectSource;
     objectSource.load_file(CONSTANT_XML_PATH);
     listObject = DoubleList<movilObject>();
@@ -81,15 +84,18 @@ movilObjectManager::movilObjectManager() {
     for (int h = 0; h < elementCounter; h++) {
         temp = temp.next_sibling();
         listXmlData.append(temp);
-        for (int i = 0; i < elementCounter; i++) {
+        for (int i = 0; i < elementCounter; i++,  idCounter) {
             Vector2D position = Terrain::getRandomFreePosition();
             movilObject object = movilObject(this, (*listXmlData.getNode(i)->getData())
                     .attribute("characteristic")
                     .as_int(), (*listXmlData.getNode(i)->getData())
-                                                     .attribute("value").as_int(), i, position.x, position.y);
-            objectCounter++;
+                                                     .attribute("value").as_int(), idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
+                                                      position.x, position.y);
             listObject.append(object);
-            Terrain::set(position, -100);
+            createObject(object.getId(),object.get_X_Position(),object.get_Y_Position());
+            Terrain::set(position, object.getId());
+            objectCounter++;
+            idCounter++;
         }
         listSize = listObject.len();
 
@@ -154,6 +160,7 @@ void movilObject::applyEffect(Subject* person) {
         person->setCharacteristic(effect,(unsigned char)object);
         Terrain::set(*position,0);
         manager->decreseCounter(*this);
+        deleteObject(id);
     }
 
 }
@@ -186,6 +193,9 @@ int movilObject::get_X_Position() {
  */
 int movilObject::get_Y_Position() {
     return position->y;
+}
+Vector2D* movilObject::getVector() {
+    return position;
 }
 
 /**SobreCargar el operator ==

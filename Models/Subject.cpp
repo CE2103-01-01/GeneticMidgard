@@ -5,6 +5,7 @@
 #include "Subject.h"
 #include "Terrain.h"
 #include "../Network/SocketLogic.h"
+#include "movilObjectManager.h"
 
 using namespace pugi;
 using namespace constantsSubjectXML;
@@ -188,12 +189,7 @@ unsigned char Subject::getCharacteristic(int position){
     return  *(characteristics + position);
 }
 
-/** @brief Ata
- */
-void Subject::attack(){
-    //Oponents in range?
-    //TODO_roberto revisar esto
-    Vector2D tmpOpponentPosition = *opponent->position;
+void Subject::findPath(Vector2D* positionToFind) {
     while (!(position->x <= opponent->position->x- OFFSET_ATTACK && position->x >= opponent->position->x+ OFFSET_ATTACK
              && position->y <= opponent->position->y- OFFSET_ATTACK && position->y>= opponent->position->y+ OFFSET_ATTACK)) {
         Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);
@@ -205,36 +201,59 @@ void Subject::attack(){
             updateSubject(*id, position->x, position->y);
             //std::cout << "SE MOVIO" << std::endl;
             path.pop();
-            if(tmpOpponentPosition== *opponent->position)
+            if(*positionToFind== *opponent->position)
             {
                 path = Terrain::findPathAS(*position,*opponent->position);
-                tmpOpponentPosition = *opponent->position;
+                *positionToFind = *opponent->position;
 
             }
         }
     }
+}
+
+/** @brief Ata
+ */
+void Subject::attack(){
+    findPath(opponent->position);
     //Se suma el gen del ataque del atacante con la caracteristica arma
     int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)
-                       + *(characteristics+POSITION_OF_CHARACTERISTIC_WEAPON);
+                       + getCharacteristic(POSITION_OF_CHARACTERISTIC_WEAPON)
+                       + getGeneticInformation()->getGene(POSITION_OF_GENE_DEFENSE)
+                       + getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
     //Se suma el gen de la defensa del oponente con la caracteristica armadura
     int defenseResult = opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_ATTACK)
+                        + opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_DEFENSE)
+                        + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_WEAPON)
                         + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
-    int damage = ATTACK_DAMAGE;
-    //TODO-Roberto seguro que es un set?? no deberia restar???
     //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
-    if(attackResult > defenseResult){
-        opponent->setCharacteristic(damage,POSITION_OF_CHARACTERISTIC_LIFE);
-        lifeUpdate(opponent->getID(),damage);
+    if(attackResult >= defenseResult){
+        if(trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_RUNES) ||
+                trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_BLOT)){
+            opponent->kill();
+        }else if(trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_RUNES) ||
+                trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_BLOT)){
+            kill();
+        }else if(attackResult > defenseResult){
+            opponent->setCharacteristic(defenseResult-attackResult,POSITION_OF_CHARACTERISTIC_LIFE);
+            lifeUpdate(opponent->getID(),defenseResult-attackResult);
+        }else{
+            opponent->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
+            lifeUpdate(opponent->getID(),ATTACK_DAMAGE);
+            this->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
+            lifeUpdate(*id,ATTACK_DAMAGE);
+        }
     }//Si el primer elemento de la comparacion es menor, el ataque es menor que la defensa, por lo tanto no acierta
-    else if(attackResult < defenseResult){
-        this->setCharacteristic(damage,POSITION_OF_CHARACTERISTIC_LIFE);
-        lifeUpdate(*id,damage);
-    }//Si los elementos son iguales, el ataque es igual que la defensa, por lo tanto el dano es mutuo
     else{
-        opponent->setCharacteristic(damage,POSITION_OF_CHARACTERISTIC_LIFE);
-        lifeUpdate(opponent->getID(),damage);
-        this->setCharacteristic(damage,POSITION_OF_CHARACTERISTIC_LIFE);
-        lifeUpdate(*id,damage);
+        if(trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_RUNES) ||
+                trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_BLOT)){
+            opponent->kill();
+        }else if(trueRandom::getRandom()%256 < getGeneticInformation()->getGene(POSITION_OF_GENE_RUNES) ||
+                trueRandom::getRandom()%256 < getGeneticInformation()->getGene(POSITION_OF_GENE_BLOT)){
+            kill();
+        }else{
+            this->setCharacteristic(attackResult - defenseResult,POSITION_OF_CHARACTERISTIC_LIFE);
+            lifeUpdate(*id,attackResult - defenseResult);
+        }
     }
     //std::cout << *id  << " vs " << opponent->getID() << " = " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << "-" << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
 }
@@ -319,9 +338,12 @@ void Subject::delete_p_thread(){
     free(lifeThread);
     deleteSubject(*id);
 }
-void Subject::optionSelection() {
-    int value =trueRandom::randRange(0,100);
 
+void Subject::optionSelection() {
+    int value = trueRandom::randRange(0,100);
+    movilObject objectToGet = movilObjectManager::getInstance()->getRandomObject();
+    findPath(objectToGet.getVector());
+    objectToGet.applyEffect(this);
 }
 
 /**@brief metodo ejecutado por el pthread
