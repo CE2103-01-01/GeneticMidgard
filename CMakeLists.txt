@@ -26,6 +26,7 @@ set(HEADER_FILES Interface/Random.h
                  Data/Tree.h
                  Data/TreeProof.h
                  Network/SocketLogic.h
+                 Data/FileManager.h
                  )
 
 set(SOURCE_FILES main.cpp
@@ -47,7 +48,8 @@ set(SOURCE_FILES main.cpp
 set (DATA_STRUCTS   Data/BitVector.cpp
                     Data/TreeProof.cpp
                     Data/Leaf.cpp
-                    Data/PThreadParam.cpp)
+                    Data/PThreadParam.cpp
+                    Data/FileManager.cpp)
 
 
 
