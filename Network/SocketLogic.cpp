@@ -76,7 +76,23 @@ void SocketLogic::createSubject(unsigned int idSubject, unsigned int x, unsigned
     client.send(packet);
     send.unlock();
 }
-
+void SocketLogic::lifeUpdate(unsigned int idSubject, int lifeUpdate) {
+    if(!NETWORK_ACTIVATED) return;
+    if(!initialized) return;
+    Packet packet;
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+    writer.StartObject();
+    writer.String("action"); writer.String("lifeUpdate");
+    writer.String("id"); writer.Uint(idSubject);
+    writer.String("size"); writer.Int(lifeUpdate);
+    writer.EndObject();
+    std::string tmp = s.GetString();
+    packet<<tmp;
+    send.lock();
+    client.send(packet);
+    send.unlock();
+}
 void SocketLogic::changeEdda(std::string edda) {
     if(!NETWORK_ACTIVATED) return;
     if(!initialized) return;
@@ -177,4 +193,9 @@ void deleteSubject(unsigned int idSubject) {
 
 void updateSubject(unsigned int idSubject, unsigned int x, unsigned int y){
     SocketLogic::getInstance()->updateSubject(idSubject, x, y);
+}
+
+
+void lifeUpdate(unsigned int idSubject, int lifeUpdate) {
+    SocketLogic::getInstance()->lifeUpdate(idSubject, lifeUpdate);
 }

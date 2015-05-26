@@ -80,6 +80,12 @@ void SocketGUI::manageMessage(std::string string) {
         unsigned int y = document.FindMember("y")->value.GetUint();
         Map::getInstance()->getPoblacion()->updateId(id,x,y);
     }
+    else if (action == "lifeUpdate")
+    {
+        unsigned int id = document.FindMember("id")->value.GetUint();
+        unsigned int size = document.FindMember("size")->value.GetInt();
+        Map::getInstance()->getPoblacion()->updateLifeId(id,size);
+    }
     else if (action == "deleteSubject")
     {
         unsigned int id = document.FindMember("id")->value.GetUint();

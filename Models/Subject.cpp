@@ -219,17 +219,22 @@ void Subject::attack(){
     //Se suma el gen de la defensa del oponente con la caracteristica armadura
     int defenseResult = opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_ATTACK)
                         + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
-
+    int damage = ATTACK_DAMAGE;
+    //TODO-Roberto seguro que es un set?? no deberia restar???
     //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
     if(attackResult > defenseResult){
-        opponent->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
+        opponent->setCharacteristic(damage,POSITION_OF_CHARACTERISTIC_LIFE);
+        lifeUpdate(opponent->getID(),damage);
     }//Si el primer elemento de la comparacion es menor, el ataque es menor que la defensa, por lo tanto no acierta
     else if(attackResult < defenseResult){
-        this->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
+        this->setCharacteristic(damage,POSITION_OF_CHARACTERISTIC_LIFE);
+        lifeUpdate(*id,damage);
     }//Si los elementos son iguales, el ataque es igual que la defensa, por lo tanto el dano es mutuo
     else{
-        opponent->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
-        this->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
+        opponent->setCharacteristic(damage,POSITION_OF_CHARACTERISTIC_LIFE);
+        lifeUpdate(opponent->getID(),damage);
+        this->setCharacteristic(damage,POSITION_OF_CHARACTERISTIC_LIFE);
+        lifeUpdate(*id,damage);
     }
     //std::cout << *id  << " vs " << opponent->getID() << " = " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << "-" << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
 }
