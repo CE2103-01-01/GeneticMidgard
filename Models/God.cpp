@@ -8,8 +8,11 @@
  * @param unsigned char id: identificacion
  */
 God::God() {
+    //Reserva espacio para los genes
     attributes = static_cast<unsigned char*>(malloc(NUMBER_OF_ATTRIBUTES));
+    //Itera llenando los atributos
     for(int i = 0; i < NUMBER_OF_ATTRIBUTES; i++){
+        //Llena los genes con valores random entre 200 y 255
         *(attributes + i) = trueRandom::getRandom()%56 + 200;
     }
 }
@@ -18,8 +21,11 @@ God::God() {
  * @param const God& other: dios a copiar
  */
 God::God(const God& other){
+    //Reserva espacio para los genes
     attributes = static_cast<unsigned char*>(malloc(NUMBER_OF_ATTRIBUTES));
+    //Itera llenando los atributos
     for(int i = 0; i < NUMBER_OF_ATTRIBUTES; i++){
+        //Copia los genes del otro sujeto
         *(attributes + i) = *(other.attributes+i);
     }
 }
@@ -49,9 +55,12 @@ unsigned char God::getAttribute(int position){
  * @param unsigned char value: valor a restar
  */
 void God::decreseLife(unsigned char value){
+    //Comprueba si el valor que se va a restar sacaria al atributo de rango hacia el negativo
     if(*(attributes+POSITION_OF_GOD_ATTRIBUTE_LIFE) <= value){
+        //Si sacaria al atributode rango, lo coloca en 0
         *(attributes+POSITION_OF_GOD_ATTRIBUTE_LIFE) = 0;
     }else{
+        //Si no sacaria al atributo de rango, le resta el valor
         *(attributes+POSITION_OF_GOD_ATTRIBUTE_LIFE)-= value;
     }
 }
