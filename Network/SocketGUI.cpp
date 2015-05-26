@@ -70,6 +70,13 @@ void SocketGUI::manageMessage(std::string string) {
         Person person(id,x,y,r,g,b);
         Map::getInstance()->getPoblacion()->addPerson(person);
         //std::cout << id << std::endl;
+    }else if (action == "createObject")
+    {
+        //ID = numeroDeObjeto*10000 + 8888... Ej: 18888,28888,38888,...
+        unsigned int id = document.FindMember("id")->value.GetUint();
+        unsigned int x = document.FindMember("x")->value.GetUint();
+        unsigned int y = document.FindMember("y")->value.GetUint();
+        //TODO: TERMINIAR
     }
     else if (action == "updateSubject")
     {
