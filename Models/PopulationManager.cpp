@@ -255,18 +255,18 @@ void* populationManagerThread(void* param){
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=10;
+    timeController.tv_sec=5;
     pthread_mutex_lock(static_cast<PThreadParam*>(param)->getMutex());
     manager->createLife();
     pthread_cond_signal(static_cast<PThreadParam*>(param)->getCondition());
     pthread_mutex_unlock(static_cast<PThreadParam*>(param)->getMutex());
     //Este while corre hasta que se mueran todos
     while(manager->isSomeoneAlive()){
-        pthread_mutex_lock(static_cast<PThreadParam*>(param)->getMutex());
+        //pthread_mutex_lock(static_cast<PThreadParam*>(param)->getMutex());
         //Ejecuta el metodo
         manager->thread();
         pthread_cond_signal(static_cast<PThreadParam*>(param)->getCondition());
-        pthread_mutex_unlock(static_cast<PThreadParam*>(param)->getMutex());
+        //pthread_mutex_unlock(static_cast<PThreadParam*>(param)->getMutex());
         //Espera un segundo
         nanosleep(&timeController, NULL);
     }

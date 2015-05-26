@@ -328,7 +328,7 @@ void* subjectLife(void* parameter){
     //Crea estructura para tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=5;
+    timeController.tv_sec=1;
     //Este while corre hasta que se llame al metodo kill()
     while(excecutioner->isAlive()){
         //Espera un segundo

@@ -19,6 +19,7 @@ class God{
     unsigned char* attributes;
     public:
         God();
+        God(const God&);
         ~God();
         bool isAlive();
         unsigned char getAttribute(int);
