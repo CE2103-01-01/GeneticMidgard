@@ -64,7 +64,6 @@ void SocketGUI::manageMessage(std::string string) {
     std::string action = document.FindMember("action")->value.GetString();
     if (action == "createSubject")
     {
-
         unsigned int id = document.FindMember("id")->value.GetUint();
         unsigned int x = document.FindMember("x")->value.GetUint();
         unsigned int y = document.FindMember("y")->value.GetUint();
