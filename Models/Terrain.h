@@ -21,6 +21,7 @@ static char const *const TILE_NODE = "tile";
 #include "../Constants.h"
 #include "../Data/PriorityQueue.h"
 #include "../Data/DoubleList.h"
+#include "../Data/Stack.h"
 
 #define POSITION_RANDOM_RANGE 10
 
@@ -29,6 +30,7 @@ class Vector2D
 public:
     Vector2D(const Vector2D&);
     Vector2D(int, int);
+    bool operator==(Vector2D);
     int x;
     int y;
 };
@@ -42,7 +44,7 @@ public:
     static void initArray();
     static int getFreeSpaces();
     static void printArray();
-    static DoubleList<Vector2D> findPathAS(const Vector2D& start, const Vector2D& finish);
+    static Stack<Vector2D> findPathAS(const Vector2D &start, const Vector2D &finish);
     static Vector2D getRandomFreePosition();
     static Vector2D getFreePositionNear(Vector2D);
     static int get(Vector2D);
