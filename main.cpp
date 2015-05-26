@@ -15,9 +15,9 @@ int main()
     FileManager::readFile(readedText, id, size);
 
     for(int i = 0; i < size; i++){
-        std::cout << *(readedText + i) << std::endl;
+        std::cout << *(readedText + i);
     }
-
+    std::cout << std::endl;
     Terrain::initArray();
     trueRandom::init();
 
