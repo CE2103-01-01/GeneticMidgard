@@ -129,6 +129,23 @@ void SocketLogic::deleteObject(unsigned int idObject) {
     client.send(packet);
     send.unlock();
 }
+void SocketLogic::deleteSubject(unsigned int idObject) {
+    if(!NETWORK_ACTIVATED) return;
+    if(!initialized) return;
+    Packet packet;
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+    writer.StartObject();
+    writer.String("action");
+    writer.String("deleteSubject");
+    writer.String("id");
+    writer.Uint(idObject);
+    writer.EndObject();
+    packet<<s.GetString();
+    send.lock();
+    client.send(packet);
+    send.unlock();
+}
 
 void SocketLogic::receiving() {
     while (on) {
@@ -155,7 +172,7 @@ void createSubject(unsigned int idSubject, unsigned int x, unsigned int y, unsig
 }
 
 void deleteSubject(unsigned int idSubject) {
-    SocketLogic::getInstance()->deleteObject(idSubject);
+    SocketLogic::getInstance()->deleteSubject(idSubject);
 }
 
 void updateSubject(unsigned int idSubject, unsigned int x, unsigned int y){

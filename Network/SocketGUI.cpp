@@ -49,10 +49,7 @@ void SocketGUI::receiving() {
             break;
         }
         packet>>message;
-        //std::cout << "Received: " << message<< std::endl;
-        Packet packetR;
-        //packetR<< "received";
-        socket.send(packetR);
+        std::cout << "Received: " << message<< std::endl;
         Thread thread(std::bind(&SocketGUI::manageMessage, message));
         thread.launch();
     }
@@ -82,6 +79,11 @@ void SocketGUI::manageMessage(std::string string) {
         unsigned int x = document.FindMember("x")->value.GetUint();
         unsigned int y = document.FindMember("y")->value.GetUint();
         Map::getInstance()->getPoblacion()->updateId(id,x,y);
+    }
+    else if (action == "deleteSubject")
+    {
+        unsigned int id = document.FindMember("id")->value.GetUint();
+        Map::getInstance()->getPoblacion()->deletePerson(id);
     }
     else if (action == "changeEdda")
     {
