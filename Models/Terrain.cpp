@@ -64,7 +64,7 @@ void Terrain::printArray() {
 /*
  * Algoritmo A* para paths
  */
-DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &finish) {
+Stack<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &finish) {
     int closed_Nodes_map[width][height]; // map of closed (tried-out) Nodes
     int open_Nodes_map[width][height]; // map of open (not-yet-tried) Nodes
     int dir_map[width][height]; // map of directions
@@ -114,10 +114,10 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
         // quit searching when the goal state is reached
         if(x==finish.x && y==finish.y)
         {
-            DoubleList<Vector2D> path = DoubleList<Vector2D>();
+            Stack<Vector2D> path = Stack<Vector2D>();
             while(!(x==start.x && y==start.y))
             {
-                path.add(Vector2D (x,y));
+                path.push(Vector2D (x,y));
                 j=dir_map[x][y];
                 x+=dx[j];
                 y+=dy[j];
@@ -130,6 +130,7 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
             // empty the leftover Nodes
             while(!priorityQueue[pqi].empty()) priorityQueue[pqi].pop();
             pthread_mutex_unlock(&mutexMap);
+            std::cout << path.size() << std::endl;
             return path;
         }
 
@@ -194,7 +195,7 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
         delete n0; // garbage collection
     }
     pthread_mutex_unlock(&mutexMap);
-    return DoubleList<Vector2D>();
+    return Stack<Vector2D>();
 
 
 }
@@ -330,4 +331,8 @@ int Terrain::getFreeSpaces() {
 
     }
     return freeSpaces;
+}
+
+bool Vector2D::operator==(Vector2D other) {
+    return other.x == x   &&   other.y ==y;
 }

@@ -5,6 +5,8 @@
 #ifndef PROJECTMIDGARD_SUBJECT_H
 #define PROJECTMIDGARD_SUBJECT_H
 
+static const int OFFSET_ATTACK = 3;
+
 #include "Chromosome.h"
 #include "../Algorithms/GeneralFitnessCalculator.h"
 #include "../Data/PThreadParam.h"
@@ -35,6 +37,7 @@ public:
     Subject(Subject*,Subject*,Chromosome*,long,long,int*);
     Subject(const Subject&);
     ~Subject();;
+    static int actionSleepNano;
     long getGeneration();
     long getID();
     Chromosome* getGeneticInformation();

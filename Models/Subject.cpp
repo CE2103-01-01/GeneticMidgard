@@ -8,7 +8,7 @@
 
 using namespace pugi;
 using namespace constantsSubjectXML;
-
+int Subject::actionSleepNano = 20;
 /** Constructor
  * @brief genera un individuo de primera generacion
  */
@@ -182,30 +182,36 @@ void Subject::calculateFitness() {
 }
 
 /** @brief Accede a una caracteristica
- * @return unsigned char*
+ * @return unsca a un sujetoigned char*
  */
 unsigned char Subject::getCharacteristic(int position){
     return  *(characteristics + position);
 }
 
-/** @brief Ataca a un sujeto
+/** @brief Ata
  */
 void Subject::attack(){
-    DoubleList<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);
-    Node<Vector2D>* actualNode = path.getNode(NULL);
+    //Oponents in range?
+    //TODO_roberto revisar esto
     Vector2D tmpOpponentPosition = *opponent->position;
-    while(actualNode!=NULL && !(position->x <= opponent->position->x-5 && position->x >= opponent->position->x+5
-          && position->y <= opponent->position->y-5 && position->y >= opponent->position->y+5))
-    {
-        if(tmpOpponentPosition.x != opponent->position->x || tmpOpponentPosition.y != opponent->position->y){
-            path = Terrain::findPathAS(*position,*opponent->position);
-            actualNode = path.getNode(NULL);
+    while (!(position->x <= opponent->position->x- OFFSET_ATTACK && position->x >= opponent->position->x+ OFFSET_ATTACK
+             && position->y <= opponent->position->y- OFFSET_ATTACK && position->y>= opponent->position->y+ OFFSET_ATTACK)) {
+        Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);
+        if (path.size()!=0) {
+            Vector2D next = path.top();
+            position->x = next.x;
+            position->y = next.y;
+            sf::sleep(microseconds(actionSleepNano));
+            updateSubject(*id, position->x, position->y);
+            //std::cout << "SE MOVIO" << std::endl;
+            path.pop();
+            if(tmpOpponentPosition== *opponent->position)
+            {
+                path = Terrain::findPathAS(*position,*opponent->position);
+                tmpOpponentPosition = *opponent->position;
+
+            }
         }
-        position->x = actualNode->getData()->x;
-        position->y = actualNode->getData()->y;
-        updateSubject(*id,position->y,position->x);
-        actualNode=actualNode->getNextNode();
-        std::cout << "SE MOVIO" << std::endl;
     }
     //Se suma el gen del ataque del atacante con la caracteristica arma
     int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)

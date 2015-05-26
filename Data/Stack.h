@@ -6,15 +6,16 @@
 #define PROJECTMIDGARDLOGIC_QUEUE_H
 
 #include <malloc.h>
+#include <pthread.h>
 
-template<class T>class NodeQueue;
+template<class T>class NodeStack;
 template<class T>
-class Queue {
+class Stack {
 private:
     pthread_mutex_t mutexData = PTHREAD_MUTEX_INITIALIZER;
-    NodeQueue<T>* _head;
+    NodeStack<T>* _head;
     unsigned int lenght;
-    void pushNode(NodeQueue<T>*);
+    void pushNode(NodeStack<T>*);
 public:
     void push(T*);
     void push(T);
@@ -26,39 +27,39 @@ public:
 };
 
 template<class T>
-class NodeQueue
+class NodeStack
 {
-    friend class Queue<T>;
+    friend class Stack<T>;
 
 private:
     T* data;
-    NodeQueue<T> *next;
+    NodeStack<T> *next;
 public:
-    NodeQueue(T *); //Constructor
-    NodeQueue(T); //Constructor
-    ~NodeQueue(); //Destructor
+    NodeStack(T *); //Constructor
+    NodeStack(T); //Constructor
+    ~NodeStack(); //Destructor
     T *getData(); //Devuelve el dato del objeto
-    NodeQueue<T> *getNextNode();//Siguiente nodo
+    NodeStack<T> *getNextNode();//Siguiente nodo
 };
 
 
 template<class T>
-void Queue<T>::push(T *dato) {
+void Stack<T>::push(T *dato) {
     pthread_mutex_lock( &mutexData );
-    pushNode(new NodeQueue<T>(dato));
+    pushNode(new NodeStack<T>(dato));
     pthread_mutex_unlock( &mutexData );
 }
 template<class T>
-void Queue<T>::push(T dato) {
+void Stack<T>::push(T dato) {
     pthread_mutex_lock( &mutexData );
-    pushNode(new NodeQueue<T>(dato));
+    pushNode(new NodeStack<T>(dato));
     pthread_mutex_unlock( &mutexData );
 }
 /**
- * Metodo para insertar en cola de prioridad
+ * Metodo para insertar en pila
  */
 template<class T>
-void Queue<T>::pushNode(NodeQueue<T>* node) {
+void Stack<T>::pushNode(NodeStack<T>* node) {
     if (lenght==0) _head = node;
     node->next = _head;
     _head = node;
@@ -66,7 +67,7 @@ void Queue<T>::pushNode(NodeQueue<T>* node) {
 }
 
 template<class T>
-T Queue<T>::top() {
+T Stack<T>::top() {
     pthread_mutex_lock( &mutexData );
     T returnVal = *(_head->getData());
     pthread_mutex_unlock( &mutexData );
@@ -75,9 +76,9 @@ T Queue<T>::top() {
 }
 
 template<class T>
-void Queue<T>::pop() {
+void Stack<T>::pop() {
     pthread_mutex_lock( &mutexData );
-    NodeQueue<T> * headTemp = _head;//Nodo para liberarlo
+    NodeStack<T> * headTemp = _head;//Nodo para liberarlo
     _head = _head->getNextNode();
     lenght--;//Actualiza largo
     free(headTemp);//GarbageCollection
@@ -85,37 +86,37 @@ void Queue<T>::pop() {
 }
 
 template<class T>
-bool Queue<T>::empty() {
+bool Stack<T>::empty() {
     return lenght == 0;
 }
 template<class T>
-int Queue<T>::size() {
+int Stack<T>::size() {
     return lenght;
 }
 
 
 //Nodes Methods
 template<class T>
-NodeQueue<T>::NodeQueue(T * t) {
+NodeStack<T>::NodeStack(T * t) {
     data = t;
     next = 0;
 }
 template<class T>
-NodeQueue<T>::NodeQueue(T t) {
+NodeStack<T>::NodeStack(T t) {
     data = static_cast<T*>(malloc(sizeof(T)));
     *data = t;
     next = 0;
 }
 template<class T>
-NodeQueue<T>::~NodeQueue() {
+NodeStack<T>::~NodeStack() {
     next = 0;
 }
 template<class T>
-T *NodeQueue<T>::getData() {
+T *NodeStack<T>::getData() {
     return data;
 }
 template<class T>
-NodeQueue<T> *NodeQueue<T>::getNextNode() {
+NodeStack<T> *NodeStack<T>::getNextNode() {
     return next;
 }
 

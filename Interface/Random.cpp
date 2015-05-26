@@ -5,8 +5,9 @@
 
 #include "Random.h"
 
+
 int fd =-1;
-Queue<int> randomNumbers;
+Stack<int> randomNumbers;
 void trueRandom::init(){
     fd = open("/dev/ttyACM0", O_RDONLY | O_NOCTTY);
     if (fd == -1)
