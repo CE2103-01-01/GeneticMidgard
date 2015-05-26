@@ -17,6 +17,8 @@ private:
     unsigned int lenght;
     void pushNode(NodeQ<T>*);
 public:
+    PriorityQueue();
+    PriorityQueue(const PriorityQueue<T> &other);
     void push(T*);
     void push(T);
     void pop();
@@ -34,11 +36,13 @@ friend class PriorityQueue<T>;
 private:
     T* data;
     NodeQ<T> *next;
+    pthread_mutex_t mutexData = PTHREAD_MUTEX_INITIALIZER;
 public:
     NodeQ(T *); //Constructor
     NodeQ(T); //Constructor
+    NodeQ(const NodeQ<T>&); //Constructor
     ~NodeQ(); //Destructor
-    T *getData(); //Devuelve el dato del objeto
+    T getData(); //Devuelve el dato del objeto
     NodeQ<T> *getNextNode();//Siguiente nodo
 };
 
@@ -67,8 +71,8 @@ void PriorityQueue<T>::pushNode(NodeQ<T>* node) {
         NodeQ<T> *prevNodeToCompare = 0;
         NodeQ<T> *nodeToCompare = _head;
         for (int i = 0; i < lenght; ++i) {
-            T dato = *nodeToCompare->getData();
-            if (dato<*node->getData()){
+            T dato = nodeToCompare->getData();
+            if (dato<node->getData()){
                 if (prevNodeToCompare == 0) {//insert in head
                     node->next = _head;
                     _head = node;
@@ -91,7 +95,7 @@ void PriorityQueue<T>::pushNode(NodeQ<T>* node) {
 template<class T>
 T PriorityQueue<T>::top() {
     pthread_mutex_lock( &mutexData );
-    T returnVal = *(_head->getData());
+    T returnVal = (_head->getData());
     pthread_mutex_unlock( &mutexData );
     return returnVal;
 }
@@ -131,12 +135,35 @@ NodeQ<T>::NodeQ(T t) {
 template<class T>
 NodeQ<T>::~NodeQ() {
     next = 0;
+    free(data);
 }
 template<class T>
-T *NodeQ<T>::getData() {
-    return data;
+T NodeQ<T>::getData() {
+    if (!data)
+        std::cerr<<"Null Pointer Exception"<<std::endl;
+    return *data;
 }
 template<class T>
 NodeQ<T> *NodeQ<T>::getNextNode() {
     return next;
+}
+template<class T>
+NodeQ<T>::NodeQ(const NodeQ<T>& other) {
+    data = static_cast<T*>(malloc(sizeof(T)));
+    *data = *other.data;
+    next = 0;
+}
+template<class T>
+PriorityQueue<T>::PriorityQueue(const PriorityQueue &other) {
+    std::cerr<<"WTF Copy Constructor"<<std::endl;
+    NodeQ<T> * node = other._head;
+    while(!node) {
+        push(node->getData());
+        node = node->getNextNode();
+    }
+}
+template<class T>
+PriorityQueue<T>::PriorityQueue() {
+    _head = 0;
+    lenght =0;
 }

@@ -15,6 +15,7 @@
 using namespace rapidjson;
 using namespace sf;
 class SocketGUI {
+    TcpListener listener;
     TcpSocket socket;
     static SocketGUI *singleton;
     static bool initialized;
@@ -22,8 +23,10 @@ class SocketGUI {
     void init();
     void receiving();
     static void manageMessage(std::string);
+    bool on;
     Mutex send;
 public:
+    ~SocketGUI();
     static SocketGUI* getInstance();
     void updateSpeed(unsigned char);
 

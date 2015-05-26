@@ -7,17 +7,23 @@
 
 bool SocketLogic::initialized  = false;
 void SocketLogic::init() {
-    if(!NETWORK_ACTIVATED) return;
     initialized = true;
+    if(!NETWORK_ACTIVATED) return;
+    on = true;
     if (listener.listen(PORT) != sf::Socket::Done)
     {
-        std::cout<<"Error on create listener"<<std::endl;
+        std::cerr<<"Error on create listener"<<std::endl;
+        return;
     }
 
-    if (listener.accept(client) != sf::Socket::Done)
+    else if (listener.accept(client) != sf::Socket::Done)
     {
-        std::cout<<"Error on create client"<<std::endl;
+        std::cerr<<"Error on create client"<<std::endl;
+        return;
     }
+    else std::cout << "Connected!" << std::endl;
+
+    //receiving();
 }
 SocketLogic* SocketLogic::singleton = NULL;
 SocketLogic *SocketLogic::getInstance() {
@@ -122,6 +128,25 @@ void SocketLogic::deleteObject(unsigned int idObject) {
     send.lock();
     client.send(packet);
     send.unlock();
+}
+
+void SocketLogic::receiving() {
+    while (on) {
+
+        std::cout << "hi" << std::endl;
+        Packet packet;
+        std::string message;
+        if (client.receive(packet) != sf::Socket::Done) {
+            break;
+        }
+        packet>>message;
+        std::cout << "Received: " << message<< std::endl;
+    }
+}
+
+SocketLogic::~SocketLogic() {
+    on = false;
+    client.disconnect();
 }
 
 void createSubject(unsigned int idSubject, unsigned int x, unsigned int y, unsigned int r, unsigned int g,

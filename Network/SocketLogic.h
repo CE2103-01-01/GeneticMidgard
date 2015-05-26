@@ -15,14 +15,18 @@ using namespace sf;
 using namespace rapidjson;
 class SocketLogic {
     SocketLogic();
+
     static SocketLogic *singleton;
     TcpListener listener;
     TcpSocket client;
     void init();
     static bool initialized;
+    bool on;
     Mutex send;
 public:
+    ~SocketLogic();
     static SocketLogic* getInstance();
+    void receiving();
     void updateSubject(unsigned int, unsigned int, unsigned int);
     void createSubject(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
     void createObject(unsigned int, std::string, unsigned int, unsigned int);

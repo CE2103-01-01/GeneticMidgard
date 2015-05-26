@@ -69,16 +69,15 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
     int open_Nodes_map[width][height]; // map of open (not-yet-tried) Nodes
     int dir_map[width][height]; // map of directions
     const int dir=4; // number of possible directions to go at any position
-    int dx[dir]={1, 0, -1, 0};
-    int dy[dir]={0, 1, 0, -1};
+    const int dx[dir]={1, 0, -1, 0};
+    const int dy[dir]={0, 1, 0, -1};
 
-    static PriorityQueue<NodeAS> priorityQueue[2]; // list of open (not-yet-tried) Nodes
-    static int pqi; // pq index
-    static NodeAS* n0;
-    static NodeAS* m0;
-    static int i, j, x, y, xdx, ydy;
-    static char c;
-    pqi=0;
+    PriorityQueue<NodeAS> priorityQueue[2]; // list of open (not-yet-tried) Nodes
+    int pqi; // pq index
+    NodeAS* n0;
+    NodeAS* m0;
+    int dirOfMov, j, x, y, xdx, ydy;
+    pqi=0;//index priority queue
 
     // reset the NodeAS maps
     for(y=0;y< height;y++)
@@ -113,28 +112,17 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
         closed_Nodes_map[x][y]=1;
 
         // quit searching when the goal state is reached
-        //if((*n0).estimate(finish.x, finish.y) == 0)
         if(x==finish.x && y==finish.y)
         {
-            // generate the path from finish to start
-            // by following the directions
             DoubleList<Vector2D> path = DoubleList<Vector2D>();
-            Vector2D startmp(start.x,start.y);
-            Vector2D *tmp = &startmp;
             while(!(x==start.x && y==start.y))
             {
-                Vector2D step(*tmp);
-
+                path.add(Vector2D (x,y));
                 j=dir_map[x][y];
-                if (j==0) step.x-=1;
-                else if(j==1) step.y-=1;
-                else if(j==2) step.x +=1;
-                else if(j==3) step.y +=1;
-                cout<<step.x<<", "<<step.y<<endl;
-                path.append(step);
                 x+=dx[j];
                 y+=dy[j];
-                tmp = &step;
+
+
             }
 
             // garbage collection
@@ -146,9 +134,9 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
         }
 
         // generate moves (child Nodes) in all possible directions
-        for(i=0;i<dir;i++)
+        for(dirOfMov =0; dirOfMov <dir; dirOfMov++)
         {
-            xdx=x+dx[i]; ydy=y+dy[i];
+            xdx=x+dx[dirOfMov]; ydy=y+dy[dirOfMov];
 
             if(!(xdx<0 || xdx> width -1 || ydy<0 || ydy> height -1 || *(map+xdx+(ydy*width))!=0
                  || closed_Nodes_map[xdx][ydy]==1))
@@ -156,7 +144,7 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
                 // generate a child NodeAS
                 m0=new NodeAS( xdx, ydy, n0->getLevel(),
                              n0->getPriority());
-                m0->nextLevel(i);
+                m0->nextLevel(dirOfMov);
                 m0->updatePriority(finish.x, finish.y);
 
                 // if it is not in the open list then add into that
@@ -167,14 +155,15 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
                     priorityQueue[pqi].push(*m0);
                     delete m0;
                     // mark its parent NodeAS direction
-                    dir_map[xdx][ydy]=(i+dir/2)%dir;
+                    dir_map[xdx][ydy]=(dirOfMov +dir/2)%dir;
+                    //Converts direction to opossite to return
                 }
                 else if(open_Nodes_map[xdx][ydy]>m0->getPriority())
                 {
                     // update the priority info
                     open_Nodes_map[xdx][ydy]=m0->getPriority();
                     // update the parent direction info
-                    dir_map[xdx][ydy]=(i+dir/2)%dir;
+                    dir_map[xdx][ydy]=(dirOfMov +dir/2)%dir;
 
                     // replace the NodeAS
                     // by emptying one pq to the other one
@@ -197,6 +186,7 @@ DoubleList<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &
                     }
                     pqi=1-pqi;
                     priorityQueue[pqi].push(*m0); // add the better NodeAS instead
+                    delete m0;
                 }
                 else delete m0; // garbage collection
             }
@@ -276,7 +266,7 @@ Vector2D Terrain::getRandomFreePosition() {
  * Obtener una posicion libre cerca de x lugar
  */
 Vector2D Terrain::getFreePositionNear(Vector2D vector){
-    
+
     while(true){
         //Tira dos numeros random que indican el offset a probar
         int randomX = rand()%POSITION_RANDOM_RANGE + 1;

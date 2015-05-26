@@ -24,6 +24,7 @@ SocketGUI *SocketGUI::getInstance() {
 
 void SocketGUI::init() {
     if(!NETWORK_ACTIVATED) return;
+    on = true;
     initialized = true;
     std::cout<< "Waiting connection..."<<std:: endl;
     while (true) {
@@ -49,6 +50,9 @@ void SocketGUI::receiving() {
         }
         packet>>message;
         std::cout << "Received: " << message<< std::endl;
+        Packet packetR;
+        packetR<< "received";
+        socket.send(packetR);
         Thread thread(std::bind(&SocketGUI::manageMessage, message));
         thread.launch();
     }
@@ -100,6 +104,12 @@ void SocketGUI::updateSpeed(unsigned char speed) {
     writer.EndObject();
     packet<<s.GetString();
     send.lock();
+    std::cout << "Sending" << std::endl;
     socket.send(packet);
     send.unlock();
+}
+
+SocketGUI::~SocketGUI() {
+    on = false;
+    socket.disconnect();
 }
