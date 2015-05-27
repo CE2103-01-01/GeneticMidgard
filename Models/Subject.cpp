@@ -339,7 +339,7 @@ void Subject::delete_p_thread(){
 void Subject::optionSelection() {
     int value = trueRandom::randRange(0,100);
     movilObject objectToGet = movilObjectManager::getInstance()->getRandomObject();
-    findPath(objectToGet.getVector());
+    findPath(*objectToGet.getVector());
     objectToGet.applyEffect(this);
 }
 
