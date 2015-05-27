@@ -202,8 +202,7 @@ void Subject::findPath(Vector2D positionToFind) {
             //std::cout << "SE MOVIO" << std::endl;
             path.pop();
             if(!(positionToFind == *opponent->position)) {
-                findPath(*opponent->position);
-                break;
+                path = Terrain::findPathAS(*position,*opponent->position);
             }
         }
     }
