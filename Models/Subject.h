@@ -5,6 +5,14 @@
 #ifndef PROJECTMIDGARD_SUBJECT_H
 #define PROJECTMIDGARD_SUBJECT_H
 
+#define FATHERID "FATHERID  "
+#define MOTHERID " / MOTHERID  "
+#define SUBJECTID " / SUBJECTID "
+#define FITNESS " / FITNESS  "
+#define GENERATION " / GENERATION "
+#define GEN " / GEN "
+#define CHARACTERISTICS " / CHARACTERISTICS "
+
 static const int OFFSET_ATTACK = 5;
 
 #include "Chromosome.h"

@@ -57,6 +57,7 @@
 //TODO: estas bibliotecas se estan incluyendo en muchos archivos donde no se ocupan y hacen el codigo mas pesado, se debe buscar su uso y separarlo...
 #include <fstream>
 #include <sys/stat.h>
+#include "../GeneticMidgard/Data/DoubleList.h"
 
 //TODO: estas bibliotecas se estan incluyendo en muchos archivos donde no se ocupan y hacen el codigo mas pesado, se debe buscar su uso y separarlo...
 

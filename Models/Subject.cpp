@@ -412,32 +412,37 @@ void* subjectLife(void* parameter){
  */
 void Subject::makeSubjectFile()
 {
+    std::string todo = "";
+
     if(father != 0 && mother != 0)
     {
-        FileManager::writeFile((std::to_string(mother->getID())).c_str(), *(id),
-                               (std::to_string(father->getID())).length());
-
-        FileManager::writeFile((std::to_string(mother->getID())).c_str(), *(id),
-                               (std::to_string(mother->getID())).length());
+        todo.append(FATHERID);
+        todo.append(std::to_string(father->getID()));
+        todo.append(MOTHERID);
+        todo.append(std::to_string(mother->getID()));
     }
 
-
-    FileManager::writeFile(std::to_string(*(id)).c_str(), *(id),
-                           (std::to_string(*(id)).length()));
-
-    FileManager::writeFile((std::to_string(*generation)).c_str(), *(id),
-                           (std::to_string(*generation)).length());
+    todo.append(SUBJECTID);
+    todo.append(std::to_string(*id));
+    todo.append(FITNESS);
+    todo.append(std::to_string(getFitness()));
+    todo.append(GENERATION);
+    todo.append(std::to_string(*generation));
 
     for(int i = 0; i < NUMBER_OF_GENES; i++)
     {
-        FileManager::writeFile((std::to_string(geneticInformation->getGene(i))).c_str(), *(id),
-                               ((std::to_string(geneticInformation->getGene(i)))).length());
+        todo.append(GEN);
+        todo.append(std::to_string(i) + ":");
+        todo.append(" ");
+        todo.append(std::to_string(geneticInformation->getGene(i)));
     }
 
     for(int j = 0; j < NUMBER_OF_CHARACTERISTICS; j++)
     {
-        FileManager::writeFile((std::to_string(*(characteristics + j))).c_str(), *(id),
-                               ((std::to_string(*(characteristics + j + 1)))).length());
+        todo.append(CHARACTERISTICS);
+        todo.append(std::to_string(j)) + ":";
+        todo.append(" ");
+        todo.append(std::to_string(*(characteristics + j + 1)));
     }
-
+    FileManager::writeFile(todo.c_str(), *id, todo.length());
 }
