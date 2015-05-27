@@ -1,3 +1,6 @@
+// *** ADDED BY HEADER FIXUP ***
+#include <cstdlib>
+// *** END ***
 //
 // Created by pablo on 22/05/15.
 //

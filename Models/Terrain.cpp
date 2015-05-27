@@ -130,7 +130,6 @@ Stack<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &finis
             // empty the leftover Nodes
             while(!priorityQueue[pqi].empty()) priorityQueue[pqi].pop();
             pthread_mutex_unlock(&mutexMap);
-            std::cout << path.size() << std::endl;
             return path;
         }
 
