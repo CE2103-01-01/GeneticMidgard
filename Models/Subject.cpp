@@ -37,6 +37,7 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     //Crea posicion
     position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
     *position = basePosition;
+    selectProfession();
     //Asigna padres
     father = 0;
     mother = 0;
@@ -191,6 +192,32 @@ void Subject::calculateFitness() {
  */
 unsigned char Subject::getCharacteristic(int position){
     return  *(characteristics + position);
+}
+
+
+/**@breif metodo que selecciona la profesion basado en el mejor gen
+ */
+void Subject::selectProfession() {
+    switch(getGeneticInformation()->getBest()){
+        case POSITION_OF_GENE_ATTACK:
+            *(characteristics + POSITION_OF_CHARACTERISTIC_PROFESSION) = PROFESSION_WARRIOR;
+            break;
+        case POSITION_OF_GENE_DEFENSE:
+            *(characteristics + POSITION_OF_CHARACTERISTIC_PROFESSION) = PROFESSION_DEFENSE;
+            break;
+        case POSITION_OF_GENE_MAGIC:
+            *(characteristics + POSITION_OF_CHARACTERISTIC_PROFESSION) = PROFESSION_MAGICIAN;
+            break;
+        case POSITION_OF_GENE_INTELLIGENCE:
+            *(characteristics + POSITION_OF_CHARACTERISTIC_PROFESSION) = PROFESSION_ENGINEER;
+            break;
+        case POSITION_OF_GENE_SUPERSTITION:
+            *(characteristics + POSITION_OF_CHARACTERISTIC_PROFESSION) = PROFESSION_PREACHER;
+            break;
+        default:
+            *(characteristics + POSITION_OF_CHARACTERISTIC_PROFESSION) = PROFESSION_QUACK;
+            break;
+    }
 }
 
 void Subject::findPath(Vector2D positionToFind) {

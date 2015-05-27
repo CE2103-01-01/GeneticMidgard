@@ -10,12 +10,14 @@
 
 class Chromosome {
     unsigned char* geneticData;
+    unsigned char* best;
 public:
     Chromosome(unsigned char*,unsigned char*,unsigned char*);
     Chromosome(unsigned char*);
     Chromosome(const Chromosome&);
     ~Chromosome();
     unsigned char getGene(int);
+    unsigned char getBest();
 };
 
 #endif //PROJECTMIDGARD_GENES_H

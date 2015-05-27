@@ -60,6 +60,7 @@ public:
     void delete_p_thread();
     Subject* getOpponent();
     void optionSelection();
+    void selectProfession();
     void printParents();
     void changeSelection(bool);
     bool isSelected();
