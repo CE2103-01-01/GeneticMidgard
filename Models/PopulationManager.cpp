@@ -80,10 +80,28 @@ void PopulationManager::init_war(){
     while(firstPopulationNumber==secondPopulationNumber){
         secondPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
     }
+    //ultima persona visitada
+    int lastDefense = 0;
     //Inicia las peleas
     for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
-        (*((population+firstPopulationNumber)->getFittest() + i))
-                ->setOppenent((*((population+secondPopulationNumber)->getFittest() + i)));
+        //Toma un sujeto temporal y revisa si es guerrero
+        Subject* tmpWarrior = *((population+firstPopulationNumber)->getFittest() + i);
+        if(tmpWarrior->getCharacteristic(POSITION_OF_CHARACTERISTIC_PROFESSION)==PROFESSION_WARRIOR){
+            //toma un sujeto temporal para iterta en busca de defensa
+            Subject* tmpDefense = 0;
+            //Busca un defensa
+            for(int j=lastDefense; j<2*SUBJECTS_BY_GENERATION;j++){
+                //Si encuentra a un defensa lo coloca en el temporal y actualiza el id
+                if((*((population+secondPopulationNumber)->getFittest() + j))
+                           ->getCharacteristic(POSITION_OF_CHARACTERISTIC_PROFESSION)==PROFESSION_DEFENSE){
+                    tmpDefense=*((population+secondPopulationNumber)->getFittest() + j);
+                    lastDefense = j+1;
+                }
+            }
+            //Si el defensa no es nulo lo coloca como oponente, si no corta el ciclo al no haber gente disponible
+            if(tmpDefense!= 0) tmpWarrior->setOppenent(tmpDefense);
+            else break;
+        }
     }
 }
 

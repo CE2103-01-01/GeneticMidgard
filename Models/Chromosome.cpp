@@ -13,8 +13,11 @@ using namespace constantsSubjectXML;
  */
 Chromosome::Chromosome(unsigned char* red, unsigned char* green, unsigned char* blue) {
     geneticData = static_cast<unsigned char*>(malloc(sizeof(unsigned char)*NUMBER_OF_GENES));
+    best = static_cast<unsigned char*>(malloc(1));
+    *best = 0;
     for (int i = 0; i < NUMBER_OF_GENES - 3; i++) {
         *(geneticData+i) = trueRandom::getRandom()%255 + 50;
+        if(*(geneticData+*best) < *(geneticData+i)) *best = i;
     }
     *(geneticData + POSITION_OF_GENE_RED) = *red;
     *(geneticData + POSITION_OF_GENE_GREEN) = *green;
@@ -61,4 +64,11 @@ unsigned char Chromosome::getGene(int geneNumber) {
     }else{
         return 0;
     }
+}
+
+/**@brief Accede a la posicion del mejor gen
+ * @return unsigned char
+ */
+unsigned char Chromosome::getBest() {
+    return *best;
 }
