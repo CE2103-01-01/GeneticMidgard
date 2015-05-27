@@ -388,28 +388,32 @@ void* subjectLife(void* parameter){
  */
 void Subject::makeSubjectFile()
 {
-    /*FileManager::writeFile((const char*)(father->getID()), *(id),
-                           sizeof((std::to_string(father->getID())).length()));
+    if(father != 0 && mother != 0)
+    {
+        FileManager::writeFile((std::to_string(mother->getID())).c_str(), *(id),
+                               (std::to_string(father->getID())).length());
 
-    FileManager::writeFile((const char*)(mother->getID()), *(id),
-                           sizeof((std::to_string(mother->getID())).length()));
+        FileManager::writeFile((std::to_string(mother->getID())).c_str(), *(id),
+                               (std::to_string(mother->getID())).length());
+    }
 
-    FileManager::writeFile((const char*)(*id), *(id),
-                           sizeof((std::to_string(*(id)).length())));
 
-    FileManager::writeFile((const char*)(*generation), *(id),
-                           sizeof((std::to_string(*generation)).length()));*/
+    FileManager::writeFile(std::to_string(*(id)).c_str(), *(id),
+                           (std::to_string(*(id)).length()));
+
+    FileManager::writeFile((std::to_string(*generation)).c_str(), *(id),
+                           (std::to_string(*generation)).length());
 
     for(int i = 0; i < NUMBER_OF_GENES; i++)
     {
         FileManager::writeFile((std::to_string(geneticInformation->getGene(i))).c_str(), *(id),
-                               sizeof(((std::to_string(geneticInformation->getGene(i)))).length()));
+                               ((std::to_string(geneticInformation->getGene(i)))).length());
     }
 
     for(int j = 0; j < NUMBER_OF_CHARACTERISTICS; j++)
     {
-        FileManager::writeFile((std::to_string(*(characteristics + j + 1))).c_str(), *(id),
-                               sizeof(((std::to_string(*(characteristics + j + 1)))).length()));
+        FileManager::writeFile((std::to_string(*(characteristics + j))).c_str(), *(id),
+                               ((std::to_string(*(characteristics + j + 1)))).length());
     }
 
 }
