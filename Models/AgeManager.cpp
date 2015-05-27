@@ -145,8 +145,6 @@ void AgeManager::initPopulationManager(){
 void* ageManagerThread(void* parameter){
     //Extrae el parametro
     AgeManager* excecutioner = static_cast<AgeManager*>(parameter);
-    //Ejecuta el metodo del hilo hasta que esten todos extintos
-    //pthread_mutex_lock(excecutioner->getGeneralMutex());
     //Inicializa el manager de poblacion
     excecutioner->initPopulationManager();
     //Ejecute metodo del thread
@@ -155,8 +153,35 @@ void* ageManagerThread(void* parameter){
         excecutioner->thread();
     }
     //Desbloquea mutex
-    //pthread_mutex_unlock(excecutioner->getGeneralMutex());
-
     excecutioner->delete_p_thread();
     return NULL;
+}
+
+/**@brief solicita cada cierto tiempo un id para imprimir
+ * @param void* PTHREAD_PARAM
+ */
+void* subjectPrinter(void* parameter){
+    struct timespec timeController;
+    timeController.tv_nsec=0;
+    timeController.tv_sec=1;
+    while(PopulationManager::getInstance()->getActivePopulations() > 0){
+        //Crea y lee de consola el id de sujeto
+        std::cout << ID_REQUEST << std::endl;
+        std::string idToPrintStr;
+        std::cin >> idToPrintStr;
+        //Convierte el id y lo separa en id de nacimiento e id de poblacion
+        long populationID = atol(idToPrintStr.c_str())%SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID;
+        long birthID = atol(idToPrintStr.c_str())/SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID;
+        //Comprueba la validez del id y lo imprime
+        if(populationID < PopulationManager::getInstance()->getActualID()){
+            if(birthID <= (PopulationManager::getInstance()->getPopulation()+populationID)->getActualID()){
+                (PopulationManager::getInstance()->getPopulation()+populationID)->getSubject(birthID)->print();
+            }else{
+                std::cout << SUBJECT_ID_ERROR_MESSAGE << std::endl;
+            }
+        }else{
+            std::cout << POPULATION_ID_ERROR_MESSAGE << std::endl;
+        }
+        nanosleep(&timeController,NULL);
+    }
 }

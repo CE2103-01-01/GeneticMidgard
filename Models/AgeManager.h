@@ -9,6 +9,10 @@
 #include "PopulationManager.h"
 #include "movilObjectManager.h"
 
+#define ID_REQUEST "Ingrese el id a imprimir: "
+#define SUBJECT_ID_ERROR_MESSAGE "La seccion del id ingresado correspondiente al numero de sujeto es incorrecta"
+#define POPULATION_ID_ERROR_MESSAGE "La seccion del id ingresado correspondiente al numero de poblacion es incorrecta"
+
 class AgeManager {
     pthread_mutex_t* generalMutex;
     pthread_t* managementThread;
@@ -30,5 +34,6 @@ class AgeManager {
 };
 
 void* ageManagerThread(void*);
+void* subjectPrinter(void*);
 
 #endif //PROJECTMIDGARDLOGIC_AGEMANAGER_H

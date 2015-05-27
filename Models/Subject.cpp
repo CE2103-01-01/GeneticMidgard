@@ -216,6 +216,34 @@ void Subject::selectProfession() {
     }
 }
 
+/**@breif metodo que selecciona la profesion basado en el mejor gen
+ */
+void Subject::printProfession() {
+    switch(*(characteristics + POSITION_OF_CHARACTERISTIC_PROFESSION)){
+        case PROFESSION_WARRIOR:
+            std::cout << PROFESSION_STR << PROFESSION_WARRIOR_STR << std::endl;
+            break;
+        case PROFESSION_DEFENSE:
+            std::cout << PROFESSION_STR << PROFESSION_DEFENSE_STR << std::endl;
+            break;
+        case PROFESSION_MAGICIAN:
+            std::cout << PROFESSION_STR << PROFESSION_MAGICIAN_STR << std::endl;
+            break;
+        case PROFESSION_ENGINEER:
+            std::cout << PROFESSION_STR << PROFESSION_ENGINEER_STR << std::endl;
+            break;
+        case PROFESSION_PREACHER:
+            std::cout << PROFESSION_STR << PROFESSION_PREACHER_STR << std::endl;
+            break;
+        default:
+            std::cout << PROFESSION_STR << PROFESSION_QUACK_STR << std::endl;
+            break;
+    }
+}
+
+/**@brief sigue un camino hasta una ruta definida
+ * @param Vector2D positionToFind: posicion a encontrar en el mapa
+ */
 void Subject::findPath(Vector2D positionToFind) {
     Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);
     while (!(position->x <= opponent->position->x- OFFSET_ATTACK && position->x >= opponent->position->x+ OFFSET_ATTACK
@@ -235,7 +263,37 @@ void Subject::findPath(Vector2D positionToFind) {
     }
 }
 
-/** @brief Ata
+/**@brief imprime los datos de sujeto
+ */
+void Subject::printGeneralData(){
+    std::cout << ID_STR << *id << std::endl;
+    std::cout << GENERATION_STR << *generation << std::endl;
+    std::cout << FITNESS_STR << *fitness << std::endl;
+    std::cout << LIFE_STATE_STR << isAlive() << std::endl;
+    printProfession();
+}
+
+/**@brief imprime los padres del sujeto
+ */
+void Subject::printParents(){
+    if(father != 0){
+        std::cout << FATHER_STR << father->getID() << std::endl;
+        std::cout << MOTHER_STR << mother->getID() << std::endl;
+    }else{
+        std::cout << FATHER_STR << NULL_PARENTS_STR << std::endl;
+        std::cout << MOTHER_STR << NULL_PARENTS_STR << std::endl;
+    }
+}
+
+/**@brief imprime los datos de sujeto
+ */
+void Subject::print(){
+    printGeneralData();
+    printParents();
+}
+
+
+/** @brief Ataque
  */
 void Subject::attack(){
     findPath(*opponent->position);

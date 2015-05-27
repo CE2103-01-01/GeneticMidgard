@@ -34,6 +34,8 @@ public:
     bool isDefunct();
     void fillFittest();
     Subject** getFittest();
+    int getActualID();
+    Subject* getSubject(long);
 };
 
 void* reproductionThread(void*);

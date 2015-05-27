@@ -12,6 +12,21 @@ static const int OFFSET_ATTACK = 5;
 #include "../Data/PThreadParam.h"
 #include "Terrain.h"
 
+#define ID_STR "ID: "
+#define GENERATION_STR "GENERATION: "
+#define FITNESS_STR "FITNESS: "
+#define FATHER_STR "FATHER: "
+#define MOTHER_STR "MOTHER: "
+#define NULL_PARENTS_STR "null, first generation"
+#define LIFE_STATE_STR "LIFE STATE: "
+#define PROFESSION_STR "PROFESSION: "
+#define PROFESSION_WARRIOR_STR "Warrior"
+#define PROFESSION_DEFENSE_STR "Defense"
+#define PROFESSION_MAGICIAN_STR "Magician"
+#define PROFESSION_ENGINEER_STR "Engineer"
+#define PROFESSION_PREACHER_STR "Preacher"
+#define PROFESSION_QUACK_STR "Quack"
+
 /** Clase Subject
  * @brief clase a la cual pertenecen todos los individuos vivos
  * @caracteristicas: edad, experiencia, salud, ataque, velocidad, defensa,
@@ -33,6 +48,9 @@ class Subject {
     unsigned char* characteristics;//vida-experiencia-arma-armadura-profesion
     void calculateFitness();//funcion de calcular fitness y set fitness
     void findPath(Vector2D);
+    void printGeneralData();
+    void printProfession();
+    void printParents();
 public:
     Subject(long,int*,unsigned char*,Vector2D);
     Subject(Subject*,Subject*,Chromosome*,long,long,int*);
@@ -58,7 +76,7 @@ public:
     Subject* getOpponent();
     void optionSelection();
     void selectProfession();
-    void printParents();
+    void print();
     void changeSelection(bool);
     bool isSelected();
     void create();

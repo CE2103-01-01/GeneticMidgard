@@ -208,3 +208,18 @@ void Population::exterminate(){
     *defunct = true;
     (*activePopulationsOnManager)--;
 }
+
+/**@brief id del ultimo sujeto
+ * @return int
+ */
+int Population::getActualID(){
+    return *populationSize;
+}
+
+/**@brief busca un sujeto y lo retorna
+ * @paran long id: id de nacimiento = subject->getID()/SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID
+ * @return Subject*
+ */
+Subject* Population::getSubject(long id){
+    return populationTree->searchElement(id);
+}
