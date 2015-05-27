@@ -130,7 +130,6 @@ Subject::~Subject(){
     father = 0;
     mother = 0;
     opponent = 0;
-    //FileManager::deleteFile(*(id));
 }
 
 /** @brief Accede al padre

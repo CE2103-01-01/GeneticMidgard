@@ -110,7 +110,6 @@ void Population::updateFittest(Subject* newMember) {
             *(fittest+i) = tmp;
         }
     }
-    std::cout<< "POBLACION "<<((int)*populationType)<< ", NUEVO PEOR: " << ((*(fittest+2*SUBJECTS_BY_GENERATION-1))->getFitness()) <<std::endl;
 }
 
 /**@brief: busca los muertos
