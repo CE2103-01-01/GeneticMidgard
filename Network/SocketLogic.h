@@ -34,7 +34,7 @@ public:
     void createObject(unsigned int, unsigned int, unsigned int);
     void deleteObject(unsigned int);
     void changeEdda(std::string);
-    void battleDetails(unsigned int, char*);//TODO-roberto definir info de peleas
+    void manageMessage(std::string);
 
 
 };

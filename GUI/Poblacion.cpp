@@ -3,6 +3,7 @@
 //
 
 #include "Poblacion.h"
+#include "../Network/SocketGUI.h"
 
 
 void Poblacion::drawPoblacion(RenderTarget &target, const IntRect &rect) {
@@ -136,4 +137,22 @@ Person::Person(unsigned int id, unsigned int x, unsigned int y, unsigned int r, 
 {
     lifeUpdate = 0;
     lifeUpdate = new LifeUpdate(0);
+}
+/**
+ * Check if anyone is on the mouse click and tell the logic that.
+ */
+void Poblacion::clickOnPerson(Vector2f click) {
+    int x = (click.x/Map::getInstance()->tileWidth);
+    int y = (click.y/Map::getInstance()->tileHeight);
+    if (x<0||y<0||x>=Map::getInstance()->getWidth()||y>=Map::getInstance()->getHeight())return;
+    DoubleListIterator<Person> *iter  = poblacion.getIterator();
+    while (iter->exists())
+    {
+        Person *next = iter->next();
+        if(next->x==click.x && next->y==click.y)
+        {
+            SocketGUI::getInstance()->detailsSubject(next->id);
+            break;
+        }
+    }
 }

@@ -29,6 +29,7 @@ public:
     ~SocketGUI();
     static SocketGUI* getInstance();
     void updateSpeed(unsigned char);
+    void detailsSubject(unsigned int id);
 
 };
 

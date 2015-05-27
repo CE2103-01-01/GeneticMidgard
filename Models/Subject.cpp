@@ -394,7 +394,7 @@ void* subjectLife(void* parameter){
         excecutioner->updateLife();
         //Si existe oponente ataca
         if(excecutioner->getOpponent()!=NULL && excecutioner->getOpponent()->isAlive()){
-            excecutioner->attack();
+           // excecutioner->attack();
             excecutioner->setOppenent(NULL);
         }//Si no existe oponente selecciona random un objeto
         else{

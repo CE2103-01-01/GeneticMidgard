@@ -35,15 +35,17 @@ void Slider::drawSlider(RenderTarget &target) {
 }
 /*
  * Receives the vector of mouse position and updates the pos of the slider
+ * Returns if pos changed
  */
-void Slider::move(Vector2i i) {
+bool Slider::move(Vector2i i) {
     if(shape.getGlobalBounds().contains(Vector2f(i.x, i.y)))
     {
         float xSlider =shape.getGlobalBounds().left;
         int posCalc = 255* (i.x-xSlider)/(length*2.0f);
-        if (posCalc>255) return;
+        if (posCalc>255) return false;
         pos = posCalc;
         SocketGUI::getInstance()->updateSpeed(pos);
+        return true;
     }
 
 }/*
