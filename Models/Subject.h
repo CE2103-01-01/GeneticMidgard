@@ -11,6 +11,9 @@ static const int OFFSET_ATTACK = 3;
 #include "../Algorithms/GeneralFitnessCalculator.h"
 #include "../Data/PThreadParam.h"
 #include "Terrain.h"
+#include "../Data/FileManager.h"
+#include "iostream"
+#include "string"
 
 /** Clase Subject
  * @brief clase a la cual pertenecen todos los individuos vivos
@@ -61,6 +64,7 @@ public:
     void changeSelection(bool);
     bool isSelected();
     void create();
+    void makeSubjectFile();
 };
 
 void* subjectLife(void*);

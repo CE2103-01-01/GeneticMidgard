@@ -43,6 +43,7 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     opponent = 0;
     //Coloca en 0 el puntero al thread
     lifeThread = 0;
+    makeSubjectFile();
 }
 
 /** Constructor
@@ -77,6 +78,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     opponent = 0;
     //Coloca en 0 el puntero al thread
     lifeThread = 0;
+    makeSubjectFile();
     }
 
 /** Constructor
@@ -111,6 +113,7 @@ Subject::Subject(const Subject& other){
     mother = other.mother;
     opponent = other.opponent;
     lifeThread = other.lifeThread;
+    makeSubjectFile();
 }
 
 /** Destructor
@@ -126,6 +129,7 @@ Subject::~Subject(){
     father = 0;
     mother = 0;
     opponent = 0;
+    //FileManager::deleteFile(*(id));
 }
 
 /** @brief Accede al padre
@@ -378,3 +382,34 @@ void* subjectLife(void* parameter){
     return 0;
 }
 
+/**
+ *FatherID | MotherID | SubjectID | SubjectGeneration | SubjectGens |SubjectCharacteristics
+ * 8bytes  |  8bytes  |   8bytes  |       4bytes      |    13bytes  |       8bytes
+ */
+void Subject::makeSubjectFile()
+{
+    /*FileManager::writeFile((const char*)(father->getID()), *(id),
+                           sizeof((std::to_string(father->getID())).length()));
+
+    FileManager::writeFile((const char*)(mother->getID()), *(id),
+                           sizeof((std::to_string(mother->getID())).length()));
+
+    FileManager::writeFile((const char*)(*id), *(id),
+                           sizeof((std::to_string(*(id)).length())));
+
+    FileManager::writeFile((const char*)(*generation), *(id),
+                           sizeof((std::to_string(*generation)).length()));*/
+
+    for(int i = 0; i < NUMBER_OF_GENES; i++)
+    {
+        FileManager::writeFile((std::to_string(geneticInformation->getGene(i))).c_str(), *(id),
+                               sizeof(((std::to_string(geneticInformation->getGene(i)))).length()));
+    }
+
+    for(int j = 0; j < NUMBER_OF_CHARACTERISTICS; j++)
+    {
+        FileManager::writeFile((std::to_string(*(characteristics + j + 1))).c_str(), *(id),
+                               sizeof(((std::to_string(*(characteristics + j + 1)))).length()));
+    }
+
+}
