@@ -59,7 +59,7 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* c
                                  );
     Subject* selected = populationTree->searchElement(*populationSize);
     selected->start_p_thread();
-    updateFittest(selected);
+    if((*(fittest+2*SUBJECTS_BY_GENERATION-1))->getFitness()<=selected->getFitness())updateFittest(selected);
 }
 
 /**@brief: inserta un nuevo miembro

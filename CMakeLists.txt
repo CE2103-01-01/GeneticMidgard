@@ -27,6 +27,11 @@ set(HEADER_FILES Interface/Random.h
                  Data/TreeProof.h
                  Network/SocketLogic.h
                  Data/FileManager.h
+                 Models/PopulationManager.h
+                 Data/Stack.h
+                 Models/God.h
+                 Models/AgeManager.h
+                 Network/SocketConfig.h
                  )
 
 set(SOURCE_FILES main.cpp
@@ -43,6 +48,9 @@ set(SOURCE_FILES main.cpp
                  Algorithms/GeneralFitnessCalculator.cpp
                  Algorithms/BinaryReader.cpp
                  Network/SocketLogic.cpp
+                 Models/PopulationManager.cpp
+                 Models/AgeManager.cpp
+                 Models/God.cpp
                  )
 
 set (DATA_STRUCTS   Data/BitVector.cpp
@@ -72,7 +80,7 @@ add_executable(ProjectMidgardLogic  ${SOURCE_FILES}
                                     ${HEADER_FILES}
                                     ${XML}
                                     ${DATA_STRUCTS}
-                                    ${RES_FILES} Models/PopulationManager.cpp Models/PopulationManager.h Models/AgeManager.cpp Models/AgeManager.h Network/SocketConfig.h Data/Stack.h Models/God.cpp Models/God.h Data/SubjectPrinter.cpp Data/SubjectPrinter.h)
+                                    ${RES_FILES})
 include_directories(../libs)
 target_link_libraries (ProjectMidgardLogic ${CMAKE_THREAD_LIBS_INIT})
 
