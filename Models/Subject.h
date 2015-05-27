@@ -5,7 +5,7 @@
 #ifndef PROJECTMIDGARD_SUBJECT_H
 #define PROJECTMIDGARD_SUBJECT_H
 
-static const int OFFSET_ATTACK = 3;
+static const int OFFSET_ATTACK = 5;
 
 #include "Chromosome.h"
 #include "../Algorithms/GeneralFitnessCalculator.h"
@@ -35,7 +35,7 @@ class Subject {
     bool* selected;
     unsigned char* characteristics;//vida-experiencia-arma-armadura-profesion
     void calculateFitness();//funcion de calcular fitness y set fitness
-    void findPath(Vector2D*);
+    void findPath(Vector2D);
 public:
     Subject(long,int*,unsigned char*,Vector2D);
     Subject(Subject*,Subject*,Chromosome*,long,long,int*);

@@ -1,3 +1,6 @@
+// *** ADDED BY HEADER FIXUP ***
+#include <cassert>
+// *** END ***
 /**
  * pugixml parser - version 1.2
  * --------------------------------------------------------

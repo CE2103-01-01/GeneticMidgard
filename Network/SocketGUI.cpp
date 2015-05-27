@@ -49,7 +49,7 @@ void SocketGUI::receiving() {
             break;
         }
         packet>>message;
-        std::cout << "Received: " << message<< std::endl;
+        //std::cout << "Received: " << message<< std::endl;
         Thread thread(std::bind(&SocketGUI::manageMessage, message));
         thread.launch();
     }
@@ -88,6 +88,7 @@ void SocketGUI::manageMessage(std::string string) {
     }
     else if (action == "lifeUpdate")
     {
+        std::cout << "Life Update" << std::endl;
         unsigned int id = document.FindMember("id")->value.GetUint();
         unsigned int size = document.FindMember("size")->value.GetInt();
         Map::getInstance()->getPoblacion()->updateLifeId(id,size);

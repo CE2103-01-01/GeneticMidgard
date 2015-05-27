@@ -16,77 +16,53 @@
     </MOVILOBJECT>
     <FitnessByAge>
         <age0>
-            <Inmune_system>0.3</Inmune_system>
-            <Attack>0.1</Attack>
-            <Defense>0.1</Defense>
-            <Magic>0.1</Magic>
-            <Intelligence>0.5</Intelligence>
-            <Superstition>1</Superstition>
-            <Speed>0.1</Speed>
-            <Vital_Energy>0.1</Vital_Energy>
-            <Blot>0.1</Blot>
-            <Runes>0.1</Runes>
+            <Life>5</Life>
+            <Attack>8</Attack>
+            <Defense>8</Defense>
+            <Magic>5</Magic>
+            <Intelligence>5</Intelligence>
+            <Superstition>8</Superstition>
+            <Speed>5</Speed>
+            <Vital_Energy>5</Vital_Energy>
+            <Blot>7</Blot>
+            <Runes>3</Runes>
         </age0>
         <age1>
-            <Inmune_system>0.3</Inmune_system>
-            <Attack>0.1</Attack>
-            <Defense>0.1</Defense>
-            <Magic>0.1</Magic>
-            <Intelligence>0.5</Intelligence>
-            <Superstition>1</Superstition>
-            <Speed>0.1</Speed>
-            <Vital_Energy>0.1</Vital_Energy>
-            <Blot>0.1</Blot>
-            <Runes>0.1</Runes>
+            <Life>5</Life>
+            <Attack>8</Attack>
+            <Defense>8</Defense>
+            <Magic>5</Magic>
+            <Intelligence>8</Intelligence>
+            <Superstition>8</Superstition>
+            <Speed>5</Speed>
+            <Vital_Energy>5</Vital_Energy>
+            <Blot>5</Blot>
+            <Runes>5</Runes>
         </age1>
         <age2>
-            <Inmune_system>0.3</Inmune_system>
-            <Attack>0.1</Attack>
-            <Defense>0.1</Defense>
-            <Magic>0.1</Magic>
-            <Intelligence>0.5</Intelligence>
-            <Superstition>1</Superstition>
-            <Speed>0.1</Speed>
-            <Vital_Energy>0.1</Vital_Energy>
-            <Blot>0.1</Blot>
-            <Runes>0.1</Runes>
+            <Life>8</Life>
+            <Attack>8</Attack>
+            <Defense>8</Defense>
+            <Magic>5</Magic>
+            <Intelligence>10</Intelligence>
+            <Superstition>8</Superstition>
+            <Speed>5</Speed>
+            <Vital_Energy>5</Vital_Energy>
+            <Blot>3</Blot>
+            <Runes>8</Runes>
         </age2>
         <age3>
-            <Inmune_system>0.3</Inmune_system>
-            <Attack>0.1</Attack>
-            <Defense>0.1</Defense>
-            <Magic>0.1</Magic>
-            <Intelligence>0.5</Intelligence>
-            <Superstition>1</Superstition>
-            <Speed>0.1</Speed>
-            <Vital_Energy>0.1</Vital_Energy>
-            <Blot>0.1</Blot>
-            <Runes>0.1</Runes>
+            <Life>10</Life>
+            <Attack>10</Attack>
+            <Defense>10</Defense>
+            <Magic>5</Magic>
+            <Intelligence>10</Intelligence>
+            <Superstition>10</Superstition>
+            <Speed>5</Speed>
+            <Vital_Energy>5</Vital_Energy>
+            <Blot>0</Blot>
+            <Runes>10</Runes>
         </age3>
-        <age4>
-            <Inmune_system>0.3</Inmune_system>
-            <Attack>0.1</Attack>
-            <Defense>0.1</Defense>
-            <Magic>0.1</Magic>
-            <Intelligence>0.5</Intelligence>
-            <Superstition>1</Superstition>
-            <Speed>0.1</Speed>
-            <Vital_Energy>0.1</Vital_Energy>
-            <Blot>0.1</Blot>
-            <Runes>0.1</Runes>
-        </age4>
-        <age5>
-            <Inmune_system>0.3</Inmune_system>
-            <Attack>0.1</Attack>
-            <Defense>0.1</Defense>
-            <Magic>0.1</Magic>
-            <Intelligence>0.5</Intelligence>
-            <Superstition>1</Superstition>
-            <Speed>0.1</Speed>
-            <Vital_Energy>0.1</Vital_Energy>
-            <Blot>0.1</Blot>
-            <Runes>0.1</Runes>
-        </age5>
     </FitnessByAge>
 
     <Dwarves>

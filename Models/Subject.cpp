@@ -193,10 +193,10 @@ unsigned char Subject::getCharacteristic(int position){
     return  *(characteristics + position);
 }
 
-void Subject::findPath(Vector2D* positionToFind) {
+void Subject::findPath(Vector2D positionToFind) {
+    Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);
     while (!(position->x <= opponent->position->x- OFFSET_ATTACK && position->x >= opponent->position->x+ OFFSET_ATTACK
              && position->y <= opponent->position->y- OFFSET_ATTACK && position->y>= opponent->position->y+ OFFSET_ATTACK)) {
-        Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);
         if (path.size()!=0) {
             Vector2D next = path.top();
             position->x = next.x;
@@ -205,11 +205,8 @@ void Subject::findPath(Vector2D* positionToFind) {
             updateSubject(*id, position->x, position->y);
             //std::cout << "SE MOVIO" << std::endl;
             path.pop();
-            if(*positionToFind== *opponent->position)
-            {
+            if(!(positionToFind == *opponent->position)) {
                 path = Terrain::findPathAS(*position,*opponent->position);
-                *positionToFind = *opponent->position;
-
             }
         }
     }
@@ -218,7 +215,7 @@ void Subject::findPath(Vector2D* positionToFind) {
 /** @brief Ata
  */
 void Subject::attack(){
-    findPath(opponent->position);
+    findPath(*opponent->position);
     //Se suma el gen del ataque del atacante con la caracteristica arma
     int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)
                        + getCharacteristic(POSITION_OF_CHARACTERISTIC_WEAPON)
@@ -346,7 +343,7 @@ void Subject::delete_p_thread(){
 void Subject::optionSelection() {
     int value = trueRandom::randRange(0,100);
     movilObject objectToGet = movilObjectManager::getInstance()->getRandomObject();
-    findPath(objectToGet.getVector());
+    findPath(*objectToGet.getVector());
     objectToGet.applyEffect(this);
 }
 
