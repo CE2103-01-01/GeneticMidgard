@@ -35,3 +35,4 @@ int loadNumberOfGenes(){
     genesXMLDoc.load_file(constantsSubjectXML::GENES_XML_PATH);
     return genesXMLDoc.child(constantsSubjectXML::GENES_XML_ROOT).child(constantsSubjectXML::GENES_XML_LENGHT).attribute(constantsSubjectXML::GENES_XML_LENGHT_INFO).as_int();
 }
+

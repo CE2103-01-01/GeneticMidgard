@@ -14,7 +14,10 @@ SocketGUI* SocketGUI::singleton = NULL;
 SocketGUI::SocketGUI() {
    if (!initialized) init();
 }
-
+SocketGUI::~SocketGUI() {
+    on = false;
+    socket.disconnect();
+}
 SocketGUI *SocketGUI::getInstance() {
     if (!singleton) singleton = new SocketGUI();
     return singleton;
@@ -34,6 +37,11 @@ void SocketGUI::init() {
         }
         else {
             std::cout<<"Connected"<<std::endl;
+            Packet packet;
+            packet<<"hello";
+            send.lock();
+            socket.send(packet);
+            send.unlock();
             break;
         }
 
@@ -104,7 +112,7 @@ void SocketGUI::manageMessage(std::string string) {
     }
 
     (Map::getInstance()->needToPaint) = true;
-    //std::cout << "Flag to paint" << std::endl;
+
 }
 
 void SocketGUI::updateSpeed(unsigned char speed) {
@@ -119,12 +127,25 @@ void SocketGUI::updateSpeed(unsigned char speed) {
     writer.EndObject();
     packet<<s.GetString();
     send.lock();
-    std::cout << "Sending" << std::endl;
     socket.send(packet);
     send.unlock();
+    std::cout << "sent" << std::endl;
 }
 
-SocketGUI::~SocketGUI() {
-    on = false;
-    socket.disconnect();
+
+
+void SocketGUI::detailsSubject(unsigned int id) {
+    if(!NETWORK_ACTIVATED) return;
+    if (!initialized) return;
+    Packet packet;
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+    writer.StartObject();
+    writer.String("action"); writer.String("detailsSubject");
+    writer.String("id"); writer.Uint(id);
+    writer.EndObject();
+    packet<<s.GetString();
+    send.lock();
+    socket.send(packet);
+    send.unlock();
 }

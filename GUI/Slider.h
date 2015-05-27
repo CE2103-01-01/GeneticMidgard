@@ -38,7 +38,7 @@ private:
 public:
     Slider(Vector2f, int length);
     void drawSlider(RenderTarget&);
-    void move(Vector2i);
+    bool move(Vector2i);
     unsigned char getPosition();
 };
 

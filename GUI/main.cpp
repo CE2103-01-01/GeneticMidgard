@@ -70,7 +70,7 @@ int main()
         //std::cout << "Painting " << std::endl;
         mapText.clear();
         window.clear();
-        //Render mAP
+        //Render map
         window.setView(mapView);
         mapa->renderMap(mapText, getRenderArea());
         mapText.display();
@@ -139,8 +139,16 @@ IntRect getRenderArea()
 void ManageEvents(Thread &socketThread, RenderWindow &window) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
-        slider.move(Mouse::getPosition(window));
         (Map::getInstance()->needToPaint) = true;
+        const Vector2i &position = Mouse::getPosition(window);
+            if (!slider.move(position))
+            {
+                window.setView(mapView);
+
+                Map::getInstance()->getPoblacion()->clickOnPerson(window.mapPixelToCoords(position));
+            }
+
+
     }
     sf::Event event;
     while (window.pollEvent(event))

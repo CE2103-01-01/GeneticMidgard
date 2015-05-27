@@ -5,12 +5,24 @@
 #ifndef PROJECTMIDGARD_SUBJECT_H
 #define PROJECTMIDGARD_SUBJECT_H
 
+#define FATHERID "FATHERID  "
+#define MOTHERID " / MOTHERID  "
+#define SUBJECTID " / SUBJECTID "
+#define POPULATIONID " / POPULATIONID "
+#define FITNESS " / FITNESS  "
+#define GENERATION " / GENERATION "
+#define GEN " / GEN "
+#define CHARACTERISTICS " / CHARACTERISTICS "
+
 static const int OFFSET_ATTACK = 5;
 
 #include "Chromosome.h"
 #include "../Algorithms/GeneralFitnessCalculator.h"
 #include "../Data/PThreadParam.h"
 #include "Terrain.h"
+#include "../Data/FileManager.h"
+#include "iostream"
+#include "string"
 
 #define ID_STR "ID: "
 #define GENERATION_STR "GENERATION: "
@@ -46,6 +58,7 @@ class Subject {
     float* fitness;
     bool* selected;
     unsigned char* characteristics;//vida-experiencia-arma-armadura-profesion
+    std::string writeFileVariable;
     void calculateFitness();//funcion de calcular fitness y set fitness
     void findPath(Vector2D);
     void printGeneralData();
@@ -80,6 +93,8 @@ public:
     void changeSelection(bool);
     bool isSelected();
     void create();
+    void makeSubjectFile();
+    void readSubjectFIle();
 };
 
 void* subjectLife(void*);

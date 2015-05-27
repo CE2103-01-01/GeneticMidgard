@@ -56,6 +56,7 @@ public:
     void deletePerson(unsigned int id);
     void updateId(unsigned int id, unsigned int x, unsigned int y);
     void updateLifeId(unsigned int id, int lifeUpdate);
+    void clickOnPerson(Vector2f);
 };
 
 

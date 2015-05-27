@@ -44,6 +44,7 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     opponent = 0;
     //Coloca en 0 el puntero al thread
     lifeThread = 0;
+    makeSubjectFile();
 }
 
 /** Constructor
@@ -78,6 +79,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     opponent = 0;
     //Coloca en 0 el puntero al thread
     lifeThread = 0;
+    makeSubjectFile();
     }
 
 /** Constructor
@@ -112,6 +114,7 @@ Subject::Subject(const Subject& other){
     mother = other.mother;
     opponent = other.opponent;
     lifeThread = other.lifeThread;
+    makeSubjectFile();
 }
 
 /** Destructor
@@ -127,6 +130,7 @@ Subject::~Subject(){
     father = 0;
     mother = 0;
     opponent = 0;
+    //FileManager::deleteFile(*(id));
 }
 
 /** @brief Accede al padre
@@ -460,3 +464,58 @@ void* subjectLife(void* parameter){
     return 0;
 }
 
+/**
+ *FatherID | MotherID | SubjectID | SubjectGeneration | SubjectGens |SubjectCharacteristics
+ * 8bytes  |  8bytes  |   8bytes  |       4bytes      |    13bytes  |       8bytes
+ */
+void Subject::makeSubjectFile()
+{
+    writeFileVariable = "";
+
+    if(father != 0 && mother != 0)
+    {
+        writeFileVariable.append(FATHERID);
+        writeFileVariable.append(std::to_string(father->getID()));
+        writeFileVariable.append(MOTHERID);
+        writeFileVariable.append(std::to_string(mother->getID()));
+    }
+
+    writeFileVariable.append(SUBJECTID);
+    writeFileVariable.append(std::to_string(*id));
+    writeFileVariable.append(POPULATIONID);
+    writeFileVariable.append(std::to_string(*(id)/SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID));
+    writeFileVariable.append(FITNESS);
+    writeFileVariable.append(std::to_string(getFitness()));
+    writeFileVariable.append(GENERATION);
+    writeFileVariable.append(std::to_string(*generation));
+
+    for(int i = 0; i < NUMBER_OF_GENES; i++)
+    {
+        writeFileVariable.append(GEN);
+        writeFileVariable.append(std::to_string(i) + ":");
+        writeFileVariable.append(" ");
+        writeFileVariable.append(std::to_string(geneticInformation->getGene(i)));
+    }
+
+    for(int j = 0; j < NUMBER_OF_CHARACTERISTICS; j++)
+    {
+        writeFileVariable.append(CHARACTERISTICS);
+        writeFileVariable.append(std::to_string(j)) + ":";
+        writeFileVariable.append(" ");
+        writeFileVariable.append(std::to_string(*(characteristics + j + 1)));
+    }
+    FileManager::writeFile(writeFileVariable.c_str(), *id, writeFileVariable.length());
+}
+
+/**
+ *
+ */
+void Subject::readSubjectFIle()
+{
+    char* reader_variable = static_cast<char*>(malloc(writeFileVariable.length()));
+
+    FileManager::readFile(reader_variable, *id, writeFileVariable.length());
+
+    std::cout << reader_variable << std::endl;
+
+}

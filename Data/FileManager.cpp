@@ -10,7 +10,7 @@
  * @param: int id: numero de archivo
  * @param: int dSize: tamaño del dato
  */
-void FileManager::writeFile(const char *data, int id, int dSize) {
+void FileManager::writeFile(const char *data, long id, int dSize) {
     std::string path = constants::PROJECT_PATH + PATH + std::to_string(id) + EXTENSION;
     std::ofstream outFile(path, std::ios::binary);
     outFile.write(data, dSize);
@@ -23,7 +23,7 @@ void FileManager::writeFile(const char *data, int id, int dSize) {
  * @param: int id: numero de archivo
  * @param: int retSize: tamaño del dato
  */
-void FileManager::readFile(char *ret, int id, int size) {//T(11+6i)
+void FileManager::readFile(char *ret, long id, int size) {//T(11+6i)
     std::string path = constants::PROJECT_PATH + PATH + std::to_string(id) + EXTENSION;
     std::ifstream inFile(path, std::ios::binary);
     inFile.read(ret,size);
@@ -34,7 +34,7 @@ void FileManager::readFile(char *ret, int id, int size) {//T(11+6i)
  * @brief borra un archivo formato EXTENSION
  * @param: int id: numero de archivo
  */
-void FileManager::deleteFile(int id){
+void FileManager::deleteFile(long id){
     std::string path = constants::PROJECT_PATH + PATH + std::to_string(id) + EXTENSION;
     remove(path.c_str());
 }

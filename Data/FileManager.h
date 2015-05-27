@@ -15,9 +15,9 @@
 
 class FileManager{
 public:
-    static void writeFile(const char*, int, int);
-    static void readFile(char*, int, int);
-    static void deleteFile(int);
+    static void writeFile(const char*, long, int);
+    static void readFile(char*, long, int);
+    static void deleteFile(long);
 };
 
 

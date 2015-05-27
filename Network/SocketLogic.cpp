@@ -4,7 +4,7 @@
 
 #include "SocketLogic.h"
 
-
+SocketLogic* SocketLogic::singleton = NULL;
 bool SocketLogic::initialized  = false;
 void SocketLogic::init() {
     initialized = true;
@@ -23,9 +23,8 @@ void SocketLogic::init() {
     }
     else std::cout << "Connected!" << std::endl;
 
-    //receiving();
+    receiving();
 }
-SocketLogic* SocketLogic::singleton = NULL;
 SocketLogic *SocketLogic::getInstance() {
     if(!singleton) singleton = new SocketLogic();
     return singleton;
@@ -165,7 +164,6 @@ void SocketLogic::deleteSubject(unsigned int idObject) {
 void SocketLogic::receiving() {
     while (on) {
 
-        std::cout << "hi" << std::endl;
         Packet packet;
         std::string message;
         if (client.receive(packet) != sf::Socket::Done) {
@@ -173,6 +171,7 @@ void SocketLogic::receiving() {
         }
         packet>>message;
         std::cout << "Received: " << message<< std::endl;
+        manageMessage(message);
     }
 }
 
@@ -209,4 +208,8 @@ void createObject(unsigned int idObject, unsigned int x, unsigned int y) {
 
 void changeEdda(std::string edda) {
     SocketLogic::getInstance()->changeEdda(edda);
+}
+
+void SocketLogic::manageMessage(std::string string) {
+
 }
