@@ -8,6 +8,7 @@
 #define FATHERID "FATHERID  "
 #define MOTHERID " / MOTHERID  "
 #define SUBJECTID " / SUBJECTID "
+#define POPULATIONID " / POPULATIONID "
 #define FITNESS " / FITNESS  "
 #define GENERATION " / GENERATION "
 #define GEN " / GEN "
@@ -42,6 +43,7 @@ class Subject {
     float* fitness;
     bool* selected;
     unsigned char* characteristics;//vida-experiencia-arma-armadura-profesion
+    std::string writeFileVariable;
     void calculateFitness();//funcion de calcular fitness y set fitness
     void findPath(Vector2D);
 public:
@@ -74,6 +76,7 @@ public:
     bool isSelected();
     void create();
     void makeSubjectFile();
+    void readSubjectFIle();
 };
 
 void* subjectLife(void*);

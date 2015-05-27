@@ -412,37 +412,52 @@ void* subjectLife(void* parameter){
  */
 void Subject::makeSubjectFile()
 {
-    std::string todo = "";
+    writeFileVariable = "";
 
     if(father != 0 && mother != 0)
     {
-        todo.append(FATHERID);
-        todo.append(std::to_string(father->getID()));
-        todo.append(MOTHERID);
-        todo.append(std::to_string(mother->getID()));
+        writeFileVariable.append(FATHERID);
+        writeFileVariable.append(std::to_string(father->getID()));
+        writeFileVariable.append(MOTHERID);
+        writeFileVariable.append(std::to_string(mother->getID()));
     }
 
-    todo.append(SUBJECTID);
-    todo.append(std::to_string(*id));
-    todo.append(FITNESS);
-    todo.append(std::to_string(getFitness()));
-    todo.append(GENERATION);
-    todo.append(std::to_string(*generation));
+    writeFileVariable.append(SUBJECTID);
+    writeFileVariable.append(std::to_string(*id));
+    writeFileVariable.append(POPULATIONID);
+    writeFileVariable.append(std::to_string(*(id)/SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID));
+    writeFileVariable.append(FITNESS);
+    writeFileVariable.append(std::to_string(getFitness()));
+    writeFileVariable.append(GENERATION);
+    writeFileVariable.append(std::to_string(*generation));
 
     for(int i = 0; i < NUMBER_OF_GENES; i++)
     {
-        todo.append(GEN);
-        todo.append(std::to_string(i) + ":");
-        todo.append(" ");
-        todo.append(std::to_string(geneticInformation->getGene(i)));
+        writeFileVariable.append(GEN);
+        writeFileVariable.append(std::to_string(i) + ":");
+        writeFileVariable.append(" ");
+        writeFileVariable.append(std::to_string(geneticInformation->getGene(i)));
     }
 
     for(int j = 0; j < NUMBER_OF_CHARACTERISTICS; j++)
     {
-        todo.append(CHARACTERISTICS);
-        todo.append(std::to_string(j)) + ":";
-        todo.append(" ");
-        todo.append(std::to_string(*(characteristics + j + 1)));
+        writeFileVariable.append(CHARACTERISTICS);
+        writeFileVariable.append(std::to_string(j)) + ":";
+        writeFileVariable.append(" ");
+        writeFileVariable.append(std::to_string(*(characteristics + j + 1)));
     }
-    FileManager::writeFile(todo.c_str(), *id, todo.length());
+    FileManager::writeFile(writeFileVariable.c_str(), *id, writeFileVariable.length());
+}
+
+/**
+ *
+ */
+void Subject::readSubjectFIle()
+{
+    char* reader_variable = static_cast<char*>(malloc(writeFileVariable.length()));
+
+    FileManager::readFile(reader_variable, *id, writeFileVariable.length());
+
+    std::cout << reader_variable << std::endl;
+
 }
