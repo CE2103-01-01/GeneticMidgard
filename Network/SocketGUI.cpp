@@ -38,7 +38,7 @@ void SocketGUI::init() {
         else {
             std::cout<<"Connected"<<std::endl;
             Packet packet;
-            packet<<"hello";
+            packet<<"{\"action\":\"hello\"}";
             send.lock();
             socket.send(packet);
             send.unlock();
@@ -57,7 +57,7 @@ void SocketGUI::receiving() {
             break;
         }
         packet>>message;
-        //std::cout << "Received: " << message<< std::endl;
+        std::cout << "Received: " << message<< std::endl;
         Thread thread(std::bind(&SocketGUI::manageMessage, message));
         thread.launch();
     }
@@ -75,8 +75,8 @@ void SocketGUI::manageMessage(std::string string) {
         unsigned int r = document.FindMember("r")->value.GetUint();
         unsigned int g = document.FindMember("g")->value.GetUint();
         unsigned int b = document.FindMember("b")->value.GetUint();
-        Person person(id,x,y,r,g,b);
-        Map::getInstance()->getPoblacion()->addPerson(person);
+        Object person(id,x,y,r,g,b);
+        Map::getInstance()->getPoblacion()->addObject(person);
         //std::cout << id << std::endl;
     }else if (action == "createObject")
     {
@@ -88,7 +88,7 @@ void SocketGUI::manageMessage(std::string string) {
     }
     else if (action == "updateSubject")
     {
-        //std::cout << "updateSubject: " << std::endl;
+
         unsigned int id = document.FindMember("id")->value.GetUint();
         unsigned int x = document.FindMember("x")->value.GetUint();
         unsigned int y = document.FindMember("y")->value.GetUint();
@@ -104,11 +104,29 @@ void SocketGUI::manageMessage(std::string string) {
     else if (action == "deleteSubject")
     {
         unsigned int id = document.FindMember("id")->value.GetUint();
-        Map::getInstance()->getPoblacion()->deletePerson(id);
+        Map::getInstance()->getPoblacion()->deleteObject(id);
     }
-    else if (action == "changeEdda")
+    else if (action == "createObject")
     {
-        //std::cout << "changeEdda: " << std::endl;
+        unsigned int id = document.FindMember("id")->value.GetUint();
+        unsigned int x = document.FindMember("x")->value.GetUint();
+        unsigned int y = document.FindMember("y")->value.GetUint();
+        Object object(id,x,y);
+        Map::getInstance()->getObjects()->addObject(object);
+    }
+    else if (action == "updateObject")
+    {
+
+        unsigned int id = document.FindMember("id")->value.GetUint();
+        unsigned int x = document.FindMember("x")->value.GetUint();
+        unsigned int y = document.FindMember("y")->value.GetUint();
+        Map::getInstance()->getObjects()->updateId(id,x,y);
+    }
+
+    else if (action == "deleteObject")
+    {
+        unsigned int id = document.FindMember("id")->value.GetUint();
+        Map::getInstance()->getObjects()->deleteObject(id);
     }
 
     (Map::getInstance()->needToPaint) = true;

@@ -45,6 +45,7 @@ Map::Map() {
     //create Poblacion
     if(!texture.loadFromFile(tilesetPath)) abort();
     unsigned int personGid;
+    unsigned int objectGid;
     unsigned int personAlphaGid;
     rapidxml::xml_node<> *terrain_node = root_node->first_node(TILESET_NODE)->first_node(TERRAINS)->first_node(
             TERRAIN_NODE);
@@ -54,6 +55,8 @@ Map::Map() {
             personGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value())+1;// Ojo el mas 1 para pasar de id a gid
         else if(!strcmp(terrain_node->first_attribute(NAME)->value(), ALPHA_PERSON))
             personAlphaGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value())+1;// Ojo el mas 1 para pasar de id a gid
+        else if(!strcmp(terrain_node->first_attribute(NAME)->value(), OBJECT_NODE))
+            objectGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value())+1;
         terrain_node = terrain_node->next_sibling();
     }
     Texture texturePerson;
@@ -62,6 +65,9 @@ Map::Map() {
     if (!texturePersonLayer.loadFromFile(tilesetPath,getTileRect(personAlphaGid))) abort();
     if(personGid==0||personAlphaGid==0) cerr<<"Error Textura de Personas no definida"<<endl;
     poblacion = new Poblacion(texturePerson,texturePersonLayer);
+    Texture textureObject;
+    if (!textureObject.loadFromFile(tilesetPath,getTileRect(objectGid))) abort();
+    objects = new Objects(textureObject);
     needToPaint = true;
 }
 
@@ -123,7 +129,8 @@ void Map::renderMap(RenderTarget& renderArea, const IntRect &rect) {
             }
         }
 
-    poblacion->drawPoblacion(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
+    poblacion->drawObjects(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
+    objects->drawObjects(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
 }
 
     IntRect Map::getTileRect(unsigned int i) {
@@ -166,3 +173,7 @@ Map *Map::getInstance() {
 Poblacion *Map::getPoblacion() {
     return poblacion;
 }
+Objects *Map::getObjects() {
+    return poblacion;
+}
+

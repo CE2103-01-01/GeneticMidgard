@@ -21,9 +21,16 @@ void SocketLogic::init() {
         std::cerr<<"Error on create client"<<std::endl;
         return;
     }
-    else std::cout << "Connected!" << std::endl;
+    else {
+        std::cout << "Connected!" << std::endl;
+        Packet packet;
+        packet<<"{\"action\":\"hello\"}";
+        send.lock();
+        client.send(packet);
+        send.unlock();
+    }
 
-    receiving();
+    //receiving();
 }
 SocketLogic *SocketLogic::getInstance() {
     if(!singleton) singleton = new SocketLogic();
