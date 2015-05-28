@@ -99,7 +99,10 @@ void PopulationManager::init_war(){
                 }
             }
             //Si el defensa no es nulo lo coloca como oponente, si no corta el ciclo al no haber gente disponible
-            if(tmpDefense!= 0) tmpWarrior->setOppenent(tmpDefense);
+            if(tmpDefense!= 0){
+                tmpWarrior->setOppenent(tmpDefense);
+                std::cout << "AAAAAAA" << std::endl;
+            }
             else break;
         }
     }

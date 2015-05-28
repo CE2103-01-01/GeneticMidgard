@@ -60,7 +60,7 @@ void SocketGUI::receiving() {
             break;
         }
         packet>>message;
-        std::cout << "Received: " << message<< std::endl;
+        //std::cout << "Received: " << message<< std::endl;
         Thread thread(std::bind(&SocketGUI::manageMessage, message));
         thread.launch();
     }
@@ -104,7 +104,7 @@ void SocketGUI::manageMessage(std::string string) {
     }
     else if (action == "updateSubject")
     {
-
+        std::cout<<"Update"<<std::endl;
         unsigned int id = document.FindMember("id")->value.GetUint();
         unsigned int x = document.FindMember("x")->value.GetUint();
         unsigned int y = document.FindMember("y")->value.GetUint();
@@ -128,7 +128,7 @@ void SocketGUI::manageMessage(std::string string) {
     else if (action == "deleteSubject")
     {
         popul-=1;
-        std::cout << "Population: " << popul << std::endl;
+       // std::cout << "Population: " << popul << std::endl;
         unsigned int id = document.FindMember("id")->value.GetUint();
         Map::getInstance()->getPoblacion()->deletePerson(id);
     }

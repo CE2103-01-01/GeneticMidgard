@@ -14,8 +14,6 @@ int main()
     Terrain::initArray();
     trueRandom::init();
 
-
-
     AgeManager* manager = static_cast<AgeManager*>(malloc(sizeof(AgeManager)));
 
     new(manager) AgeManager();

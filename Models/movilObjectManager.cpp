@@ -49,7 +49,7 @@ void movilObjectManager::update(){
  * @return movilObject
  */
 movilObject* movilObjectManager::getRandomObject() {
-    int objectNumber = trueRandom::randRange(0,NUMBER_OF_OBJECTS);
+    int objectNumber = trueRandom::getRandom()%NUMBER_OF_OBJECTS;
     return listObject+objectNumber;
 }
 
@@ -90,6 +90,7 @@ movilObjectManager::movilObjectManager() {
         Vector2D position = Terrain::getRandomFreePosition();
         *(listObject+i) = movilObject(*(listXmlData+2*random), *(listXmlData+2*random+1), idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
                                       position.x, position.y, i);
+        createObject((listObject+i)->getId(),(listObject+i)->get_X_Position(),(listObject+i)->get_Y_Position());
         objectCounter++;
         idCounter++;
     }
@@ -137,7 +138,7 @@ bool movilObjectManager::needsToUpdate() {
  * @param int value: valor que se modifica en la caracteristica
  */
 movilObject::movilObject(int characteristic,int value, int identificator,int xPosition,int yPosition, int positionOnListParam)  {
-    position = Vector2D(position.x,position.y);
+    position = Vector2D(xPosition,yPosition);
     use = false;
     object = characteristic;
     effect = value;

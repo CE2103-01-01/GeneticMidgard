@@ -243,22 +243,40 @@ void Subject::printProfession() {
 /**@brief sigue un camino hasta una ruta definida
  * @param Vector2D positionToFind: posicion a encontrar en el mapa
  */
-void Subject::findPath(Vector2D positionToFind) { /* (7 + 68N)T */
+bool Subject::findPath(Vector2D positionToFind) { /* (7 + 68N)T */
     Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);                                  //7T
-    while (!(opponent->position->x-OFFSET_ATTACK <= position->x <= opponent->position->x+OFFSET_ATTACK
-             && opponent->position->y-OFFSET_ATTACK <= position->y <= opponent->position->y+OFFSET_ATTACK)) {   //20T
+    if(path.size()==0) return false;
+    while (opponent->position->x-OFFSET_ATTACK > position->x || position->x > opponent->position->x+OFFSET_ATTACK
+           || opponent->position->y-OFFSET_ATTACK > position->y || position->y > opponent->position->y+OFFSET_ATTACK) {   //20T
         if (path.size()!=0) {                                                                                   //4T
             Vector2D next = path.top();                                                                         //5T
             position->x = next.x;                                                                               //5T
             position->y = next.y;                                                                               //5T
             sf::sleep(microseconds(actionSleepNano));                                                           //4T
             updateSubject(*id, position->x, position->y);                                                       //6T
+            std::cout << "aaaa" << std::endl;
             path.pop();                                                                                         //2T
             if(positionToFind != *opponent->position) {                                                         //4T
                 path = Terrain::findPathAS(*position,*opponent->position);                                      //6T
             }
         }
     }
+    return true;
+}
+
+bool Subject::findObjectPath(Vector2D positionToFind){
+    Stack<Vector2D> path = Terrain::findPathAS(*position,positionToFind);
+    if(path.size()==0) return false;
+    while(path.size()!=0)
+    {
+        Vector2D next = path.top();                                                                         //5T
+        position->x = next.x;                                                                               //5T
+        position->y = next.y;                                                                               //5T
+        sf::sleep(microseconds(actionSleepNano));                                                           //4T
+        updateSubject(*id, position->x, position->y);                                                       //6T
+        path.pop();
+    }
+    return true;
 }
 
 /**@brief imprime los datos de sujeto
@@ -294,7 +312,7 @@ void Subject::print(){
 /** @brief Ataque
  */
 void Subject::attack(){/* 70T */
-    findPath(*opponent->position);                                                                                  //3T
+    if(!findPath(*opponent->position))return;                                                                                  //3T
     //Se suma el gen del ataque del atacante con la caracteristica arma
     int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)                                         //19T
                        + *(characteristics+POSITION_OF_CHARACTERISTIC_WEAPON)
@@ -422,7 +440,7 @@ void Subject::delete_p_thread(){
 void Subject::optionSelection() {
     int value = trueRandom::randRange(0,100);
     movilObject objectToGet = *(movilObjectManager::getInstance()->getRandomObject());
-    findPath(objectToGet.getVector());
+    if(findObjectPath(objectToGet.getVector()))
     objectToGet.applyEffect(this);
 }
 
