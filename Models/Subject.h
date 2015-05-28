@@ -69,7 +69,7 @@ public:
     Subject(long,int*,unsigned char*,Vector2D);
     Subject(Subject*,Subject*,Chromosome*,long,long,int*);
     Subject(const Subject&);
-    ~Subject();;
+    ~Subject();
     static int actionSleepNano;
     long getGeneration();
     long getID();
