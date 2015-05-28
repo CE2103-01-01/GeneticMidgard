@@ -64,6 +64,8 @@ void Terrain::printArray() {
 /*
  * Algoritmo A* para paths
  */
+
+
 Stack<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &finish) {
     int closed_Nodes_map[width][height]; // map of closed (tried-out) Nodes
     int open_Nodes_map[width][height]; // map of open (not-yet-tried) Nodes
@@ -344,3 +346,4 @@ bool Vector2D::operator==(Vector2D other) {
 bool Vector2D::operator!=(Vector2D other) {
     return other.x != x   ||   other.y !=y;
 }
+

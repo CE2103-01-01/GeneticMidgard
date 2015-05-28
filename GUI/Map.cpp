@@ -137,9 +137,9 @@ void Map::renderMap(RenderTarget& renderArea, const IntRect &rect) {
             }
         }
 
-    //poblacion->drawPoblacion(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
+    poblacion->drawPoblacion(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
     dioses->drawPoblacion(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
-    //objects->drawObjects(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
+    objects->drawObjects(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
 }
 
     IntRect Map::getTileRect(unsigned int i) {

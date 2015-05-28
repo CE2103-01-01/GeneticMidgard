@@ -47,6 +47,7 @@ public:
     static int getFreeSpaces();
     static void printArray();
     static Stack<Vector2D> findPathAS(const Vector2D &start, const Vector2D &finish);
+    static Stack<Vector2D> findPathA(const Vector2D &start, const Vector2D &finish);
     static Vector2D getRandomFreePosition();
     static Vector2D getFreePositionNear(Vector2D);
     static int get(Vector2D);

@@ -99,7 +99,8 @@ void SocketGUI::manageMessage(std::string string) {
         unsigned int id = document.FindMember("id")->value.GetUint();
         unsigned int x = document.FindMember("x")->value.GetUint();
         unsigned int y = document.FindMember("y")->value.GetUint();
-        //TODO: TERMINIAR
+        Object object (id,x,y);
+        Map::getInstance()->getObjects()->addObject(object);
     }
     else if (action == "updateSubject")
     {
