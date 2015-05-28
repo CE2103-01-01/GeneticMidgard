@@ -112,7 +112,7 @@ void AgeManager::delete_p_thread(){
  */
 void AgeManager::changeAge(){
     if(*actualAge < UNION_AGE)
-        showSubjectsByAge();
+        //showSubjectsByAge();
     (*actualAge)++;
     (*years) = 0;
     //Comprueba en que edda se encuentra
@@ -131,8 +131,8 @@ void AgeManager::changeAge(){
             (PopulationManager::getInstance()->getPopulation()+i)->exterminate();
         }
     }
-    std::cout<< "---------------------------Change Age-------------------------"<<std::endl;
-    std::cout<<""<<std::endl;
+   // std::cout<< "---------------------------Change Age-------------------------"<<std::endl;
+   // std::cout<<""<<std::endl;
 }
 
 void AgeManager::initPopulationManager(){

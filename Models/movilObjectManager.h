@@ -23,8 +23,8 @@ class movilObject;
 class movilObjectManager{
     int idCounter;
     int objectCounter;
-    DoubleList<movilObject> listObject;
-    DoubleList<xml_node> listXmlData;
+    movilObject* listObject;
+    int* listXmlData;
     int listSize;
     static movilObjectManager* instance;
 public:
@@ -35,7 +35,7 @@ public:
     void obtainData();
     bool needsToUpdate();
     movilObject getDataByPosistion(Vector2D);
-    movilObject getRandomObject();
+    movilObject* getRandomObject();
 };
 /** Clase movilObject
  * @brief clase de los objetos generado por el Manager
@@ -50,15 +50,19 @@ private:
     int object;
     bool use;
     int id;
+    int estaVacido;
 public:
     bool operator ==(movilObject);
     movilObject(movilObjectManager*,int,int,int,int,int);
+    movilObject(int);
     ~movilObject();
     void applyEffect(Subject* person);
     int getId();
-    std::string getType();
+
     int get_X_Position();
     int get_Y_Position();
+    int getEffect();
+    int getCharacteristic();
     Vector2D* getVector();
 
 };

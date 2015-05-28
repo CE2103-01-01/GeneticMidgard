@@ -51,9 +51,9 @@ void movilObjectManager::update(){
  * @brief retorna de forma random un objeto de la lista
  * @return movilObject
  */
-movilObject movilObjectManager::getRandomObject() {
+movilObject* movilObjectManager::getRandomObject() {
     int objectNumber = trueRandom::randRange(0,listObject.len());
-    return *(listObject.get(objectNumber));
+    return (listObject.getNode(objectNumber)->getData());
 }
 
 /**obtiene la instancia singleton de la clase
@@ -72,26 +72,38 @@ movilObjectManager* movilObjectManager::getInstance() {
  */
 movilObjectManager::movilObjectManager() {
     idCounter = 0;
-    xml_document objectSource;
-    objectSource.load_file(CONSTANT_XML_PATH);
-    listObject = DoubleList<movilObject>();
-    listXmlData = DoubleList<xml_node>();
     int elementCounter = std::distance(objectSource.child("CONSTANTS").child("MOVILOBJECT").begin(),
                                        objectSource.child("CONSTANTS").child("MOVILOBJECT").end());
+    xml_document objectSource;
+    objectSource.load_file(CONSTANT_XML_PATH);
+    listXmlData = static_cast<int*>(malloc(2*elementCounter*sizeof(int)));
+    listObject = static_cast<movilObject*>(calloc(0,30*sizeof(movilObject)));
+
+
+
     objectCounter = 0;
     xml_node temp = objectSource.child("CONSTANTS").child("MOVILOBJECT").first_child();
-    listXmlData.append(temp);
-    for (int h = 0; h < elementCounter; h++) {
+
+
+    for (int h = 0; h < 2*elementCounter; h+=2) {
+
+        *(listXmlData+h) = temp.first_attribute().as_int();
+        *(listXmlData+h+1)= temp.last_attribute().as_int();
         temp = temp.next_sibling();
-        listXmlData.append(temp);
+    }
         for (int i = 0; i < elementCounter; i++,  idCounter) {
             Vector2D position = Terrain::getRandomFreePosition();
-            movilObject object = movilObject(this, (*listXmlData.getNode(i)->getData())
-                    .attribute("characteristic")
-                    .as_int(), (*listXmlData.getNode(i)->getData())
-                                                     .attribute("value").as_int(), idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
+            int Effect =*(listXmlData+2*i);
+
+
+            std::cout<<"Effect "<<Effect<<std::endl;
+            int characteristic = *(listXmlData+2*i+1);
+            std::cout<<"Characteristic "<<characteristic<<std::endl;
+
+            movilObject object = movilObject(this,characteristic , Effect, idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
                                                       position.x, position.y);
-            listObject.append(object);
+
+            std::cout<<"hola pablo"<<std::endl;
             createObject(object.getId(),object.get_X_Position(),object.get_Y_Position());
             Terrain::set(position, object.getId());
             objectCounter++;
@@ -99,10 +111,14 @@ movilObjectManager::movilObjectManager() {
         }
         listSize = listObject.len();
 
-
+    for(int i =0;i<listObject.len();i++){
+        std::cout<<"Object ID "<<listObject.getNode(i)->getData()->getId()<<std::endl;
+        std::cout<<"Object Object "<<listObject.getNode(i)->getData()->getCharacteristic()<<std::endl;
+        std::cout<<"Object Effect "<<listObject.getNode(i)->getData()->getEffect()<<std::endl;
+    }
 
         std::cout << elementCounter << std::endl;
-    }
+
 }
 /**Obtiene el objeto segun la position de Vector2D
  * @brief Obtiene el objeto segun la position de Vector2D
@@ -205,6 +221,12 @@ bool movilObject::operator==(movilObject object) {
     return position->x==object.position->x && position->y == object.position->y;
 }
 
+int movilObject::getEffect() {
+    return effect;
+}
+int movilObject::getCharacteristic() {
+    return object;
+}
 
 
 

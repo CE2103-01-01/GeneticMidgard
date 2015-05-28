@@ -17,7 +17,10 @@ int main()
 
 
     AgeManager* manager = static_cast<AgeManager*>(malloc(sizeof(AgeManager)));
+    movilObjectManager* ObjectManager = static_cast<movilObjectManager*>(malloc(sizeof(movilObjectManager)));
+    new(ObjectManager) movilObjectManager();
     new(manager) AgeManager();
+
 
     return 0;
 }
