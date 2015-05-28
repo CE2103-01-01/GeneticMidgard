@@ -23,6 +23,8 @@ AgeManager::AgeManager(){
     //new(objectManager) movilObjectManager();
     pthread_create(managementThread,0,ageManagerThread, static_cast<void*>(this));
     pthread_join(*managementThread,NULL);
+    pthread_create(printerThread,0,subjectPrinter, NULL);
+    pthread_join(*printerThread,NULL);
 }
 
 /**Destructor
@@ -131,8 +133,6 @@ void AgeManager::changeAge(){
             (PopulationManager::getInstance()->getPopulation()+i)->exterminate();
         }
     }
-   // std::cout<< "---------------------------Change Age-------------------------"<<std::endl;
-   // std::cout<<""<<std::endl;
 }
 
 void AgeManager::initPopulationManager(){

@@ -467,7 +467,7 @@ void* subjectLife(void* parameter){
             excecutioner->setOppenent(NULL);
         }//Si no existe oponente selecciona random un objeto
         else{
-           // excecutioner->optionSelection();
+            //excecutioner->optionSelection();
         }
     }
     excecutioner->delete_p_thread();

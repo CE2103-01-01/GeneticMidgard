@@ -6,6 +6,6 @@
 #define PROJECTMIDGARDLOGIC_SOCKETCONFIG_H
 static const bool NETWORK_ACTIVATED = true;
 static const char *const IP_ADDRESS = "127.0.0.1";
-static const int PORT = 53008;
+static const int PORT = 53009;
 static const float RECONNECT_TIME = 2.0f;
 #endif //PROJECTMIDGARDLOGIC_SOCKETCONFIG_H

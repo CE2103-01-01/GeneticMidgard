@@ -16,6 +16,7 @@
 class AgeManager {
     pthread_mutex_t* generalMutex;
     pthread_t* managementThread;
+    pthread_t* printerThread;
     pthread_cond_t* condition;
     int* actualAge;
     int* years;

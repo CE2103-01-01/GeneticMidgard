@@ -86,10 +86,13 @@ movilObjectManager::movilObjectManager() {
         temp = temp.next_sibling();
     }
     for(int i = 0; i<NUMBER_OF_OBJECTS-1; i++){
-        int random = trueRandom::randRange(0,elementCounter);
+        int random = trueRandom::getRandom()%elementCounter;
         Vector2D position = Terrain::getRandomFreePosition();
         *(listObject+i) = movilObject(*(listXmlData+2*random), *(listXmlData+2*random+1), idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
                                       position.x, position.y, i);
+        std::cout<< (listObject+i)->getId()<< std::endl;
+        std::cout<<(listObject+i)->get_X_Position()<< std::endl;
+        std::cout<<(listObject+i)->get_Y_Position()<< std::endl;
         createObject((listObject+i)->getId(),(listObject+i)->get_X_Position(),(listObject+i)->get_Y_Position());
         objectCounter++;
         idCounter++;
