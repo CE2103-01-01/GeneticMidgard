@@ -12,5 +12,4 @@ namespace gui_constants{
     const int FPS_LIMIT = 8;
     const int SIZE_MINIMAP = 300;
 }
-static sf::Mutex peopleMutex;
 #endif //PROJECTMIDGARDLOGIC_CONSTANTS_H

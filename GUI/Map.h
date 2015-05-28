@@ -30,6 +30,8 @@ static const char *const TILE_NODE = "tile";
 static const char *const TILESET_PATH = "../res/";
 static const char *const ALPHA_PERSON = "PersonaAlpha";
 
+static const char *const OBJECT_NODE = "Object";
+
 #include <iostream>
 #include <string.h>
 #include <SFML/Graphics.hpp>
@@ -46,7 +48,7 @@ using namespace std;
 using namespace gui_constants;
 
 class Poblacion;
-
+class Objects;
 class Map {
 private:
     Map();
@@ -56,6 +58,7 @@ private:
     unsigned int lastGid;
     Texture texture;
     Poblacion *poblacion;
+    Objects *objects;
 public:
     static Map* getInstance();
     int width;
@@ -74,6 +77,7 @@ public:
     int getWidth();
     int getHeight();
     Poblacion *getPoblacion();
+    Objects *getObjects();
     Texture getTexture();
 
     void renderMap(RenderTarget&, const IntRect &rect);

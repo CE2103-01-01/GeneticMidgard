@@ -6,15 +6,15 @@
 #include "../Network/SocketGUI.h"
 
 
-void Poblacion::drawPoblacion(RenderTarget &target, const IntRect &rect) {
-    peopleMutex.lock();
-    DoubleListIterator<Person> *iter = poblacion.getIterator();
+void Poblacion::drawObjects(RenderTarget &target, const IntRect &rect) {
+    objectMutex.lock();
+    DoubleListIterator<Person> *iter = objects.getIterator();
 
     while (iter->exists()) {
         Person *next = iter->next();
        // if(rect.contains(Vector2i(next->x,next->y)))continue;
         Sprite sprite;
-        sprite.setTexture(texturePerson);
+        sprite.setTexture(textureObject);
         sprite.setPosition(sf::Vector2f(Map::getInstance()->getTileWidth() * next->x, Map::getInstance()->getTileHeight() * next->y));
         target.draw(sprite);
         sprite.setTexture(textureLayer);
@@ -36,47 +36,14 @@ void Poblacion::drawPoblacion(RenderTarget &target, const IntRect &rect) {
             target.draw(text);
         }
     }
-    peopleMutex.unlock();
+    objectMutex.unlock();
 }
 
-void Poblacion::addPerson(Person &person) {
-    peopleMutex.lock();
-    poblacion.add(person);
-    peopleMutex.unlock();
-}
 
-void Poblacion::deletePerson(unsigned int id) {
-    int i=0;
-    DoubleListIterator<Person> *iter = poblacion.getIterator();
-    while (iter->exists())
-    {
-        if(*(iter->next())==(id)) {
-            poblacion.deleteNode(i);
-            return;
-        }
-        i++;
-    }
-
-}
-
-void Poblacion::updateId(unsigned int id, unsigned int x, unsigned int y) {
-    int i=0;
-    DoubleListIterator<Person> *iter = poblacion.getIterator();
-    while (iter->exists()) {
-        Person *next = iter->next();
-        if(*next==id)
-        {
-            next->x = x;
-            next->y = y;
-            return;
-        }
-    }
-
-}
 
 void Poblacion::updateLifeId(unsigned int id, int lifeUpdate) {
     int i=0;
-    DoubleListIterator<Person> *iter = poblacion.getIterator();
+    DoubleListIterator<Person> *iter = (DoubleListIterator<Person> *) objects.getIterator();
     while (iter->exists()) {
         Person *next = iter->next();
         if(*next==id)
@@ -87,9 +54,6 @@ void Poblacion::updateLifeId(unsigned int id, int lifeUpdate) {
     }
 }
 
-bool Person::operator==(unsigned int pId) {
-    return (id==pId);
-}
 
 LifeUpdate::LifeUpdate(int life) :life(life){
     startTime = Clock();
@@ -106,7 +70,8 @@ void Person::setLifeUpdate(int i) {
 
 
 Poblacion::Poblacion(Texture texture, Texture pTextureLayer) {
-    texturePerson = texture;
+    objects = DoubleList<Person>();
+    textureObject = texture;
     textureLayer = pTextureLayer;
 
     if (!roboto.loadFromFile("../res/roboto.ttf"))
@@ -133,8 +98,9 @@ LifeUpdate *Person::getLifeUpdate() {
     return nullptr;
 }
 
-Person::Person(unsigned int id, unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b) : id(id),x(x),y(y),r(r),g(g),b(b)
+Person::Person(unsigned int pId, unsigned int pX, unsigned int pY, unsigned int pR, unsigned int pG, unsigned int pB)
 {
+    id=pId; x = pX; y = pY; r = pR; g = pG; b = pB;
     lifeUpdate = 0;
     lifeUpdate = new LifeUpdate(0);
 }
@@ -145,10 +111,10 @@ void Poblacion::clickOnPerson(Vector2f click) {
     int x = (click.x/Map::getInstance()->tileWidth);
     int y = (click.y/Map::getInstance()->tileHeight);
     if (x<0||y<0||x>=Map::getInstance()->getWidth()||y>=Map::getInstance()->getHeight())return;
-    DoubleListIterator<Person> *iter  = poblacion.getIterator();
+    DoubleListIterator<Person> *iter  = objects.getIterator();
     while (iter->exists())
     {
-        Person *next = iter->next();
+        Object *next = iter->next();
         if(next->x==click.x && next->y==click.y)
         {
             SocketGUI::getInstance()->detailsSubject(next->id);
