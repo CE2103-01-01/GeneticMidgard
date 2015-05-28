@@ -37,10 +37,9 @@ GeneralFitnessCalculator::GeneralFitnessCalculator(){
 float GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
     float fitness = 0;
     for(int i = 0; i < NUMBER_OF_GENES - 3; i++){
-        fitness += chromosome->getGene(i)*(*(constants+i))* chromosome->getGene(i)*(*(constants+i))/
-                (255*NUMBER_OF_GENES-3);
+        fitness += chromosome->getGene(i)*(*(constants+i))/255;
     }
-    return fitness/ (255*NUMBER_OF_GENES-3)*100;
+    return fitness;
 }
 
 /**@brief metodo que accede a la unica instancia
