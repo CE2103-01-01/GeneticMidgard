@@ -32,5 +32,5 @@ public:
     void detailsSubject(unsigned int id);
 
 };
-
+void exit();
 #endif //PROJECTMIDGARDLOGIC_SOCKET_H

@@ -2,11 +2,13 @@
 // Created by pablo on 03/05/15.
 //
 
+#include <signal.h>
 #include "SocketLogic.h"
 
 SocketLogic* SocketLogic::singleton = NULL;
 bool SocketLogic::initialized  = false;
 void SocketLogic::init() {
+    signal(SIGTERM,&exit);
     initialized = true;
     if(!NETWORK_ACTIVATED) return;
     on = true;
@@ -219,4 +221,9 @@ void changeEdda(std::string edda) {
 
 void SocketLogic::manageMessage(std::string string) {
 
+}
+
+
+void exit() {
+    SocketLogic::getInstance()->~SocketLogic();
 }

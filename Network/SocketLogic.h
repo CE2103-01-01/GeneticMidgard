@@ -27,10 +27,10 @@ public:
     ~SocketLogic();
     static SocketLogic* getInstance();
     void receiving();
-    void updateSubject(unsigned int, unsigned int, unsigned int);
     void createSubject(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
-    void lifeUpdate(unsigned int, int);
+    void updateSubject(unsigned int, unsigned int, unsigned int);
     void deleteSubject(unsigned int);
+    void lifeUpdate(unsigned int, int);
     void createObject(unsigned int, unsigned int, unsigned int);
     void deleteObject(unsigned int);
     void changeEdda(std::string);
@@ -47,5 +47,6 @@ void updateSubject(unsigned int, unsigned int, unsigned int);
 void lifeUpdate(unsigned int, int);
 void changeEdda(std::string);
 void battleDetails(unsigned int, char*);
+void exit();
 
 #endif //PROJECTMIDGARDLOGIC_SOCKETLOGIC_H

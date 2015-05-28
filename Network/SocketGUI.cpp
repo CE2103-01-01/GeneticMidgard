@@ -3,6 +3,7 @@
 //
 
 
+#include <signal.h>
 #include "SocketGUI.h"
 
 
@@ -26,6 +27,7 @@ SocketGUI *SocketGUI::getInstance() {
 
 
 void SocketGUI::init() {
+    signal(SIGTERM,&exit);
     if(!NETWORK_ACTIVATED) return;
     on = true;
     initialized = true;
@@ -166,4 +168,8 @@ void SocketGUI::detailsSubject(unsigned int id) {
     send.lock();
     socket.send(packet);
     send.unlock();
+}
+
+void exit() {
+    SocketGUI::getInstance()->~SocketGUI();
 }
