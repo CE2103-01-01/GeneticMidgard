@@ -335,3 +335,7 @@ int Terrain::getFreeSpaces() {
 bool Vector2D::operator==(Vector2D other) {
     return other.x == x   &&   other.y ==y;
 }
+
+bool Vector2D::operator!=(Vector2D other) {
+    return other.x != x   ||   other.y !=y;
+}

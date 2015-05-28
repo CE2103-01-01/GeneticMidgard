@@ -31,6 +31,7 @@ public:
     Vector2D(const Vector2D&);
     Vector2D(int, int);
     bool operator==(Vector2D);
+    bool operator!=(Vector2D);
     int x;
     int y;
 };
