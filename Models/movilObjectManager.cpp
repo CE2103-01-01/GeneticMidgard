@@ -79,7 +79,7 @@ movilObjectManager::movilObjectManager() {
     listObject = static_cast<movilObject*>(calloc(0,NUMBER_OF_OBJECTS*sizeof(movilObject)));
 
     xml_node temp = objectSource.child("CONSTANTS").child("MOVILOBJECT").first_child();
-    
+
     for (int h = 0; h < 2*elementCounter; h+=2) {
         *(listXmlData+h) = temp.first_attribute().as_int();
         *(listXmlData+h+1)= temp.last_attribute().as_int();

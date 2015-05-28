@@ -17,7 +17,7 @@ int main()
 
 
     AgeManager* manager = static_cast<AgeManager*>(malloc(sizeof(AgeManager)));
-    movilObjectManager::getInstance();
+
     new(manager) AgeManager();
 
 
