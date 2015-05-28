@@ -86,7 +86,7 @@ void AgeManager::evaluateEvolution(){
         if(flag) break;
     }
     //Si se cumplio el parametro cambia la edda
-    if(!flag | *years > MAX_YEARS) changeAge();
+    if(!flag || *years > MAX_YEARS) changeAge();
 }
 
 /**@brief accede al mutex general
@@ -113,8 +113,6 @@ void AgeManager::delete_p_thread(){
 /**@brief cambia el calculo de fitness
  */
 void AgeManager::changeAge(){
-    if(*actualAge < UNION_AGE)
-        //showSubjectsByAge();
     (*actualAge)++;
     (*years) = 0;
     //Comprueba en que edda se encuentra
@@ -132,6 +130,7 @@ void AgeManager::changeAge(){
         for(int i = 0; i < INITIAL_NUMBER_OF_POPULATIONS; i++){
             (PopulationManager::getInstance()->getPopulation()+i)->exterminate();
         }
+        std::cout << "TWILIGHT OF THE GODS" << std::endl;
     }
 }
 

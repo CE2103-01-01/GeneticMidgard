@@ -90,9 +90,6 @@ movilObjectManager::movilObjectManager() {
         Vector2D position = Terrain::getRandomFreePosition();
         *(listObject+i) = movilObject(*(listXmlData+2*random), *(listXmlData+2*random+1), idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
                                       position.x, position.y, i);
-        std::cout<< (listObject+i)->getId()<< std::endl;
-        std::cout<<(listObject+i)->get_X_Position()<< std::endl;
-        std::cout<<(listObject+i)->get_Y_Position()<< std::endl;
         createObject((listObject+i)->getId(),(listObject+i)->get_X_Position(),(listObject+i)->get_Y_Position());
         objectCounter++;
         idCounter++;
