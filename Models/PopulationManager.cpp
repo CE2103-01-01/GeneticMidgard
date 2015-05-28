@@ -86,25 +86,8 @@ void PopulationManager::init_war(){
     for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
         //Toma un sujeto temporal y revisa si es guerrero
         Subject* tmpWarrior = *((population+firstPopulationNumber)->getFittest() + i);
-        if(tmpWarrior->getCharacteristic(POSITION_OF_CHARACTERISTIC_PROFESSION)==PROFESSION_WARRIOR){
-            //toma un sujeto temporal para iterta en busca de defensa
-            Subject* tmpDefense = 0;
-            //Busca un defensa
-            for(int j=lastDefense; j<2*SUBJECTS_BY_GENERATION;j++){
-                //Si encuentra a un defensa lo coloca en el temporal y actualiza el id
-                if((*((population+secondPopulationNumber)->getFittest() + j))
-                           ->getCharacteristic(POSITION_OF_CHARACTERISTIC_PROFESSION)==PROFESSION_DEFENSE){
-                    tmpDefense=*((population+secondPopulationNumber)->getFittest() + j);
-                    lastDefense = j+1;
-                }
-            }
-            //Si el defensa no es nulo lo coloca como oponente, si no corta el ciclo al no haber gente disponible
-            if(tmpDefense!= 0){
-                tmpWarrior->setOppenent(tmpDefense);
-                std::cout << "AAAAAAA" << std::endl;
-            }
-            else break;
-        }
+        Subject* tmpDefense = *((population+secondPopulationNumber)->getFittest() + i);
+        if(!tmpWarrior->getOpponent())tmpWarrior->setOppenent(tmpDefense);
     }
 }
 
@@ -185,7 +168,7 @@ void PopulationManager::reproduce(){
  */
 void PopulationManager::thread() {
     reproduce();
-    if(trueRandom::getRandom()%RANDOM_WAR_LIMIT < constants::RANDOM_WAR_RANGE_BY_EDDA) init_war();
+    if(trueRandom::getRandom()%RANDOM_WAR_LIMIT < constants::RANDOM_WAR_RANGE_BY_EDDA && *activePopulations>1) init_war();
 }
 
 /**@brief devuelve true si hay personas vivas

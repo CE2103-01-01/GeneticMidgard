@@ -9,7 +9,6 @@
 Map *Map::singleton = NULL;
 
 Map::Map() {
-
     rapidxml::xml_node<> *root_node;
     rapidxml::xml_document<> doc;
     rapidxml::file<> file(MAP_LOCATION);
@@ -186,6 +185,7 @@ Poblacion *Map::getPoblacion() {
 Objects *Map::getObjects() {
     return objects;
 }
+
 Poblacion *Map::getGods() {
     return dioses;
 }

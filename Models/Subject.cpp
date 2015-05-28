@@ -78,6 +78,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     opponent = 0;
     //Coloca en 0 el puntero al thread
     lifeThread = 0;
+    selectProfession();
     }
 
 /** Constructor
@@ -254,7 +255,6 @@ bool Subject::findPath(Vector2D positionToFind) { /* (7 + 68N)T */
             position->y = next.y;                                                                               //5T
             sf::sleep(microseconds(actionSleepNano));                                                           //4T
             updateSubject(*id, position->x, position->y);                                                       //6T
-            std::cout << "aaaa" << std::endl;
             path.pop();                                                                                         //2T
             if(positionToFind != *opponent->position) {                                                         //4T
                 path = Terrain::findPathAS(*position,*opponent->position);                                      //6T

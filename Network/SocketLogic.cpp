@@ -63,7 +63,6 @@ void SocketLogic::updateSubject(unsigned int idSubject, unsigned int x, unsigned
     writer.EndObject();
     packet<<s.GetString();
     send.lock();
-    std::cout<<"update"<<std::endl;
     client.send(packet);
     send.unlock();
 }
