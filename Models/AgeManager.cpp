@@ -126,7 +126,7 @@ void AgeManager::changeAge(){
         PopulationManager::getInstance()->mergePopulations();
     }else if(*actualAge == TWILIGHT_OF_THE_GODS_AGE){
         //En la edda de la pelea contra los dioses genera la pelea
-        std::cout<< "SE HA ALCANZADO LA META" <<std::endl;
+        PopulationManager::getInstance()->initFinalWar();
         for(int i = 0; i < INITIAL_NUMBER_OF_POPULATIONS; i++){
             (PopulationManager::getInstance()->getPopulation()+i)->exterminate();
         }

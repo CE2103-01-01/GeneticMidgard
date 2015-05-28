@@ -95,9 +95,6 @@ LifeUpdate::LifeUpdate(int life) :life(life){
 
 }
 
-
-
-
 void Person::setLifeUpdate(int i) {
     if(lifeUpdate)free(lifeUpdate);
     lifeUpdate = new LifeUpdate(i);
