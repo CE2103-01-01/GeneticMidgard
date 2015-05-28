@@ -47,8 +47,9 @@ float GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
         //ademas, para un mismo gen, el resultado aumenta conforme la constante crece
         else fitness += (*(constants+i))/chromosome->getGene(i);
     }
-
-    return fitness/1000;
+    //esto se puede cambiar, depende de como quiera visualizar el numero
+    //pero al final da lo mismo, ya que la comparacion va a seguir dando el mismo resultado
+    return fitness/100;
 }
 
 /**@brief metodo que accede a la unica instancia
