@@ -24,7 +24,7 @@ class movilObject;
 
 class movilObjectManager{
     int idCounter;
-    int objectCounter;
+    int objectCounterc;
     movilObject* listObject;
     int* listXmlData;
     static movilObjectManager* instance;
@@ -35,7 +35,6 @@ public:
     movilObjectManager();
     void update();
     void decreseCounter(movilObject);
-    void obtainData();
     bool needsToUpdate();
     movilObject getDataByPosistion(Vector2D);
     movilObject* getRandomObject();
