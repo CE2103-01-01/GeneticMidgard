@@ -117,6 +117,7 @@ void AgeManager::changeAge(){
     if(*actualAge < UNION_AGE){
         //Cambia la edda en el calculador de fitness
         GeneralFitnessCalculator::getInstance()->changeEdda();
+        showSubjectsByAge();
     }else if(*actualAge == UNION_AGE){
         //Cambia la edda en el calculador de fitness
         GeneralFitnessCalculator::getInstance()->changeEdda();
@@ -138,6 +139,24 @@ void AgeManager::initPopulationManager(){
     //Inicia el pthread del manejador de poblaciomnes
     pthread_create(PopulationManager::getInstance()->get_pthread(),NULL,populationManagerThread,populationManagerThreadParameters);
     pthread_cond_wait(condition,generalMutex);
+}
+
+void AgeManager::showSubjectsByAge()
+{
+    for(int i = 0; i < INITIAL_NUMBER_OF_POPULATIONS; i++)
+    {
+        Subject* tmpsubject1 = *((PopulationManager::getInstance()->getPopulation()+i)->getFittest());
+        Subject* tmpsubject2 = *((PopulationManager::getInstance()->getPopulation()+i)->getFittest() + INITIAL_NUMBER_OF_SUBJECTS - 1);
+        std::cout << "EL SUJETO CON MEJOR FITNES EN LA ERA " << *actualAge - 1<< " EN LA POBLACION "<< tmpsubject1->getID()%SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID << std::endl;
+        tmpsubject1->makeSubjectFile();
+        tmpsubject1->readSubjectFIle();
+        std::cout << "EL SUJETO CON PEOR FITNES EN LA ERA " << *actualAge - 1<< " EN LA POBLACION "<< tmpsubject2->getID()%SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID << std::endl;
+        tmpsubject2->makeSubjectFile();
+        tmpsubject2->readSubjectFIle();
+        std::cout<<""<<std::endl;
+    }
+    std::cout<< "---------------------------Change Age------------------------"<<std::endl;
+    std::cout<<""<<std::endl;
 }
 
 /**@brief pthread del manejador de eddas
@@ -185,3 +204,4 @@ void* subjectPrinter(void* parameter){
         nanosleep(&timeController,NULL);
     }
 }
+

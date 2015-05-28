@@ -471,9 +471,9 @@ void Subject::makeSubjectFile()
     if(father != 0 && mother != 0)
     {
         writeFileVariable.append(FATHERID);
-        writeFileVariable.append(std::to_string(father->getID()));
+        writeFileVariable.append(std::to_string(father->getID()/SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID));
         writeFileVariable.append(MOTHERID);
-        writeFileVariable.append(std::to_string(mother->getID()));
+        writeFileVariable.append(std::to_string(mother->getID()/SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID));
     }
 
     writeFileVariable.append(SUBJECTID);
@@ -498,7 +498,7 @@ void Subject::makeSubjectFile()
         writeFileVariable.append(CHARACTERISTICS);
         writeFileVariable.append(std::to_string(j)) + ":";
         writeFileVariable.append(" ");
-        writeFileVariable.append(std::to_string(*(characteristics + j + 1)));
+        writeFileVariable.append(std::to_string(*(characteristics + j)));
     }
     FileManager::writeFile(writeFileVariable.c_str(), *(id)/SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID, writeFileVariable.length());
 }

@@ -22,6 +22,7 @@ class AgeManager {
     void changeAge();
     void evaluateEvolution();
     bool evaluateSubject(Subject*);
+    void showSubjectsByAge();
 
     public:
         AgeManager();

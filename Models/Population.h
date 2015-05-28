@@ -36,6 +36,7 @@ public:
     Subject** getFittest();
     int getActualID();
     Subject* getSubject(long);
+    unsigned char getColors();
 };
 
 void* reproductionThread(void*);
