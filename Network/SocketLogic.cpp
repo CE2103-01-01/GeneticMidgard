@@ -134,7 +134,8 @@ void SocketLogic::createObject(unsigned int idObject,  unsigned int x, unsigned 
     writer.String("x"); writer.Uint(x);
     writer.String("y"); writer.Uint(y);
     writer.EndObject();
-    packet<<s.GetString();
+    std::string tmp = s.GetString();
+    packet<<tmp;
     send.lock();
     client.send(packet);
     send.unlock();
