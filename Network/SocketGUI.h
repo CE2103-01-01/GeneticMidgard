@@ -25,6 +25,7 @@ class SocketGUI {
     static void manageMessage(std::string);
     bool on;
     Mutex send;
+    static int popul;
 public:
     ~SocketGUI();
     static SocketGUI* getInstance();

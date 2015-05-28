@@ -16,20 +16,24 @@ void Objects::addObject(Object &object) {
 }
 
 void Objects::deleteObject(unsigned int id) {
+    objectMutex.lock();
     int i=0;
     DoubleListIterator<Object> *iter = objects.getIterator();
     while (iter->exists())
     {
         if(*(iter->next())==(id)) {
+            std::cout << "Borrar" << std::endl;
             objects.deleteNode(i);
+            std::cout << "Last:" << objects.len() << std::endl;
             return;
         }
         i++;
     }
-
+    objectMutex.unlock();
 }
 
 void Objects::updateId(unsigned int id, unsigned int x, unsigned int y) {
+    objectMutex.lock();
     int i=0;
     DoubleListIterator<Object> *iter = objects.getIterator();
     while (iter->exists()) {
@@ -41,7 +45,7 @@ void Objects::updateId(unsigned int id, unsigned int x, unsigned int y) {
             return;
         }
     }
-
+    objectMutex.unlock();
 }
 
 Objects::Objects(Texture texture) {
@@ -66,9 +70,6 @@ Object::Object(unsigned int id, unsigned int x, unsigned int y) :id(id), x(x), y
 
 }
 
-Object::Object() {
-
-}
 
 void Object::setLifeUpdate(int i) {
     if(lifeUpdate)free(lifeUpdate);

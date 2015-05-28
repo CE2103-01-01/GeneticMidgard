@@ -18,7 +18,6 @@ public:
 class Object
 {
 public:
-    Object();
     Object(unsigned int id, unsigned int x, unsigned int y);
     Object(unsigned int id, unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b) ;
     unsigned int id;
@@ -38,7 +37,6 @@ protected:
     DoubleList<Object> objects;
     Texture textureObject;
 public:
-    Objects() { }
     Objects(Texture);
     void drawObjects(RenderTarget&,const IntRect &);
     void addObject(Object&);

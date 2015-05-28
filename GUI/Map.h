@@ -32,6 +32,10 @@ static const char *const ALPHA_PERSON = "PersonaAlpha";
 
 static const char *const OBJECT_NODE = "Object";
 
+static const char *const DIOS = "Dios";
+
+static const char *const DIOS_ALPHA = "DiosAlpha";
+
 #include <iostream>
 #include <string.h>
 #include <SFML/Graphics.hpp>
@@ -59,6 +63,7 @@ private:
     Texture texture;
     Poblacion *poblacion;
     Objects *objects;
+    Poblacion *dioses;
 public:
     static Map* getInstance();
     int width;
@@ -83,6 +88,8 @@ public:
     void renderMap(RenderTarget&, const IntRect &rect);
     IntRect getTileRect(unsigned int gid);
     bool needToPaint;
+
+    rapidxml::xml_node<> *loadTerrain();
 };
 
 

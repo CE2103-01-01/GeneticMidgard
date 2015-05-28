@@ -30,6 +30,9 @@ public:
     void createSubject(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
     void updateSubject(unsigned int, unsigned int, unsigned int);
     void deleteSubject(unsigned int);
+    void createGod(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
+    void updateGod(unsigned int, unsigned int, unsigned int);
+    void deleteGod(unsigned int);
     void lifeUpdate(unsigned int, int);
     void createObject(unsigned int, unsigned int, unsigned int);
     void deleteObject(unsigned int);

@@ -32,6 +32,12 @@ void SocketLogic::init() {
         send.unlock();
     }
 
+    Packet packet;
+    std::string message;
+    client.receive(packet);
+    packet>>message;
+    if(message == "{\"action\":\"hello\"}") std::cout << "Connection Tested" << std::endl;
+
     //receiving();
 }
 SocketLogic *SocketLogic::getInstance() {
@@ -45,7 +51,6 @@ SocketLogic::SocketLogic() {
 
 void SocketLogic::updateSubject(unsigned int idSubject, unsigned int x, unsigned int y) {
     if(!NETWORK_ACTIVATED) return;
-
     if(!initialized) return;
     Packet packet;
     StringBuffer s;
@@ -226,4 +231,63 @@ void SocketLogic::manageMessage(std::string string) {
 
 void exit() {
     SocketLogic::getInstance()->~SocketLogic();
+}
+
+void SocketLogic::createGod(unsigned int idGod, unsigned int x, unsigned int y, unsigned int r, unsigned int g,
+                            unsigned int b) {
+    if(!NETWORK_ACTIVATED) return;
+    if(!initialized) return;
+    Packet packet;
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+    writer.StartObject();
+    writer.String("action"); writer.String("createGod");
+    writer.String("id"); writer.Uint(idGod);
+    writer.String("x"); writer.Uint(x);
+    writer.String("y"); writer.Uint(y);
+    writer.String("r"); writer.Uint(r);
+    writer.String("g"); writer.Uint(g);
+    writer.String("b"); writer.Uint(b);
+    writer.EndObject();
+    std::string tmp = s.GetString();
+    packet<<tmp;
+    send.lock();
+    client.send(packet);
+    send.unlock();
+}
+
+void SocketLogic::updateGod(unsigned int idGod, unsigned int x, unsigned int y) {
+    if(!NETWORK_ACTIVATED) return;
+    if(!initialized) return;
+    Packet packet;
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+    writer.StartObject();
+    writer.String("action"); writer.String("updateGod");
+    writer.String("id"); writer.Uint(idGod);
+    writer.String("x"); writer.Uint(x);
+    writer.String("y"); writer.Uint(y);
+    writer.EndObject();
+    packet<<s.GetString();
+    send.lock();
+    client.send(packet);
+    send.unlock();
+}
+
+void SocketLogic::deleteGod(unsigned int id) {
+    if(!NETWORK_ACTIVATED) return;
+    if(!initialized) return;
+    Packet packet;
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+    writer.StartObject();
+    writer.String("action");
+    writer.String("deleteGod");
+    writer.String("id");
+    writer.Uint(id);
+    writer.EndObject();
+    packet<<s.GetString();
+    send.lock();
+    client.send(packet);
+    send.unlock();
 }

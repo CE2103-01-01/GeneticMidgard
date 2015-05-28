@@ -2,6 +2,7 @@
 // Created by pablo on 10/05/15.
 //
 
+#include <cmath>
 #include "Slider.h"
 
 /*
@@ -47,8 +48,9 @@ bool Slider::move(Vector2i i) {
         SocketGUI::getInstance()->updateSpeed(pos);
         return true;
     }
-
-}/*
+return false;
+}
+/*
  * Position from 1 to 255
  */
 unsigned char Slider::getPosition() {

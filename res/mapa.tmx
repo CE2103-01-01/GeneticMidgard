@@ -9,6 +9,8 @@
    <terrain name="PersonaAlpha" tile="1851"/>
    <terrain name="Object" tile="1820"/>
    <terrain name="Tierra/Zacate" tile="1566"/>
+   <terrain name="Dios" tile="1836"/>
+   <terrain name="DiosAlpha" tile="1852"/>
   </terraintypes>
   <tile id="80" terrain=",,,0"/>
   <tile id="81" terrain=",,0,0"/>

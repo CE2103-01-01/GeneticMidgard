@@ -7,11 +7,14 @@
 int main()
 {
 
+    if(NETWORK_ACTIVATED)
+    {
+        SocketLogic::getInstance();
+    }
     Terrain::initArray();
     trueRandom::init();
 
-    Thread socketThread(&SocketLogic::getInstance);
-    socketThread.launch();
+
 
     AgeManager* manager = static_cast<AgeManager*>(malloc(sizeof(AgeManager)));
     new(manager) AgeManager();

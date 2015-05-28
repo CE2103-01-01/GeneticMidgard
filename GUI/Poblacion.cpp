@@ -42,6 +42,7 @@ void Poblacion::drawObjects(RenderTarget &target, const IntRect &rect) {
 
 
 void Poblacion::updateLifeId(unsigned int id, int lifeUpdate) {
+    objectMutex.lock();
     int i=0;
     DoubleListIterator<Object> *iter = objects.getIterator();
     while (iter->exists()) {
@@ -49,9 +50,11 @@ void Poblacion::updateLifeId(unsigned int id, int lifeUpdate) {
         if(*next==id)
         {
             next->setLifeUpdate(lifeUpdate);
+            objectMutex.unlock();
             return;
         }
     }
+    objectMutex.unlock();
 }
 
 
@@ -60,8 +63,7 @@ void Poblacion::updateLifeId(unsigned int id, int lifeUpdate) {
 
 
 
-Poblacion::Poblacion(Texture texture, Texture pTextureLayer) {
-    textureObject = texture;
+Poblacion::Poblacion(Texture texture, Texture pTextureLayer):Objects(texture) {
     textureLayer = pTextureLayer;
 
     if (!roboto.loadFromFile("../res/roboto.ttf"))

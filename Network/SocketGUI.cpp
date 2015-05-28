@@ -7,7 +7,7 @@
 #include "SocketGUI.h"
 
 
-
+int SocketGUI::popul = 0;
 bool SocketGUI::initialized = false;
 SocketGUI* SocketGUI::singleton = NULL;
 
@@ -71,6 +71,7 @@ void SocketGUI::manageMessage(std::string string) {
     std::string action = document.FindMember("action")->value.GetString();
     if (action == "createSubject")
     {
+        popul+=1;
         unsigned int id = document.FindMember("id")->value.GetUint();
         unsigned int x = document.FindMember("x")->value.GetUint();
         unsigned int y = document.FindMember("y")->value.GetUint();
@@ -105,6 +106,8 @@ void SocketGUI::manageMessage(std::string string) {
     }
     else if (action == "deleteSubject")
     {
+        popul-=1;
+        std::cout << "Population: " << popul << std::endl;
         unsigned int id = document.FindMember("id")->value.GetUint();
         Map::getInstance()->getPoblacion()->deleteObject(id);
     }

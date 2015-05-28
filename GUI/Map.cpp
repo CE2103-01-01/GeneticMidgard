@@ -9,44 +9,14 @@ Map *Map::singleton = NULL;
 
 Map::Map() {
 
-    rapidxml::xml_node<> *root_node;
-    rapidxml::xml_document<> doc;
-    rapidxml::file<> file(MAP_LOCATION);
-    doc.parse<0>(file.data());
-    //get root node
-    root_node = doc.first_node(MAP_NODE);
-    //Map settings
-    width = std::atoi(root_node->first_attribute(WIDTH_NODE)->value());
-    height = std::atoi(root_node->first_attribute(HEIGHT_NODE)->value());
-    tileWidth = std::atoi(root_node->first_attribute(TILEWIDTH_NODE)->value());
-    tileHeight = std::atoi(root_node->first_attribute(TILEHEIGHT_NODE)->value());
-    //image config
-    rapidxml::xml_node<> *image_node = root_node->first_node(TILESET_NODE)->first_node(IMAGE_NODE);
-    tilesetPath += image_node->first_attribute("source")->value();
-    tilesetHeight = std::atoi(image_node->first_attribute(HEIGHT_NODE)->value());
-    tilesetWidth = std::atoi(image_node->first_attribute(WIDTH_NODE)->value());
-    lastGid = (tilesetWidth/tileWidth)*(tilesetHeight/tileHeight);
-    //cout<<lastGid<<endl;
-    //Terrain settings
-    int pos = 0;
-    for (rapidxml::xml_node<> *layer_node = root_node->first_node(LAYER_NODE); layer_node;
-         layer_node = layer_node->next_sibling()) {
-        terrain[pos] = static_cast<int*>(malloc(sizeof(int)*width*height));
-
-        rapidxml::xml_node<> *data_node = layer_node->first_node(DATA_NODE);
-        int i = 0;//para puntero
-        for (rapidxml::xml_node<> *tile_node = data_node->first_node(TILE_NODE); tile_node;
-             tile_node = tile_node->next_sibling()) {
-            *(terrain[pos] + i) = std::atoi(tile_node->first_attribute("gid")->value());
-            i++;// contador para el puntero
-        }
-        pos++;
-    }
+    rapidxml::xml_node<> *root_node = loadTerrain();
     //create Poblacion
     if(!texture.loadFromFile(tilesetPath)) abort();
     unsigned int personGid;
-    unsigned int objectGid;
     unsigned int personAlphaGid;
+    unsigned int diosGid;
+    unsigned int diosAlphaGid;
+    unsigned int objectGid;
     rapidxml::xml_node<> *terrain_node = root_node->first_node(TILESET_NODE)->first_node(TERRAINS)->first_node(
             TERRAIN_NODE);
     while (terrain_node)
@@ -55,22 +25,63 @@ Map::Map() {
             personGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value())+1;// Ojo el mas 1 para pasar de id a gid
         else if(!strcmp(terrain_node->first_attribute(NAME)->value(), ALPHA_PERSON))
             personAlphaGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value())+1;// Ojo el mas 1 para pasar de id a gid
+        else if(!strcmp(terrain_node->first_attribute(NAME)->value(), DIOS))
+            diosGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value())+1;
+        else if(!strcmp(terrain_node->first_attribute(NAME)->value(), DIOS_ALPHA))
+            diosAlphaGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value())+1;
         else if(!strcmp(terrain_node->first_attribute(NAME)->value(), OBJECT_NODE))
             objectGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value())+1;
         terrain_node = terrain_node->next_sibling();
     }
-    Texture texturePerson;
-    if (!texturePerson.loadFromFile(tilesetPath,getTileRect(personGid))) abort();
-    Texture texturePersonLayer;
-    if (!texturePersonLayer.loadFromFile(tilesetPath,getTileRect(personAlphaGid))) abort();
-    if(personGid==0||personAlphaGid==0) cerr<<"Error Textura de Personas no definida"<<endl;
-    poblacion = new Poblacion(texturePerson,texturePersonLayer);
-    Texture textureObject;
-    if (!textureObject.loadFromFile(tilesetPath,getTileRect(objectGid))) abort();
+    Texture textureDios; if (!textureDios.loadFromFile(tilesetPath,getTileRect(personGid))) abort();
+    Texture textureDiosAlpha; if (!textureDiosAlpha.loadFromFile(tilesetPath,getTileRect(personAlphaGid))) abort();
+    Texture texturePerson; if (!texturePerson.loadFromFile(tilesetPath,getTileRect(personGid))) abort();
+    Texture texturePersonAlpha; if (!texturePersonAlpha.loadFromFile(tilesetPath,getTileRect(personAlphaGid))) abort();
+    Texture textureObject; if (!textureObject.loadFromFile(tilesetPath,getTileRect(objectGid))) abort();
+
+    if(personGid==0||personAlphaGid==0||diosGid==0||diosAlphaGid==0||objectGid==0) cerr<<"Error Textura de Personas no definida"<<endl;
+    poblacion = new Poblacion(texturePerson, texturePersonAlpha);
     objects = new Objects(textureObject);
+    dioses = new Poblacion(textureDios,textureDiosAlpha);
     needToPaint = true;
 }
 
+rapidxml::xml_node<> *Map::loadTerrain() {
+    rapidxml::xml_node<> *root_node;
+    rapidxml::xml_document<> doc;
+    rapidxml::file<> file(MAP_LOCATION);
+    doc.parse<0>(file.data());
+    //get root node
+    root_node = doc.first_node(MAP_NODE);
+    //Map settings
+    width = atoi(root_node->first_attribute(WIDTH_NODE)->value());
+    height = atoi(root_node->first_attribute(HEIGHT_NODE)->value());
+    tileWidth = atoi(root_node->first_attribute(TILEWIDTH_NODE)->value());
+    tileHeight = atoi(root_node->first_attribute(TILEHEIGHT_NODE)->value());
+    //image config
+    rapidxml::xml_node<> *image_node = root_node->first_node(TILESET_NODE)->first_node(IMAGE_NODE);
+    tilesetPath += image_node->first_attribute("source")->value();
+    tilesetHeight = atoi(image_node->first_attribute(HEIGHT_NODE)->value());
+    tilesetWidth = atoi(image_node->first_attribute(WIDTH_NODE)->value());
+    lastGid = (tilesetWidth / tileWidth)*(tilesetHeight / tileHeight);
+    //cout<<lastGid<<endl;
+    //Terrain settings
+    int pos = 0;
+    for (rapidxml::xml_node<> *layer_node = root_node->first_node(LAYER_NODE); layer_node;
+         layer_node = layer_node->next_sibling()) {
+        terrain[pos] = static_cast<int*>(malloc(sizeof(int)* width * height));
+
+        rapidxml::xml_node<> *data_node = layer_node->first_node(DATA_NODE);
+        int i = 0;//para puntero
+        for (rapidxml::xml_node<> *tile_node = data_node->first_node(TILE_NODE); tile_node;
+             tile_node = tile_node->next_sibling()) {
+            *(terrain[pos] + i) = atoi(tile_node->first_attribute("gid")->value());
+            i++;// contador para el puntero
+        }
+        pos++;
+    }
+    return root_node;
+}
 
 
 int Map::getTileWidth() {
@@ -130,6 +141,7 @@ void Map::renderMap(RenderTarget& renderArea, const IntRect &rect) {
         }
 
     poblacion->drawObjects(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
+    dioses->drawObjects(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
     objects->drawObjects(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
 }
 
