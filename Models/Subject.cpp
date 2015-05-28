@@ -240,24 +240,23 @@ void Subject::printProfession() {
             break;
     }
 }
-
+|  .  |
 /**@brief sigue un camino hasta una ruta definida
  * @param Vector2D positionToFind: posicion a encontrar en el mapa
  */
-void Subject::findPath(Vector2D positionToFind) {
-    Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);
-    while (!(position->x <= opponent->position->x- OFFSET_ATTACK && position->x >= opponent->position->x+ OFFSET_ATTACK
-             && position->y <= opponent->position->y- OFFSET_ATTACK && position->y>= opponent->position->y+ OFFSET_ATTACK)) {
-        if (path.size()!=0) {
-            Vector2D next = path.top();
-            position->x = next.x;
-            position->y = next.y;
-            sf::sleep(microseconds(actionSleepNano));
-            updateSubject(*id, position->x, position->y);
-            //std::cout << "SE MOVIO" << std::endl;
-            path.pop();
-            if(!(positionToFind == *opponent->position)) {
-                path = Terrain::findPathAS(*position,*opponent->position);
+void Subject::findPath(Vector2D positionToFind) { /* (7 + 68N)T */
+    Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);                                  //7T
+    while (!(opponent->position->x-OFFSET_ATTACK <= position->x <= opponent->position->x+OFFSET_ATTACK
+             && opponent->position->y-OFFSET_ATTACK <= position->y <= opponent->position->y+OFFSET_ATTACK)) {   //20T
+        if (path.size()!=0) {                                                                                   //4T
+            Vector2D next = path.top();                                                                         //5T
+            position->x = next.x;                                                                               //5T
+            position->y = next.y;                                                                               //5T
+            sf::sleep(microseconds(actionSleepNano));                                                           //4T
+            updateSubject(*id, position->x, position->y);                                                       //6T
+            path.pop();                                                                                         //2T
+            if(positionToFind != *opponent->position) {                                                         //4T
+                path = Terrain::findPathAS(*position,*opponent->position);                                      //6T
             }
         }
     }
@@ -295,46 +294,46 @@ void Subject::print(){
 
 /** @brief Ataque
  */
-void Subject::attack(){
-    findPath(*opponent->position);
+void Subject::attack(){/* 70T */
+    findPath(*opponent->position);                                                                                  //3T
     //Se suma el gen del ataque del atacante con la caracteristica arma
-    int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)
-                       + getCharacteristic(POSITION_OF_CHARACTERISTIC_WEAPON)
-                       + getGeneticInformation()->getGene(POSITION_OF_GENE_DEFENSE)
-                       + getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
+    int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)                                         //19T
+                       + *(characteristics+POSITION_OF_CHARACTERISTIC_WEAPON)
+                       + geneticInformation->getGene(POSITION_OF_GENE_DEFENSE)
+                       + *(characteristics+POSITION_OF_CHARACTERISTIC_ARMOR);
     //Se suma el gen de la defensa del oponente con la caracteristica armadura
-    int defenseResult = opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_ATTACK)
+    int defenseResult = opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_ATTACK)                         //23T
                         + opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_DEFENSE)
                         + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_WEAPON)
                         + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
     //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
-    if(attackResult >= defenseResult){
+    if(attackResult >= defenseResult){                                                                              //3T
         if(trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_RUNES) ||
-                trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_BLOT)){
-            opponent->kill();
+                trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_BLOT)){   //18T
+            opponent->kill();                                                                                       //2T
         }else if(trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_RUNES) ||
-                trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_BLOT)){
-            kill();
-        }else if(attackResult > defenseResult){
-            opponent->setCharacteristic(defenseResult-attackResult,POSITION_OF_CHARACTERISTIC_LIFE);
-            lifeUpdate(opponent->getID(),defenseResult-attackResult);
+                trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_BLOT)){                  //18T
+            kill();                                                                                                 //T
+        }else if(attackResult > defenseResult){                                                                     //3T
+            opponent->setCharacteristic(defenseResult-attackResult,POSITION_OF_CHARACTERISTIC_LIFE);                //6T
+            lifeUpdate(opponent->getID(),defenseResult-attackResult);                                               //6T
         }else{
-            opponent->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
-            lifeUpdate(opponent->getID(),ATTACK_DAMAGE);
-            this->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);
-            lifeUpdate(*id,ATTACK_DAMAGE);
+            opponent->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);                             //4T
+            lifeUpdate(opponent->getID(),ATTACK_DAMAGE);                                                            //4T
+            this->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);                                 //4T
+            lifeUpdate(*id,ATTACK_DAMAGE);                                                                          //3T
         }
     }//Si el primer elemento de la comparacion es menor, el ataque es menor que la defensa, por lo tanto no acierta
     else{
         if(trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_RUNES) ||
-                trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_BLOT)){
-            opponent->kill();
-        }else if(trueRandom::getRandom()%256 < getGeneticInformation()->getGene(POSITION_OF_GENE_RUNES) ||
-                trueRandom::getRandom()%256 < getGeneticInformation()->getGene(POSITION_OF_GENE_BLOT)){
-            kill();
+                trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_BLOT)){                  //18T
+            kill();                                                                                                 //T
+        }else if(trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_RUNES) ||
+                trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_BLOT)){   //18T
+            opponent->kill();                                                                                       //2T
         }else{
-            this->setCharacteristic(attackResult - defenseResult,POSITION_OF_CHARACTERISTIC_LIFE);
-            lifeUpdate(*id,attackResult - defenseResult);
+            *(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) += (attackResult - defenseResult);                   //9T
+            lifeUpdate(*id,attackResult - defenseResult);                                                           //5T
         }
     }
     //std::cout << *id  << " vs " << opponent->getID() << " = " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << "-" << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
@@ -435,7 +434,6 @@ void Subject::optionSelection() {
 void* subjectLife(void* parameter){
     //Castea el parametro y extrae el sujeto
     Subject* excecutioner = static_cast<Subject*>(static_cast<PThreadParam*>(parameter)->getExcecutioner());
-    //std::cout << "Hello, I am: " << excecutioner->getID() <<std::endl;
     //Crea estructura para tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
@@ -455,7 +453,6 @@ void* subjectLife(void* parameter){
            // excecutioner->optionSelection();
         }
     }
-    //std::cout << "Goodbye, I was: " << excecutioner->getID() <<std::endl;
     excecutioner->delete_p_thread();
     return 0;
 }
