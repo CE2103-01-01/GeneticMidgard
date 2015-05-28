@@ -32,18 +32,15 @@ void* managerThread(void* param){
  */
 
 void movilObjectManager::update(){
-    for(int i=listObject.len();i<listSize;i++){
-        int objectNumber = trueRandom::randRange(0,listXmlData.len());
+    movilObject* tmp = listObject+firstEmpty;
+    while(tmp->isEmpty()!=-1){
+        int positionOnList = tmp->getPositionOnList();
+        firstEmpty = tmp->isEmpty();
         Vector2D position = Terrain::getRandomFreePosition();
-        movilObject object = movilObject(this, (*listXmlData.getNode(objectNumber)->getData())
-                .attribute("characteristic")
-                .as_int(), (*listXmlData.getNode(objectNumber)->getData())
-                                                 .attribute("value").as_int(), idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
-                                         position.x, position.y);
-        listObject.append(object);
-        Terrain::set(position, object.getId());
-        objectCounter++;
-        idCounter++;
+        int random = trueRandom::randRange(0,elementCounter);
+        new(tmp) movilObject(*(listXmlData+2*random), *(listXmlData+2*random+1), idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
+                             position.x, position.y, positionOnList);
+        tmp = listObject+firstEmpty;
     }
 }
 
@@ -52,8 +49,8 @@ void movilObjectManager::update(){
  * @return movilObject
  */
 movilObject* movilObjectManager::getRandomObject() {
-    int objectNumber = trueRandom::randRange(0,listObject.len());
-    return (listObject.getNode(objectNumber)->getData());
+    int objectNumber = trueRandom::randRange(0,NUMBER_OF_OBJECTS);
+    return listObject+objectNumber;
 }
 
 /**obtiene la instancia singleton de la clase
@@ -72,52 +69,30 @@ movilObjectManager* movilObjectManager::getInstance() {
  */
 movilObjectManager::movilObjectManager() {
     idCounter = 0;
-    int elementCounter = std::distance(objectSource.child("CONSTANTS").child("MOVILOBJECT").begin(),
-                                       objectSource.child("CONSTANTS").child("MOVILOBJECT").end());
+    objectCounter = 0;
+    firstEmpty = -1;
     xml_document objectSource;
     objectSource.load_file(CONSTANT_XML_PATH);
+    elementCounter = std::distance(objectSource.child("CONSTANTS").child("MOVILOBJECT").begin(),
+                                       objectSource.child("CONSTANTS").child("MOVILOBJECT").end());
     listXmlData = static_cast<int*>(malloc(2*elementCounter*sizeof(int)));
-    listObject = static_cast<movilObject*>(calloc(0,30*sizeof(movilObject)));
+    listObject = static_cast<movilObject*>(calloc(0,NUMBER_OF_OBJECTS*sizeof(movilObject)));
 
-
-
-    objectCounter = 0;
     xml_node temp = objectSource.child("CONSTANTS").child("MOVILOBJECT").first_child();
-
-
+    
     for (int h = 0; h < 2*elementCounter; h+=2) {
-
         *(listXmlData+h) = temp.first_attribute().as_int();
         *(listXmlData+h+1)= temp.last_attribute().as_int();
         temp = temp.next_sibling();
     }
-        for (int i = 0; i < elementCounter; i++,  idCounter) {
-            Vector2D position = Terrain::getRandomFreePosition();
-            int Effect =*(listXmlData+2*i);
-
-
-            std::cout<<"Effect "<<Effect<<std::endl;
-            int characteristic = *(listXmlData+2*i+1);
-            std::cout<<"Characteristic "<<characteristic<<std::endl;
-
-            movilObject object = movilObject(this,characteristic , Effect, idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
-                                                      position.x, position.y);
-
-            std::cout<<"hola pablo"<<std::endl;
-            createObject(object.getId(),object.get_X_Position(),object.get_Y_Position());
-            Terrain::set(position, object.getId());
-            objectCounter++;
-            idCounter++;
-        }
-        listSize = listObject.len();
-
-    for(int i =0;i<listObject.len();i++){
-        std::cout<<"Object ID "<<listObject.getNode(i)->getData()->getId()<<std::endl;
-        std::cout<<"Object Object "<<listObject.getNode(i)->getData()->getCharacteristic()<<std::endl;
-        std::cout<<"Object Effect "<<listObject.getNode(i)->getData()->getEffect()<<std::endl;
+    for(int i = 0; i<NUMBER_OF_OBJECTS-1; i++){
+        int random = trueRandom::randRange(0,elementCounter);
+        Vector2D position = Terrain::getRandomFreePosition();
+        *(listObject+i) = movilObject(*(listXmlData+2*random), *(listXmlData+2*random+1), idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
+                                      position.x, position.y, i);
+        objectCounter++;
+        idCounter++;
     }
-
-        std::cout << elementCounter << std::endl;
 
 }
 /**Obtiene el objeto segun la position de Vector2D
@@ -127,11 +102,13 @@ movilObjectManager::movilObjectManager() {
  */
 
 movilObject movilObjectManager::getDataByPosistion(Vector2D position) {
-    for(int i = 0; i<listObject.len();i++){
-        if(listObject.get(i)->get_X_Position()==position.x && listObject.get(i)->get_Y_Position()==position.y){
-            movilObject object = *listObject.get(i);
-            listObject.deleteNodeByData(*listObject.get(i));
-            return object;
+    for(int i = 0; i<NUMBER_OF_OBJECTS;i++){
+        movilObject* tmp = listObject+i;
+        if(tmp->get_X_Position()==position.x && tmp->get_Y_Position()==position.y){
+            movilObject tmp2 = *tmp;
+            tmp->freeSpace(firstEmpty);
+            firstEmpty=tmp->isEmpty();
+            return tmp2;
         }
     }
 }
@@ -140,14 +117,16 @@ movilObject movilObjectManager::getDataByPosistion(Vector2D position) {
  */
 void movilObjectManager::decreseCounter(movilObject object) {
     objectCounter--;
-    listObject.deleteNodeByData(object);
+    int tmp = firstEmpty;
+    firstEmpty = object.getPositionOnList();
+    (listObject + object.getPositionOnList())->freeSpace(tmp);
 }
 
 /**@brief verifica si se requieren nuevos objetos moviles
  * @return bool
  */
 bool movilObjectManager::needsToUpdate() {
-    return listSize > listObject.len();
+    return firstEmpty != -1;
 }
 
 
@@ -157,14 +136,18 @@ bool movilObjectManager::needsToUpdate() {
  * @param string name: nombre de objeto, int carateristic:identificador de caracteristca
  * @param int value: valor que se modifica en la caracteristica
  */
-movilObject::movilObject(movilObjectManager* control,int characteristic,int value,
-                         int identificator,int xPosition,int yPosition)  {
-    manager = control;
-    position=new Vector2D(xPosition,yPosition);
+movilObject::movilObject(int characteristic,int value, int identificator,int xPosition,int yPosition, int positionOnListParam)  {
+    position = Vector2D(position.x,position.y);
     use = false;
     object = characteristic;
     effect = value;
     id=identificator;
+    positionOnList = positionOnListParam;
+    isEmptyVar = -1;
+}
+
+int movilObject::getPositionOnList(){
+    return positionOnList;
 }
 /**aplica el efecto del objeto a una persona
  * @brief modifica la caracteristica correspondiente de la persona
@@ -174,10 +157,18 @@ void movilObject::applyEffect(Subject* person) {
     if (use!=true) {
         use = true;
         person->setCharacteristic(effect,(unsigned char)object);
-        Terrain::set(*position,0);
-        manager->decreseCounter(*this);
+        Terrain::set(position,0);
+        movilObjectManager::getInstance()->decreseCounter(*this);
         deleteObject(id);
     }
+
+}
+/**aplica el efecto del objeto a una persona
+ * @brief modifica la caracteristica correspondiente de la persona
+ * @param Subject* person: referencia de una persona
+ */
+int movilObject::isEmpty() {
+    return isEmptyVar;
 
 }
 /**Destructor de la clase
@@ -200,7 +191,7 @@ int movilObject::getId() {
  *
  */
 int movilObject::get_X_Position() {
-    return position->x;
+    return position.x;
 }
 /**obtener la posicion en y del objeto
  *@brief obtener el posicion en y del objeto
@@ -208,9 +199,9 @@ int movilObject::get_X_Position() {
  *
  */
 int movilObject::get_Y_Position() {
-    return position->y;
+    return position.y;
 }
-Vector2D* movilObject::getVector() {
+Vector2D movilObject::getVector() {
     return position;
 }
 
@@ -218,7 +209,7 @@ Vector2D* movilObject::getVector() {
  * @brief sobrecargar el operator == de la clase movilObject
  */
 bool movilObject::operator==(movilObject object) {
-    return position->x==object.position->x && position->y == object.position->y;
+    return position.x==object.position.x && position.y == object.position.y;
 }
 
 int movilObject::getEffect() {
@@ -228,9 +219,9 @@ int movilObject::getCharacteristic() {
     return object;
 }
 
-
-
-
+void movilObject::freeSpace(int nextEmptyParam){
+    isEmptyVar = nextEmptyParam;
+}
 
 
 

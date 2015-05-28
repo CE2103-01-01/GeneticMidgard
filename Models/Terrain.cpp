@@ -319,6 +319,11 @@ Vector2D::Vector2D(int x, int y) {
     this->x=x;
     this->y=y;
 }
+
+Vector2D::Vector2D() {
+    this->x=-1;
+    this->y=-1;
+}
 /*
  * Se usa para obtener el numero libre de espacios
  */

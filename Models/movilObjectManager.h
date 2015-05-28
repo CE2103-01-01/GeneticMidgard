@@ -11,6 +11,8 @@
 #include "Subject.h"
 #include "Terrain.h"
 
+#define NUMBER_OF_OBJECTS 30
+
 void* managerThread(void*);
 
 class movilObject;
@@ -25,8 +27,9 @@ class movilObjectManager{
     int objectCounter;
     movilObject* listObject;
     int* listXmlData;
-    int listSize;
     static movilObjectManager* instance;
+    int firstEmpty;
+    int elementCounter;
 public:
     static movilObjectManager* getInstance();
     movilObjectManager();
@@ -44,27 +47,27 @@ public:
 */
 class movilObject {
 private:
-    movilObjectManager* manager;
-    Vector2D* position;
+    Vector2D position;
     int effect;
     int object;
     bool use;
     int id;
-    int estaVacido;
+    int isEmptyVar;
+    int positionOnList;
 public:
     bool operator ==(movilObject);
-    movilObject(movilObjectManager*,int,int,int,int,int);
-    movilObject(int);
+    movilObject(int,int,int,int,int,int);
     ~movilObject();
     void applyEffect(Subject* person);
     int getId();
-
     int get_X_Position();
     int get_Y_Position();
     int getEffect();
     int getCharacteristic();
-    Vector2D* getVector();
-
+    Vector2D getVector();
+    int isEmpty();
+    int getPositionOnList();
+    void freeSpace(int);
 };
 
 
