@@ -13,6 +13,7 @@
 using namespace pugi;
 
 class GeneralFitnessCalculator {
+    int* constantsTotal;
     float* constants;
     int* ageIdentificator;
     static GeneralFitnessCalculator* instance;

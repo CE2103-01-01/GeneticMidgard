@@ -172,7 +172,7 @@ void PopulationManager::reproduce(){
                 //Primera generacion
                 laboratory->createGeneration();
                 free(laboratory);
-                std::cout<< "POBLACION: " << i << " NUEVO PEOR: "<< (*((population+i)->getFittest()+INITIAL_NUMBER_OF_SUBJECTS -1))->getFitness() << std::endl;
+                std::cout<< "POBLACION: " << i << " NUEVO PEOR: "<< ((*((population+i)->getFittest()+INITIAL_NUMBER_OF_SUBJECTS -1))->getFitness()) << std::endl;
             }
         }
     }
