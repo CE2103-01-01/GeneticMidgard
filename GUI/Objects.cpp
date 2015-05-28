@@ -3,7 +3,7 @@
 //
 
 #include "Objects.h"
-#include "Map.h"
+
 
 bool Object::operator==(unsigned int pId) {
     return (id==pId);
@@ -11,6 +11,7 @@ bool Object::operator==(unsigned int pId) {
 
 void Objects::addObject(Object &object) {
     objectMutex.lock();
+    std::cout << "HEy" << std::endl;
     objects.add(object);
     objectMutex.unlock();
 }
@@ -22,9 +23,8 @@ void Objects::deleteObject(unsigned int id) {
     while (iter->exists())
     {
         if(*(iter->next())==(id)) {
-            std::cout << "Borrar" << std::endl;
             objects.deleteNode(i);
-            std::cout << "Last:" << objects.len() << std::endl;
+            objectMutex.unlock();
             return;
         }
         i++;
@@ -42,6 +42,7 @@ void Objects::updateId(unsigned int id, unsigned int x, unsigned int y) {
         {
             next->x = x;
             next->y = y;
+            objectMutex.unlock();
             return;
         }
     }
@@ -71,39 +72,3 @@ Object::Object(unsigned int id, unsigned int x, unsigned int y) :id(id), x(x), y
 }
 
 
-void Object::setLifeUpdate(int i) {
-    if(lifeUpdate)free(lifeUpdate);
-    lifeUpdate = new LifeUpdate(i);
-}
-
-
-LifeUpdate *Object::getLifeUpdate() {
-    if (lifeUpdate)
-    {
-        float elapsedSeconds = lifeUpdate->startTime.getElapsedTime().asSeconds();
-        if (elapsedSeconds < 1.0f)
-        {
-            return lifeUpdate;
-        }
-        else
-        {
-            free(lifeUpdate);
-            lifeUpdate = nullptr;
-        }
-    }
-    return nullptr;
-}
-
-LifeUpdate::LifeUpdate(int life) :life(life){
-    startTime = Clock();
-
-}
-
-
-
-Object::Object(unsigned int pId, unsigned int pX, unsigned int pY, unsigned int pR, unsigned int pG, unsigned int pB)
-{
-    id=pId; x = pX; y = pY; r = pR; g = pG; b = pB;
-    lifeUpdate = 0;
-    lifeUpdate = new LifeUpdate(0);
-}

@@ -3,18 +3,17 @@
 //
 
 #include "Poblacion.h"
-#include "../Network/SocketGUI.h"
 
 
-void Poblacion::drawObjects(RenderTarget &target, const IntRect &rect) {
-    objectMutex.lock();
-    DoubleListIterator<Object> *iter = objects.getIterator();
+void Poblacion::drawPoblacion(RenderTarget &target, const IntRect &rect) {
+    peopleMutex.lock();
+    DoubleListIterator<Person> *iter = poblacion.getIterator();
 
     while (iter->exists()) {
-        Object *next = iter->next();
-       // if(rect.contains(Vector2i(next->x,next->y)))continue;
+        Person *next = iter->next();
+        // if(rect.contains(Vector2i(next->x,next->y)))continue;
         Sprite sprite;
-        sprite.setTexture(textureObject);
+        sprite.setTexture(texturePerson);
         sprite.setPosition(sf::Vector2f(Map::getInstance()->getTileWidth() * next->x, Map::getInstance()->getTileHeight() * next->y));
         target.draw(sprite);
         sprite.setTexture(textureLayer);
@@ -36,34 +35,77 @@ void Poblacion::drawObjects(RenderTarget &target, const IntRect &rect) {
             target.draw(text);
         }
     }
-    objectMutex.unlock();
+    peopleMutex.unlock();
 }
 
+void Poblacion::addPerson(Person &person) {
+    peopleMutex.lock();
+    poblacion.add(person);
+    peopleMutex.unlock();
+}
 
-
-void Poblacion::updateLifeId(unsigned int id, int lifeUpdate) {
-    objectMutex.lock();
+void Poblacion::deletePerson(unsigned int id) {
     int i=0;
-    DoubleListIterator<Object> *iter = objects.getIterator();
+    DoubleListIterator<Person> *iter = poblacion.getIterator();
+    while (iter->exists())
+    {
+        if(*(iter->next())==(id)) {
+            poblacion.deleteNode(i);
+            return;
+        }
+        i++;
+    }
+
+}
+
+void Poblacion::updateId(unsigned int id, unsigned int x, unsigned int y) {
+    int i=0;
+    DoubleListIterator<Person> *iter = poblacion.getIterator();
     while (iter->exists()) {
-        Object *next = iter->next();
+        Person *next = iter->next();
         if(*next==id)
         {
-            next->setLifeUpdate(lifeUpdate);
-            objectMutex.unlock();
+            next->x = x;
+            next->y = y;
             return;
         }
     }
-    objectMutex.unlock();
+
+}
+
+void Poblacion::updateLifeId(unsigned int id, int lifeUpdate) {
+    int i=0;
+    DoubleListIterator<Person> *iter = poblacion.getIterator();
+    while (iter->exists()) {
+        Person *next = iter->next();
+        if(*next==id)
+        {
+            next->setLifeUpdate(lifeUpdate);
+            return;
+        }
+    }
+}
+
+bool Person::operator==(unsigned int pId) {
+    return (id==pId);
+}
+
+LifeUpdate::LifeUpdate(int life) :life(life){
+    startTime = Clock();
+
 }
 
 
 
 
+void Person::setLifeUpdate(int i) {
+    if(lifeUpdate)free(lifeUpdate);
+    lifeUpdate = new LifeUpdate(i);
+}
 
 
-
-Poblacion::Poblacion(Texture texture, Texture pTextureLayer):Objects(texture) {
+Poblacion::Poblacion(Texture texture, Texture pTextureLayer) {
+    texturePerson = texture;
     textureLayer = pTextureLayer;
 
     if (!roboto.loadFromFile("../res/roboto.ttf"))
@@ -73,21 +115,25 @@ Poblacion::Poblacion(Texture texture, Texture pTextureLayer):Objects(texture) {
 
 }
 
-/**
- * Check if anyone is on the mouse click and tell the logic that.
- */
-void Poblacion::clickOnPerson(Vector2f click) {
-    int x = (click.x/Map::getInstance()->tileWidth);
-    int y = (click.y/Map::getInstance()->tileHeight);
-    if (x<0||y<0||x>=Map::getInstance()->getWidth()||y>=Map::getInstance()->getHeight())return;
-    DoubleListIterator<Object> *iter  = objects.getIterator();
-    while (iter->exists())
+LifeUpdate *Person::getLifeUpdate() {
+    if (lifeUpdate)
     {
-        Object *next = iter->next();
-        if(next->x==click.x && next->y==click.y)
+        float elapsedSeconds = lifeUpdate->startTime.getElapsedTime().asSeconds();
+        if (elapsedSeconds < 1.0f)
         {
-            SocketGUI::getInstance()->detailsSubject(next->id);
-            break;
+            return lifeUpdate;
+        }
+        else
+        {
+            free(lifeUpdate);
+            lifeUpdate = nullptr;
         }
     }
+    return nullptr;
+}
+
+Person::Person(unsigned int id, unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b) : id(id),x(x),y(y),r(r),g(g),b(b)
+{
+    lifeUpdate = 0;
+    lifeUpdate = new LifeUpdate(0);
 }

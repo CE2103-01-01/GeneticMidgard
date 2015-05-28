@@ -5,6 +5,7 @@
 
 #include "Map.h"
 
+
 Map *Map::singleton = NULL;
 
 Map::Map() {
@@ -73,7 +74,7 @@ Map::Map() {
 
     if(personGid==0||personAlphaGid==0||diosGid==0||diosAlphaGid==0||objectGid==0) cerr<<"Error Textura de Personas no definida"<<endl;
     poblacion = new Poblacion(texturePerson, texturePersonAlpha);
-    objects = new Objects(textureObject);
+    //objects = new Objects(textureObject);
     dioses = new Poblacion(textureDios,textureDiosAlpha);
     needToPaint = true;
 }
@@ -136,8 +137,8 @@ void Map::renderMap(RenderTarget& renderArea, const IntRect &rect) {
             }
         }
 
-    poblacion->drawObjects(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
-    dioses->drawObjects(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
+    poblacion->drawPoblacion(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
+    dioses->drawPoblacion(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
     objects->drawObjects(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
 }
 
@@ -181,7 +182,10 @@ Map *Map::getInstance() {
 Poblacion *Map::getPoblacion() {
     return poblacion;
 }
-Objects *Map::getObjects() {
-    return poblacion;
-}
 
+Objects *Map::getObjects() {
+    return objects;
+}
+Poblacion *Map::getGods() {
+    return dioses;
+}

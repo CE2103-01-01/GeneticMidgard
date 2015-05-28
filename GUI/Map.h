@@ -46,7 +46,7 @@ static const char *const DIOS_ALPHA = "DiosAlpha";
 #include "../libs/rapidxml/rapidxml_utils.hpp"
 #include "../Data/DoubleList.h"
 #include "Poblacion.h"
-
+#include "Objects.h"
 using namespace sf;
 using namespace std;
 using namespace gui_constants;
@@ -82,6 +82,7 @@ public:
     int getWidth();
     int getHeight();
     Poblacion *getPoblacion();
+    Poblacion *getGods();
     Objects *getObjects();
     Texture getTexture();
 

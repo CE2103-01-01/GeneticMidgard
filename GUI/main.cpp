@@ -77,9 +77,9 @@ int main()
         //Draw map and miniMap
         Sprite mapSprite = Sprite(mapText.getTexture());
         window.draw(mapSprite);
-        window.setView(minimap);
-        mapSprite.setColor(Color(235,235,255,245));
-        window.draw(mapSprite);
+       // window.setView(minimap);
+       // mapSprite.setColor(Color(235,235,255,245));
+       // window.draw(mapSprite);
         //Draw Slider
         window.setView(fixed);
         slider.drawSlider(window);
@@ -145,7 +145,7 @@ void ManageEvents(Thread &socketThread, RenderWindow &window) {
             {
                 window.setView(mapView);
 
-                Map::getInstance()->getPoblacion()->clickOnPerson(window.mapPixelToCoords(position));
+//                Map::getInstance()->getPoblacion()->clickOnPerson(window.mapPixelToCoords(position));
             }
 
 

@@ -5,6 +5,7 @@
 
 #include <signal.h>
 #include "SocketGUI.h"
+#include "../GUI/Objects.h"
 
 
 int SocketGUI::popul = 0;
@@ -78,10 +79,21 @@ void SocketGUI::manageMessage(std::string string) {
         unsigned int r = document.FindMember("r")->value.GetUint();
         unsigned int g = document.FindMember("g")->value.GetUint();
         unsigned int b = document.FindMember("b")->value.GetUint();
-        Object person(id,x,y,r,g,b);
-        Map::getInstance()->getPoblacion()->addObject(person);
-        //std::cout << id << std::endl;
-    }else if (action == "createObject")
+        Person person(id,x,y,r,g,b);
+        Map::getInstance()->getPoblacion()->addPerson(person);
+    }
+     else if (action == "createGod")
+    {
+        unsigned int id = document.FindMember("id")->value.GetUint();
+        unsigned int x = document.FindMember("x")->value.GetUint();
+        unsigned int y = document.FindMember("y")->value.GetUint();
+        unsigned int r = document.FindMember("r")->value.GetUint();
+        unsigned int g = document.FindMember("g")->value.GetUint();
+        unsigned int b = document.FindMember("b")->value.GetUint();
+        Person god(id,x,y,r,g,b);
+        Map::getInstance()->getGods()->addPerson(god);
+    }
+    else if (action == "createObject")
     {
         //ID = numeroDeObjeto*10000 + 8888... Ej: 18888,28888,38888,...
         unsigned int id = document.FindMember("id")->value.GetUint();
@@ -97,9 +109,17 @@ void SocketGUI::manageMessage(std::string string) {
         unsigned int y = document.FindMember("y")->value.GetUint();
         Map::getInstance()->getPoblacion()->updateId(id,x,y);
     }
+    else if (action == "updateGods")
+    {
+
+        unsigned int id = document.FindMember("id")->value.GetUint();
+        unsigned int x = document.FindMember("x")->value.GetUint();
+        unsigned int y = document.FindMember("y")->value.GetUint();
+        Map::getInstance()->getGods()->updateId(id,x,y);
+    }
     else if (action == "lifeUpdate")
     {
-        std::cout << "Life Update" << std::endl;
+        //std::cout << "Life Update" << std::endl;
         unsigned int id = document.FindMember("id")->value.GetUint();
         unsigned int size = document.FindMember("size")->value.GetInt();
         Map::getInstance()->getPoblacion()->updateLifeId(id,size);
@@ -109,7 +129,12 @@ void SocketGUI::manageMessage(std::string string) {
         popul-=1;
         std::cout << "Population: " << popul << std::endl;
         unsigned int id = document.FindMember("id")->value.GetUint();
-        Map::getInstance()->getPoblacion()->deleteObject(id);
+        Map::getInstance()->getPoblacion()->deletePerson(id);
+    }
+    else if (action == "deleteGod")
+    {
+        unsigned int id = document.FindMember("id")->value.GetUint();
+        Map::getInstance()->getGods()->deletePerson(id);
     }
     else if (action == "createObject")
     {
