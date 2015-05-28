@@ -8,10 +8,10 @@
 
 void Poblacion::drawObjects(RenderTarget &target, const IntRect &rect) {
     objectMutex.lock();
-    DoubleListIterator<Person> *iter = objects.getIterator();
+    DoubleListIterator<Object> *iter = objects.getIterator();
 
     while (iter->exists()) {
-        Person *next = iter->next();
+        Object *next = iter->next();
        // if(rect.contains(Vector2i(next->x,next->y)))continue;
         Sprite sprite;
         sprite.setTexture(textureObject);
@@ -43,9 +43,9 @@ void Poblacion::drawObjects(RenderTarget &target, const IntRect &rect) {
 
 void Poblacion::updateLifeId(unsigned int id, int lifeUpdate) {
     int i=0;
-    DoubleListIterator<Person> *iter = (DoubleListIterator<Person> *) objects.getIterator();
+    DoubleListIterator<Object> *iter = objects.getIterator();
     while (iter->exists()) {
-        Person *next = iter->next();
+        Object *next = iter->next();
         if(*next==id)
         {
             next->setLifeUpdate(lifeUpdate);
@@ -55,22 +55,12 @@ void Poblacion::updateLifeId(unsigned int id, int lifeUpdate) {
 }
 
 
-LifeUpdate::LifeUpdate(int life) :life(life){
-    startTime = Clock();
-
-}
 
 
 
-
-void Person::setLifeUpdate(int i) {
-    if(lifeUpdate)free(lifeUpdate);
-    lifeUpdate = new LifeUpdate(i);
-}
 
 
 Poblacion::Poblacion(Texture texture, Texture pTextureLayer) {
-    objects = DoubleList<Person>();
     textureObject = texture;
     textureLayer = pTextureLayer;
 
@@ -81,29 +71,6 @@ Poblacion::Poblacion(Texture texture, Texture pTextureLayer) {
 
 }
 
-LifeUpdate *Person::getLifeUpdate() {
-    if (lifeUpdate)
-    {
-        float elapsedSeconds = lifeUpdate->startTime.getElapsedTime().asSeconds();
-        if (elapsedSeconds < 1.0f)
-        {
-            return lifeUpdate;
-        }
-        else
-        {
-            free(lifeUpdate);
-            lifeUpdate = nullptr;
-        }
-    }
-    return nullptr;
-}
-
-Person::Person(unsigned int pId, unsigned int pX, unsigned int pY, unsigned int pR, unsigned int pG, unsigned int pB)
-{
-    id=pId; x = pX; y = pY; r = pR; g = pG; b = pB;
-    lifeUpdate = 0;
-    lifeUpdate = new LifeUpdate(0);
-}
 /**
  * Check if anyone is on the mouse click and tell the logic that.
  */
@@ -111,7 +78,7 @@ void Poblacion::clickOnPerson(Vector2f click) {
     int x = (click.x/Map::getInstance()->tileWidth);
     int y = (click.y/Map::getInstance()->tileHeight);
     if (x<0||y<0||x>=Map::getInstance()->getWidth()||y>=Map::getInstance()->getHeight())return;
-    DoubleListIterator<Person> *iter  = objects.getIterator();
+    DoubleListIterator<Object> *iter  = objects.getIterator();
     while (iter->exists())
     {
         Object *next = iter->next();

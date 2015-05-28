@@ -75,7 +75,7 @@ void SocketGUI::manageMessage(std::string string) {
         unsigned int r = document.FindMember("r")->value.GetUint();
         unsigned int g = document.FindMember("g")->value.GetUint();
         unsigned int b = document.FindMember("b")->value.GetUint();
-        Person person(id,x,y,r,g,b);
+        Object person(id,x,y,r,g,b);
         Map::getInstance()->getPoblacion()->addObject(person);
         //std::cout << id << std::endl;
     }else if (action == "createObject")

@@ -45,7 +45,6 @@ void Objects::updateId(unsigned int id, unsigned int x, unsigned int y) {
 }
 
 Objects::Objects(Texture texture) {
-    objects = DoubleList<Object>();
     textureObject = texture;
 }
 
@@ -69,4 +68,41 @@ Object::Object(unsigned int id, unsigned int x, unsigned int y) :id(id), x(x), y
 
 Object::Object() {
 
+}
+
+void Object::setLifeUpdate(int i) {
+    if(lifeUpdate)free(lifeUpdate);
+    lifeUpdate = new LifeUpdate(i);
+}
+
+
+LifeUpdate *Object::getLifeUpdate() {
+    if (lifeUpdate)
+    {
+        float elapsedSeconds = lifeUpdate->startTime.getElapsedTime().asSeconds();
+        if (elapsedSeconds < 1.0f)
+        {
+            return lifeUpdate;
+        }
+        else
+        {
+            free(lifeUpdate);
+            lifeUpdate = nullptr;
+        }
+    }
+    return nullptr;
+}
+
+LifeUpdate::LifeUpdate(int life) :life(life){
+    startTime = Clock();
+
+}
+
+
+
+Object::Object(unsigned int pId, unsigned int pX, unsigned int pY, unsigned int pR, unsigned int pG, unsigned int pB)
+{
+    id=pId; x = pX; y = pY; r = pR; g = pG; b = pB;
+    lifeUpdate = 0;
+    lifeUpdate = new LifeUpdate(0);
 }

@@ -9,16 +9,28 @@
 #include "../Data/DoubleList.h"
 
 using namespace sf;
-
+class LifeUpdate{
+public:
+    LifeUpdate(int life);
+    int life;
+    Clock startTime;
+};
 class Object
 {
 public:
     Object();
     Object(unsigned int id, unsigned int x, unsigned int y);
+    Object(unsigned int id, unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b) ;
     unsigned int id;
     unsigned int x;
     unsigned int y;
+    unsigned int r;
+    unsigned int g;
+    unsigned int b;
     bool operator==(unsigned int pId);
+    LifeUpdate* lifeUpdate;
+    void setLifeUpdate(int);
+    LifeUpdate *getLifeUpdate();
 };
 class Objects {
 protected:

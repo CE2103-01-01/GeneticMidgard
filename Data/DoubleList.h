@@ -86,7 +86,7 @@ public:
 */
 template<class T>
 Node<T>::Node(T v) {
-    data = static_cast<T*>(malloc(sizeof(T)));
+    data = static_cast<T*>(malloc(sizeof(v)));
     *data = v;
     next = 0;
     prev = 0;
