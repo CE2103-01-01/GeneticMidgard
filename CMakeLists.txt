@@ -70,6 +70,7 @@ set(XML
 configure_file( res/constant.xml res/constant.xml COPYONLY)
 configure_file(res/genes.xml res/genes.xml COPYONLY)
 configure_file( res/mapatest.tmx res/mapatest.tmx COPYONLY)
+configure_file( res/network.json res/network.json COPYONLY)
 
 
 

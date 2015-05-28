@@ -104,7 +104,6 @@ void SocketGUI::manageMessage(std::string string) {
     }
     else if (action == "updateSubject")
     {
-        std::cout<<"Update"<<std::endl;
         unsigned int id = document.FindMember("id")->value.GetUint();
         unsigned int x = document.FindMember("x")->value.GetUint();
         unsigned int y = document.FindMember("y")->value.GetUint();
@@ -120,7 +119,6 @@ void SocketGUI::manageMessage(std::string string) {
     }
     else if (action == "lifeUpdate")
     {
-        //std::cout << "Life Update" << std::endl;
         unsigned int id = document.FindMember("id")->value.GetUint();
         unsigned int size = document.FindMember("size")->value.GetInt();
         Map::getInstance()->getPoblacion()->updateLifeId(id,size);
