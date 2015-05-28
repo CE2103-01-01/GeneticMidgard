@@ -49,13 +49,15 @@ float GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
     }
     //esto se puede cambiar, depende de como quiera visualizar el numero
     //pero al final da lo mismo, ya que la comparacion va a seguir dando el mismo resultado
-    return fitness/100;
+    fitness = ((int)(fitness*100 + 0.5)/10000.0);
+    return fitness;
 }
 
 /**@brief metodo que accede a la unica instancia
  * @return GeneralFitnessCalculator*
  */
-GeneralFitnessCalculator* GeneralFitnessCalculator::getInstance(){
+GeneralFitnessCalculator* GeneralFitnessCalculator::getInstance()
+{
     if(!instance){
         //Si no hay instancia reserva el espacio correspondiente e inicializa
         instance = static_cast<GeneralFitnessCalculator*>(malloc(sizeof(GeneralFitnessCalculator)));
@@ -67,7 +69,6 @@ GeneralFitnessCalculator* GeneralFitnessCalculator::getInstance(){
 /**@brief modifica el identificador de edda
  */
 void GeneralFitnessCalculator::changeEdda() {
-    (*ageIdentificator)++;
     rapidxml::xml_node<>* root_node;
     rapidxml::xml_document<> doc;
     rapidxml::file<> file( CONSTANT_XML_PATH );
@@ -79,4 +80,6 @@ void GeneralFitnessCalculator::changeEdda() {
         *(constants + forIteratorIndex++) = std::atof(node->value());
         node = node->next_sibling();
     }
+    (*ageIdentificator)++;
+
 }

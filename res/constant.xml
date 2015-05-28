@@ -63,6 +63,18 @@
             <Blot>0</Blot>
             <Runes>10</Runes>
         </age3>
+        <age4>
+            <Life>10</Life>
+            <Attack>10</Attack>
+            <Defense>10</Defense>
+            <Magic>10</Magic>
+            <Intelligence>10</Intelligence>
+            <Superstition>10</Superstition>
+            <Speed>10</Speed>
+            <Vital_Energy>6</Vital_Energy>
+            <Blot>0</Blot>
+            <Runes>10</Runes>
+        </age4>
     </FitnessByAge>
 
     <Dwarves>
