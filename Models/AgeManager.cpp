@@ -131,7 +131,7 @@ void AgeManager::changeAge(){
             (PopulationManager::getInstance()->getPopulation()+i)->exterminate();
         }
     }
-    std::cout<< "---------------------------Change Age------------------------"<<std::endl;
+    std::cout<< "---------------------------Change Age-------------------------"<<std::endl;
     std::cout<<""<<std::endl;
 }
 
