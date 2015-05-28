@@ -37,8 +37,17 @@ GeneralFitnessCalculator::GeneralFitnessCalculator(){
 float GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
     float fitness = 0;
     for(int i = 0; i < NUMBER_OF_GENES - 3; i++){
-        fitness += chromosome->getGene(i)*(*(constants+i))/255;
+        //Al multiplicar la constante por el gen cumple su cometido, no es necesario dividir entre nada
+        //ya que siempre se saca a factor comun y no aporta mas que un rango.
+        //De esta manera, para una misma constante mayor a 5, el resultado crece con el gen
+        //y para un mismo gen crece con la constante
+        if(*(constants+i)>5)fitness += chromosome->getGene(i)*(*(constants+i));
+        //Las unicas constantes menores a cinco son las de los genes a disminuir,
+        //al hacer constante/gen, para una misma constante, el resultado aumenta conforme el gen decrece
+        //ademas, para un mismo gen, el resultado aumenta conforme la constante crece
+        else fitness += (*(constants+i))/chromosome->getGene(i);
     }
+
     return fitness;
 }
 

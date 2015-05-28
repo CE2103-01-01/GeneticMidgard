@@ -16,50 +16,50 @@
     </MOVILOBJECT>
     <FitnessByAge>
         <age0>
-            <Life>5</Life>
+            <Life>6</Life>
             <Attack>8</Attack>
             <Defense>8</Defense>
-            <Magic>5</Magic>
-            <Intelligence>5</Intelligence>
+            <Magic>6</Magic>
+            <Intelligence>6</Intelligence>
             <Superstition>8</Superstition>
-            <Speed>5</Speed>
-            <Vital_Energy>5</Vital_Energy>
-            <Blot>7</Blot>
-            <Runes>3</Runes>
+            <Speed>6</Speed>
+            <Vital_Energy>6</Vital_Energy>
+            <Blot>4</Blot>
+            <Runes>6</Runes>
         </age0>
         <age1>
-            <Life>5</Life>
+            <Life>6</Life>
             <Attack>8</Attack>
             <Defense>8</Defense>
-            <Magic>5</Magic>
+            <Magic>6</Magic>
             <Intelligence>8</Intelligence>
             <Superstition>8</Superstition>
-            <Speed>5</Speed>
-            <Vital_Energy>5</Vital_Energy>
-            <Blot>5</Blot>
-            <Runes>5</Runes>
+            <Speed>6</Speed>
+            <Vital_Energy>6</Vital_Energy>
+            <Blot>3</Blot>
+            <Runes>7</Runes>
         </age1>
         <age2>
             <Life>8</Life>
             <Attack>8</Attack>
             <Defense>8</Defense>
-            <Magic>5</Magic>
+            <Magic>6</Magic>
             <Intelligence>10</Intelligence>
             <Superstition>8</Superstition>
-            <Speed>5</Speed>
-            <Vital_Energy>5</Vital_Energy>
-            <Blot>3</Blot>
+            <Speed>6</Speed>
+            <Vital_Energy>6</Vital_Energy>
+            <Blot>2</Blot>
             <Runes>8</Runes>
         </age2>
         <age3>
             <Life>10</Life>
             <Attack>10</Attack>
             <Defense>10</Defense>
-            <Magic>5</Magic>
+            <Magic>6</Magic>
             <Intelligence>10</Intelligence>
             <Superstition>10</Superstition>
-            <Speed>5</Speed>
-            <Vital_Energy>5</Vital_Energy>
+            <Speed>6</Speed>
+            <Vital_Energy>6</Vital_Energy>
             <Blot>0</Blot>
             <Runes>10</Runes>
         </age3>
