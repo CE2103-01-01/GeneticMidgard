@@ -48,7 +48,7 @@ float GeneralFitnessCalculator::calculateFitness(Chromosome* chromosome) {
         else fitness += (*(constants+i))/chromosome->getGene(i);
     }
 
-    return fitness;
+    return fitness/1000;
 }
 
 /**@brief metodo que accede a la unica instancia
