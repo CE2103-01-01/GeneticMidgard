@@ -44,7 +44,6 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     opponent = 0;
     //Coloca en 0 el puntero al thread
     lifeThread = 0;
-    makeSubjectFile();
 }
 
 /** Constructor
@@ -79,7 +78,6 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     opponent = 0;
     //Coloca en 0 el puntero al thread
     lifeThread = 0;
-    makeSubjectFile();
     }
 
 /** Constructor
@@ -114,7 +112,6 @@ Subject::Subject(const Subject& other){
     mother = other.mother;
     opponent = other.opponent;
     lifeThread = other.lifeThread;
-    makeSubjectFile();
 }
 
 /** Destructor
@@ -480,9 +477,9 @@ void Subject::makeSubjectFile()
     }
 
     writeFileVariable.append(SUBJECTID);
-    writeFileVariable.append(std::to_string(*id));
-    writeFileVariable.append(POPULATIONID);
     writeFileVariable.append(std::to_string(*(id)/SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID));
+    writeFileVariable.append(POPULATIONID);
+    writeFileVariable.append(std::to_string(*(id)%SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID));
     writeFileVariable.append(FITNESS);
     writeFileVariable.append(std::to_string(getFitness()));
     writeFileVariable.append(GENERATION);
@@ -503,7 +500,7 @@ void Subject::makeSubjectFile()
         writeFileVariable.append(" ");
         writeFileVariable.append(std::to_string(*(characteristics + j + 1)));
     }
-    FileManager::writeFile(writeFileVariable.c_str(), *id, writeFileVariable.length());
+    FileManager::writeFile(writeFileVariable.c_str(), *(id)/SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID, writeFileVariable.length());
 }
 
 /**
@@ -513,7 +510,7 @@ void Subject::readSubjectFIle()
 {
     char* reader_variable = static_cast<char*>(malloc(writeFileVariable.length()));
 
-    FileManager::readFile(reader_variable, *id, writeFileVariable.length());
+    FileManager::readFile(reader_variable, *(id)/SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID, writeFileVariable.length());
 
     std::cout << reader_variable << std::endl;
 

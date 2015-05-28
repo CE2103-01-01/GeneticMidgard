@@ -59,6 +59,7 @@ void Population::insertNewMember(Subject* father, Subject* mother, Chromosome* c
                                  );
     Subject* selected = populationTree->searchElement(*populationSize);
     selected->start_p_thread();
+    selected->makeSubjectFile();
     if((*(fittest+2*SUBJECTS_BY_GENERATION-1))->getFitness()<=selected->getFitness())updateFittest(selected);
 }
 
@@ -75,6 +76,7 @@ void Population::insertNewMember(Subject* newMemberParam) {
             );
     Subject* selected = populationTree->searchElement(*populationSize);
     selected->start_p_thread();
+    selected->makeSubjectFile();
     *(fittest+*populationSize-1) = selected;
 }
 
