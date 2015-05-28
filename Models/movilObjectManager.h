@@ -24,7 +24,7 @@ class movilObject;
 
 class movilObjectManager{
     int idCounter;
-    int objectCounterc;
+    int objectCounter;
     movilObject* listObject;
     int* listXmlData;
     static movilObjectManager* instance;
