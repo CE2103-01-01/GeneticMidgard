@@ -9,7 +9,39 @@ Map *Map::singleton = NULL;
 
 Map::Map() {
 
-    rapidxml::xml_node<> *root_node = loadTerrain();
+    rapidxml::xml_node<> *root_node;
+    rapidxml::xml_document<> doc;
+    rapidxml::file<> file(MAP_LOCATION);
+    doc.parse<0>(file.data());
+    //get root node
+    root_node = doc.first_node(MAP_NODE);
+    //Map settings
+    width = atoi(root_node->first_attribute(WIDTH_NODE)->value());
+    height = atoi(root_node->first_attribute(HEIGHT_NODE)->value());
+    tileWidth = atoi(root_node->first_attribute(TILEWIDTH_NODE)->value());
+    tileHeight = atoi(root_node->first_attribute(TILEHEIGHT_NODE)->value());
+    //image config
+    rapidxml::xml_node<> *image_node = root_node->first_node(TILESET_NODE)->first_node(IMAGE_NODE);
+    tilesetPath += image_node->first_attribute("source")->value();
+    tilesetHeight = atoi(image_node->first_attribute(HEIGHT_NODE)->value());
+    tilesetWidth = atoi(image_node->first_attribute(WIDTH_NODE)->value());
+    lastGid = (tilesetWidth / tileWidth)*(tilesetHeight / tileHeight);
+    //cout<<lastGid<<endl;
+    //Terrain settings
+    int pos = 0;
+    for (rapidxml::xml_node<> *layer_node = root_node->first_node(LAYER_NODE); layer_node;
+         layer_node = layer_node->next_sibling()) {
+        terrain[pos] = static_cast<int*>(malloc(sizeof(int)* width * height));
+
+        rapidxml::xml_node<> *data_node = layer_node->first_node(DATA_NODE);
+        int i = 0;//para puntero
+        for (rapidxml::xml_node<> *tile_node = data_node->first_node(TILE_NODE); tile_node;
+             tile_node = tile_node->next_sibling()) {
+            *(terrain[pos] + i) = atoi(tile_node->first_attribute("gid")->value());
+            i++;// contador para el puntero
+        }
+        pos++;
+    }
     //create Poblacion
     if(!texture.loadFromFile(tilesetPath)) abort();
     unsigned int personGid;
@@ -46,42 +78,6 @@ Map::Map() {
     needToPaint = true;
 }
 
-rapidxml::xml_node<> *Map::loadTerrain() {
-    rapidxml::xml_node<> *root_node;
-    rapidxml::xml_document<> doc;
-    rapidxml::file<> file(MAP_LOCATION);
-    doc.parse<0>(file.data());
-    //get root node
-    root_node = doc.first_node(MAP_NODE);
-    //Map settings
-    width = atoi(root_node->first_attribute(WIDTH_NODE)->value());
-    height = atoi(root_node->first_attribute(HEIGHT_NODE)->value());
-    tileWidth = atoi(root_node->first_attribute(TILEWIDTH_NODE)->value());
-    tileHeight = atoi(root_node->first_attribute(TILEHEIGHT_NODE)->value());
-    //image config
-    rapidxml::xml_node<> *image_node = root_node->first_node(TILESET_NODE)->first_node(IMAGE_NODE);
-    tilesetPath += image_node->first_attribute("source")->value();
-    tilesetHeight = atoi(image_node->first_attribute(HEIGHT_NODE)->value());
-    tilesetWidth = atoi(image_node->first_attribute(WIDTH_NODE)->value());
-    lastGid = (tilesetWidth / tileWidth)*(tilesetHeight / tileHeight);
-    //cout<<lastGid<<endl;
-    //Terrain settings
-    int pos = 0;
-    for (rapidxml::xml_node<> *layer_node = root_node->first_node(LAYER_NODE); layer_node;
-         layer_node = layer_node->next_sibling()) {
-        terrain[pos] = static_cast<int*>(malloc(sizeof(int)* width * height));
-
-        rapidxml::xml_node<> *data_node = layer_node->first_node(DATA_NODE);
-        int i = 0;//para puntero
-        for (rapidxml::xml_node<> *tile_node = data_node->first_node(TILE_NODE); tile_node;
-             tile_node = tile_node->next_sibling()) {
-            *(terrain[pos] + i) = atoi(tile_node->first_attribute("gid")->value());
-            i++;// contador para el puntero
-        }
-        pos++;
-    }
-    return root_node;
-}
 
 
 int Map::getTileWidth() {

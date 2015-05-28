@@ -88,8 +88,6 @@ public:
     void renderMap(RenderTarget&, const IntRect &rect);
     IntRect getTileRect(unsigned int gid);
     bool needToPaint;
-
-    rapidxml::xml_node<> *loadTerrain();
 };
 
 
