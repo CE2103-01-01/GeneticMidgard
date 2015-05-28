@@ -66,15 +66,15 @@ Map::Map() {
             objectGid = std::atoi(terrain_node->first_attribute(TILE_NODE)->value())+1;
         terrain_node = terrain_node->next_sibling();
     }
-    Texture textureDios; if (!textureDios.loadFromFile(tilesetPath,getTileRect(personGid))) abort();
-    Texture textureDiosAlpha; if (!textureDiosAlpha.loadFromFile(tilesetPath,getTileRect(personAlphaGid))) abort();
+    Texture textureDios; if (!textureDios.loadFromFile(tilesetPath,getTileRect(diosGid))) abort();
+    Texture textureDiosAlpha; if (!textureDiosAlpha.loadFromFile(tilesetPath,getTileRect(diosAlphaGid))) abort();
     Texture texturePerson; if (!texturePerson.loadFromFile(tilesetPath,getTileRect(personGid))) abort();
     Texture texturePersonAlpha; if (!texturePersonAlpha.loadFromFile(tilesetPath,getTileRect(personAlphaGid))) abort();
     Texture textureObject; if (!textureObject.loadFromFile(tilesetPath,getTileRect(objectGid))) abort();
 
     if(personGid==0||personAlphaGid==0||diosGid==0||diosAlphaGid==0||objectGid==0) cerr<<"Error Textura de Personas no definida"<<endl;
     poblacion = new Poblacion(texturePerson, texturePersonAlpha);
-    //objects = new Objects(textureObject);
+    objects = new Objects(textureObject);
     dioses = new Poblacion(textureDios,textureDiosAlpha);
     needToPaint = true;
 }
@@ -137,9 +137,9 @@ void Map::renderMap(RenderTarget& renderArea, const IntRect &rect) {
             }
         }
 
-    poblacion->drawPoblacion(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
+    //poblacion->drawPoblacion(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
     dioses->drawPoblacion(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
-    objects->drawObjects(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
+    //objects->drawObjects(renderArea, IntRect(leftBound, topBound,i-leftBound,j-topBound));
 }
 
     IntRect Map::getTileRect(unsigned int i) {

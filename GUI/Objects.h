@@ -12,17 +12,19 @@ using namespace sf;
 
 class Object {
 public:
-    Object(unsigned int id, unsigned int x, unsigned int y);
+    Object(unsigned int id, unsigned int x, unsigned int y) ;
     unsigned int id;
     unsigned int x;
     unsigned int y;
     bool operator==(unsigned int pId);
+
 };
 class Objects {
 private:
-    Mutex objectMutex;
     DoubleList<Object> objects;
     Texture textureObject;
+    Mutex objectMutex;
+
 public:
     Objects(Texture);
     void drawObjects(RenderTarget&,const IntRect &);
