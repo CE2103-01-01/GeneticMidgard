@@ -15,7 +15,7 @@ Chromosome::Chromosome(unsigned char* red, unsigned char* green, unsigned char* 
     geneticData = static_cast<unsigned char*>(malloc(sizeof(unsigned char)*NUMBER_OF_GENES));
     best = 0;
     for (int i = 0; i < NUMBER_OF_GENES - 3; i++) {
-        *(geneticData+i) = trueRandom::getRandom()%255 + 50;
+        *(geneticData+i) = trueRandom::getRandom()%200 + 56;
         if(*(geneticData+best) < *(geneticData+i)) best = i;
     }
     *(geneticData + POSITION_OF_GENE_RED) = *red;
@@ -23,6 +23,21 @@ Chromosome::Chromosome(unsigned char* red, unsigned char* green, unsigned char* 
     *(geneticData + POSITION_OF_GENE_BLUE) = *blue;
 }
 
+/**Constructor
+ * @brief Crea la cantidad de genes del archivo genes.xml con tamaño definido en Constants.h
+ * @param unsigned char* colors, colores rgb
+ */
+Chromosome::Chromosome(unsigned char* red, unsigned char* green, unsigned char* blue, int gene_offset) {
+    geneticData = static_cast<unsigned char*>(malloc(sizeof(unsigned char)*NUMBER_OF_GENES));
+    best = 0;
+    for (int i = 0; i < NUMBER_OF_GENES - 3; i++) {
+        *(geneticData+i) = trueRandom::getRandom()%(256-gene_offset) + gene_offset;
+        if(*(geneticData+best) < *(geneticData+i)) best = i;
+    }
+    *(geneticData + POSITION_OF_GENE_RED) = *red;
+    *(geneticData + POSITION_OF_GENE_GREEN) = *green;
+    *(geneticData + POSITION_OF_GENE_BLUE) = *blue;
+}
 
 /**Constructor
  * @brief Crea la cantidad de genes del archivo genes.xml con tamaño definido en Constants.h

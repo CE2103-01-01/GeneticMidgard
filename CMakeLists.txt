@@ -68,6 +68,7 @@ set(XML
 #Adding Resources
 
 configure_file( res/constant.xml res/constant.xml COPYONLY)
+configure_file( res/populationColors.xml res/populationColors.xml COPYONLY)
 configure_file(res/genes.xml res/genes.xml COPYONLY)
 configure_file( res/mapatest.tmx res/mapatest.tmx COPYONLY)
 configure_file( res/network.json res/network.json COPYONLY)

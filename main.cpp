@@ -1,24 +1,22 @@
-#include "Models/Population.h"
 #include "Network/SocketLogic.h"
-#include "Models/Terrain.h"
 #include "Models/AgeManager.h"
-#include "Data/FileManager.h"
+#include <SFML/Audio.hpp>
 
-int main()
-{
+void bigBang(){
+    //sf::SoundBuffer fileBuffer;
+    //if (fileBuffer.loadFromFile("res/francafrique.wav")){
+    //    sf::Sound sound;
+    //    sound.setBuffer(fileBuffer);
+    //    sound.play();
+        if(NETWORK_ACTIVATED)SocketLogic::getInstance();
+        Terrain::initArray();
+        trueRandom::init();
+        AgeManager* manager = static_cast<AgeManager*>(malloc(sizeof(AgeManager)));
+        new(manager) AgeManager();
+    //}
+}
 
-    if(NETWORK_ACTIVATED)
-    {
-        SocketLogic::getInstance();
-    }
-    Terrain::initArray();
-    trueRandom::init();
-
-    AgeManager* manager = static_cast<AgeManager*>(malloc(sizeof(AgeManager)));
-
-    new(manager) AgeManager();
-
-
-
+int main() {
+    bigBang();
     return 0;
 }

@@ -20,6 +20,9 @@ PopulationManager::PopulationManager(int numberOfPopulations){
     pthread_mutex_init(mutex,NULL);
     //Reserva espacio para el contador de poblaciones
     activePopulations = static_cast<int*>(malloc(sizeof(int)));
+    //Reserva espacio para bandera de reproduccion
+    reproductionFlag = static_cast<bool*>(malloc(sizeof(bool)));
+    *reproductionFlag=true;
     //Inicia el contador de poblaciones
     *(activePopulations) = INITIAL_NUMBER_OF_POPULATIONS;
     //Reserva espacio para el ID de poblaciones
@@ -27,7 +30,7 @@ PopulationManager::PopulationManager(int numberOfPopulations){
     //Inicia el ID de poblaciones
     *(actualID) = INITIAL_NUMBER_OF_POPULATIONS;
     //Reserva espacio para N+1 cantidad de poblaciones, donde N = numberOfPopulations
-    population = static_cast<Population*>(malloc(sizeof(Population)*INITIAL_NUMBER_OF_POPULATIONS + 1));
+    population = static_cast<Population*>(malloc(sizeof(Population)*INITIAL_NUMBER_OF_POPULATIONS + 2));
     managementThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
     warThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
 }
@@ -38,6 +41,7 @@ PopulationManager::~PopulationManager(){
     free(population);
     free(actualID);
     free(activePopulations);
+    free(reproductionFlag);
 }
 
 /**@brief mezcla las poblaciones para generar una nueva
@@ -45,7 +49,6 @@ PopulationManager::~PopulationManager(){
  */
 void PopulationManager::mergePopulations(){
     //Se bloquea mutex
-    pthread_mutex_lock(mutex);
     new(population + INITIAL_NUMBER_OF_POPULATIONS) Population(INITIAL_NUMBER_OF_POPULATIONS, activePopulations);
     //Se crea tabla de indices que ayuda a saber cual fue el ultimo indice en los fittest que se recorrio
     //asi no se recorren sujetos que ya se incluyeron
@@ -82,27 +85,14 @@ void PopulationManager::init_war(){
     while(firstPopulationNumber==secondPopulationNumber){
         secondPopulationNumber = trueRandom::getRandom()%(INITIAL_NUMBER_OF_POPULATIONS);
     }
-    //ultima persona visitada
-    int lastDefense = 0;
     //Inicia las peleas
     for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
         //Toma un sujeto temporal y revisa si es guerrero
-        Subject* tmpWarrior = *((population+firstPopulationNumber)->getFittest() + i);
-        if(tmpWarrior->getCharacteristic(POSITION_OF_CHARACTERISTIC_PROFESSION)==PROFESSION_WARRIOR && !tmpWarrior->getOpponent()){
-            //toma un sujeto temporal para iterta en busca de defensa
-            Subject* tmpDefense = 0;
-            //Busca un defensa
-            for(int j=lastDefense; j<2*SUBJECTS_BY_GENERATION;j++){
-                //Si encuentra a un defensa lo coloca en el temporal y actualiza el id
-                if((*((population+secondPopulationNumber)->getFittest() + j))
-                           ->getCharacteristic(POSITION_OF_CHARACTERISTIC_PROFESSION)==PROFESSION_DEFENSE){
-                    tmpDefense=*((population+secondPopulationNumber)->getFittest() + j);
-                    lastDefense = j+1;
-                }
-            }
-            //Si el defensa no es nulo lo coloca como oponente, si no corta el ciclo al no haber gente disponible
-            if(tmpDefense)tmpWarrior->setOppenent(tmpDefense);
-            else break;
+        Subject* tmpOne = *((population+firstPopulationNumber)->getFittest() + i);
+        Subject* tmpTwo = *((population+secondPopulationNumber)->getFittest() + i);
+        if(!tmpOne->getOpponent() && !tmpTwo->getOpponent()){
+            tmpOne->setOppenent(tmpTwo);
+            tmpTwo->setOppenent(tmpOne);
         }
     }
 }
@@ -110,56 +100,24 @@ void PopulationManager::init_war(){
 /**Inicia la ultima guerra
  */
 void PopulationManager::initFinalWar(){
+    new(population + INITIAL_NUMBER_OF_POPULATIONS + 1) Population(INITIAL_NUMBER_OF_POPULATIONS+1, activePopulations);
+    for(int i = 0; i<INITIAL_NUMBER_OF_SUBJECTS; i++){
+        (population + INITIAL_NUMBER_OF_POPULATIONS + 1)->createNewStrongRandomMember();
+    }
+    (population + INITIAL_NUMBER_OF_POPULATIONS + 1)->fillFittest();
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
     timeController.tv_sec=10;
-    *activePopulations--;
+    *reproductionFlag=false;
     nanosleep(&timeController, NULL);
     for(int i = 0; i < INITIAL_NUMBER_OF_SUBJECTS; i++){
-        //Toma un sujeto y crea un dios temporal
-        God* tmpGod = static_cast<God*>(malloc(sizeof(God)));
-        new(tmpGod) God();
-        Subject* tmpSubject = *((population+INITIAL_NUMBER_OF_POPULATIONS)->getFittest()+i);
-        //Toma las caracteristicas de interes
-        unsigned char tmpGodAttack = tmpGod->getAttribute(POSITION_OF_GOD_ATTRIBUTE_ATTACK);
-        unsigned char tmpGodDefense = tmpGod->getAttribute(POSITION_OF_GOD_ATTRIBUTE_DEFENSE);
-        unsigned char tmpSubjectAttack = tmpSubject->getGeneticInformation()->getGene(POSITION_OF_GENE_ATTACK);
-        unsigned char tmpSubjectDefense = tmpSubject->getGeneticInformation()->getGene(POSITION_OF_GENE_DEFENSE);
-        //Itera hasta que alguno muera
-        while(tmpGod->isAlive() && tmpSubject->isAlive()){
-            //Tira moneda al aire
-            int coin = trueRandom::getRandom()%(tmpGodAttack+tmpSubjectAttack);
-            //Si es menor que el ataque del dios, ataca el dios
-            if(coin<tmpGodAttack){
-                //Si el ataque es mayor, acierta
-                if(tmpGodAttack>tmpSubjectDefense) {
-                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,tmpSubjectDefense-tmpGodAttack);
-                }//Si el ataque es igual que la defensa, ambos golpean
-                else if(tmpGodAttack==tmpSubjectDefense){
-                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,-tmpGodAttack);
-                    tmpGod->decreseLife(tmpSubjectDefense);
-                }//Si el ataque es menor  que la defensa, lo golpean
-                else{
-                    tmpGod->decreseLife(tmpSubjectDefense-tmpGodAttack);
-                }
-            }//Si es mayor que el ataque del dios, ataca el sujeto
-            else{
-                //Si el ataque es mayor que la defensa, acierta
-                if(tmpSubjectAttack>tmpGodDefense) {
-                    tmpGod->decreseLife(tmpSubjectAttack-tmpGodDefense);
-                }//Si el ataque es igual que la defensa, ambos golpean
-                else if(tmpSubjectAttack==tmpGodDefense){
-                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,-tmpGodDefense);
-                    tmpGod->decreseLife(tmpSubjectAttack);
-                }//Si el ataque es menor que la defensa, lo golpean
-                else{
-                    tmpSubject->setCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE,tmpSubjectAttack-tmpGodDefense);
-                }
-            }
+        Subject* tmpGod = *((population + INITIAL_NUMBER_OF_POPULATIONS + 1)->getFittest()+i);
+        Subject* tmpSubj = *((population + INITIAL_NUMBER_OF_POPULATIONS)->getFittest()+i);
+        if(tmpGod && tmpSubj->isAlive()) {
+            tmpSubj->setOppenent(tmpGod);
+            tmpGod->setOppenent(tmpSubj);
         }
-        //Libera espacio
-        free(tmpGod);
     }
 }
 
@@ -188,6 +146,13 @@ void PopulationManager::thread() {
  */
 bool PopulationManager::isSomeoneAlive(){
     return (*activePopulations > 0);
+}
+
+/**@brief devuelve true si hay personas vivas
+ * @return bool
+ */
+bool PopulationManager::getReproductionFlag(){
+    return *reproductionFlag;
 }
 
 /**@brief devuelve el id actual
@@ -293,7 +258,7 @@ void* populationManagerThread(void* param){
     while(manager->isSomeoneAlive()){
         //pthread_mutex_lock(static_cast<PThreadParam*>(param)->getMutex());
         //Ejecuta el metodo
-        manager->reproduce();
+        if(manager->getReproductionFlag())manager->reproduce();
         pthread_cond_signal(static_cast<PThreadParam*>(param)->getCondition());
         //pthread_mutex_unlock(static_cast<PThreadParam*>(param)->getMutex());
         //Espera un segundo
@@ -310,7 +275,7 @@ void* populationManagerWarThread(void* param){
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=5;
+    timeController.tv_sec=2;
     //Este while corre hasta que se mueran todos
     while(constants::RANDOM_WAR_RANGE_BY_EDDA){
         //Ejecuta el metodo

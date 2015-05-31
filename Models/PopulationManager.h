@@ -14,6 +14,7 @@ class PopulationManager {
     static PopulationManager* singleton;
     int* actualID;
     int* activePopulations;
+    bool* reproductionFlag;
     Population* population;
     void init_war();
     public:
@@ -22,6 +23,7 @@ class PopulationManager {
         void thread();
         void killEmAll();
         bool isSomeoneAlive();
+        bool getReproductionFlag();
         Population* getPopulation();
         static PopulationManager* getInstance();
         static pthread_t* get_pthread();

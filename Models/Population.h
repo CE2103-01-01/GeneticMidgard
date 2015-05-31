@@ -25,6 +25,7 @@ public:
     Population(char, int*); //constructor de la poblacion
     ~Population();// destructor por defecto
     void createNewRandomMember();
+    void createNewStrongRandomMember();
     void insertNewMember(Subject*, Subject*, Chromosome*);
     void insertNewMember(Subject*);
     void updateGeneration();

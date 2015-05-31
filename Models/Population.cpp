@@ -6,6 +6,10 @@
 #include "../Algorithms/lifeLaboratory.h"
 #include "Terrain.h"
 
+#define COLOR_XML_PATH "../res/populationColors.xml"
+#define COLOR_XML_ROOT "POPULATION_COLORS"
+#define COLOR_XML_NODE "color"
+
 /** Construye una poblacion
  * @param Tree<Subject>* peopleTreeParam: primera generacion
  * @param char populationTypeParam: tipo de poblacion
@@ -13,9 +17,19 @@
 Population::Population(char populationTypeParam, int* activePopulationsOnManagerParam){
     //Reserva espacios
     colors = static_cast<unsigned char*>(malloc(3));
-    *(colors) = trueRandom::getRandom()%256;
-    *(colors + 1) = trueRandom::getRandom()%256;
-    *(colors + 2) = trueRandom::getRandom()%256;
+    rapidxml::xml_node<>* root_node;
+    rapidxml::xml_document<> doc;
+    rapidxml::file<> file(COLOR_XML_PATH);
+    doc.parse<0>(file.data());
+    root_node = doc.first_node(COLOR_XML_ROOT)->first_node(COLOR_XML_NODE);
+    for(int i = 0; i<populationTypeParam; i++){
+        root_node = root_node->next_sibling();
+    }
+    rapidxml::xml_attribute<>* tmpColor = root_node->first_attribute();
+    for(int i = 0; i<3; i++){
+        tmpColor = tmpColor->next_attribute();
+        *(colors+i) = std::atoi(tmpColor->value());
+    }
     activePopulationsOnManager = activePopulationsOnManagerParam;
     populationType = static_cast<char*>(malloc(sizeof(char)));
     *populationType = populationTypeParam;
@@ -88,6 +102,17 @@ void Population::createNewRandomMember() {
                                          ),
                                   *populationSize
                                  );
+    Subject* newMember = populationTree->searchElement(*populationSize);
+    newMember->start_p_thread();
+}
+
+void Population::createNewStrongRandomMember() {
+    (*populationSize)++;
+    populationTree->insertElement(Subject((*populationSize)*SUBJECT_ID_MULTIPLIER_FOR_POPULATION_ID + (*populationType),
+                                          actualGeneration, colors, Terrain::getFreePositionNear(*position),200
+                                  ),
+                                  *populationSize
+    );
     Subject* newMember = populationTree->searchElement(*populationSize);
     newMember->start_p_thread();
 }

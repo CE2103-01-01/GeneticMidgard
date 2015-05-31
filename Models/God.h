@@ -11,13 +11,13 @@
 #include <malloc.h>
 #include "../Interface/Random.h"
 
-#define NUMBER_OF_ATTRIBUTES  5
+#define NUMBER_OF_ATTRIBUTES  6
 #define POSITION_OF_GOD_ATTRIBUTE_LIFE 0
 #define POSITION_OF_GOD_ATTRIBUTE_ATTACK 1
 #define POSITION_OF_GOD_ATTRIBUTE_DEFENSE 2
 #define POSITION_OF_GOD_ATTRIBUTE_WEAPON 3
 #define POSITION_OF_GOD_ATTRIBUTE_ARMOR 4
-
+#define POSITION_OF_GOD_ATTRIBUTE_GENERAL_COLOR 5
 class God{
     unsigned char* attributes;
     public:

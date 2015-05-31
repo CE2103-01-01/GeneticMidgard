@@ -13,6 +13,7 @@ class Chromosome {
     unsigned char best;
 public:
     Chromosome(unsigned char*,unsigned char*,unsigned char*);
+    Chromosome(unsigned char*,unsigned char*,unsigned char*, int);
     Chromosome(unsigned char*);
     Chromosome(const Chromosome&);
     ~Chromosome();

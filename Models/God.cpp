@@ -15,6 +15,7 @@ God::God() {
         //Llena los genes con valores random entre 200 y 255
         *(attributes + i) = trueRandom::getRandom()%56 + 200;
     }
+    *(attributes + POSITION_OF_GOD_ATTRIBUTE_GENERAL_COLOR) = 255;
 }
 
 /**@brief Constructor de copia

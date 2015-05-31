@@ -4,6 +4,7 @@
 
 #include "movilObjectManager.h"
 #include "../Network/SocketLogic.h"
+#include "../libs/pugixml/pugixml.hpp"
 
 
 using namespace pugi;

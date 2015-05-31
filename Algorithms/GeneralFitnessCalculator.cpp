@@ -3,9 +3,7 @@
 //
 
 #include "GeneralFitnessCalculator.h"
-#include "../libs/rapidxml/rapidxml_utils.hpp"
 
-using namespace pugi;
 using namespace constantsSubjectXML;
 
 GeneralFitnessCalculator* GeneralFitnessCalculator::instance = 0;

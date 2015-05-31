@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<POPULATION_COLORS>
+    <color name="Dwarves" red ="0" green="255" blue="0"/>       <!-- verde -->
+    <color name="Elves" red ="0" green="0" blue="255"/>         <!-- azul -->
+    <color name="Dark Elves" red ="0" green="0" blue="0"/>      <!-- negro -->
+    <color name="Giants" red ="255" green="255" blue="77"/>     <!-- amarillo -->
+    <color name="Robertos" red ="255" green="0" blue="0"/>      <!-- rojo -->
+    <color name="NULL" red ="NULL" green="NULL" blue="NULL"/>   <!-- evita caida en union -->
+    <color name="Gods" red ="255" green="255" blue="255"/>      <!-- blanco -->
+</POPULATION_COLORS>

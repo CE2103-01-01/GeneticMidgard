@@ -7,7 +7,6 @@
 #include "../Network/SocketLogic.h"
 #include "movilObjectManager.h"
 
-using namespace pugi;
 using namespace constantsSubjectXML;
 int Subject::actionSleepNano = 20;
 /** Constructor
@@ -45,7 +44,41 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     //Coloca en 0 el puntero al thread
     lifeThread = NULL;
 }
-
+/** Constructor
+ * @brief genera un individuo de primera generacion
+ */
+Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vector2D basePosition, int gene_offset){
+    //Ano actual
+    actualYear = actualYearParam;
+    selected = static_cast<bool*>(malloc(sizeof(bool)));
+    *selected = false;
+    //Crea y asigna id
+    id = static_cast<long*>(malloc(sizeof(long)));
+    *id = idParam;
+    //Crea y asigna generacion
+    generation = static_cast<int*>(malloc(sizeof(int)));
+    *generation = 0;
+    //Crea y asigna la informacion genetica
+    geneticInformation = static_cast<Chromosome*>(malloc(sizeof(Chromosome)));
+    *geneticInformation = Chromosome(colors, colors+1, colors+2, gene_offset);
+    //Calcula fitness
+    fitness = static_cast<float*>(malloc(sizeof(float)));
+    calculateFitness();
+    //Crea las caracteristicas
+    characteristics = static_cast<unsigned char*>(calloc(0,NUMBER_OF_CHARACTERISTICS));
+    //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
+    *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = gene_offset;
+    //Crea posicion
+    position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
+    *position = basePosition;
+    selectProfession();
+    //Asigna padres
+    father = NULL;
+    mother = NULL;
+    opponent = NULL;
+    //Coloca en 0 el puntero al thread
+    lifeThread = NULL;
+}
 /** Constructor
  * @brief genera un individuo de generacion N
  */
@@ -156,8 +189,10 @@ Chromosome* Subject::getGeneticInformation() {
  * @param unsigned char value:valor que modifica la caracteristica
  * @param int position:posicion donde es encuentra la caracteristica
  */
-void Subject::setCharacteristic(unsigned char value, int position) {
-    *(characteristics+position)+=value;
+void Subject::setCharacteristic(char value, int position) {
+    if(0<=((int)*(characteristics+position)+(int)value)<=255) *(characteristics+position)+=value;
+    else if(value>0) *(characteristics+position)=255;
+    else *(characteristics+position)=0;
 }
 
 long Subject::getGeneration(){
@@ -248,22 +283,25 @@ void Subject::printProfession() {
 void Subject::findPath(Vector2D positionToFind) { /* (7 + 68N)T */
     //Se crea el controlador de tiempo
     struct timespec timeController;
-    timeController.tv_nsec=0;
+    timeController.tv_nsec=5000;
     timeController.tv_sec=1;
     Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);
-    while (opponent->position->x-OFFSET_ATTACK > position->x || position->x > opponent->position->x+OFFSET_ATTACK
+    int counter = 0;
+    while (opponent && opponent->position->x-OFFSET_ATTACK > position->x || position->x > opponent->position->x+OFFSET_ATTACK
            || opponent->position->y-OFFSET_ATTACK > position->y || position->y > opponent->position->y+OFFSET_ATTACK) {
 
         if(!opponent || !opponent->isAlive()) break;
-        if(positionToFind != *opponent->position) path = Terrain::findPathAS(*position,*opponent->position);
+        if(counter == 10 && positionToFind != *opponent->position){
+            path = Terrain::findPathAS(*position,*opponent->position);
+            counter = 0;
+        }
         if (path.size()==0) break;
-
         Vector2D next = path.top();                                                                         //5T
         position->x = next.x;                                                                               //5T
         position->y = next.y;
         updateSubject(*id, position->x, position->y);                                                       //6T
         path.pop();
-
+        counter++;
         nanosleep(&timeController, NULL);
     }
 }
@@ -328,34 +366,18 @@ void Subject::attack(){/* 70T */
                         + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_WEAPON)
                         + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
     //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
-    if(attackResult >= defenseResult){                                                                              //3T
-        if(trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_RUNES) ||
-                trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_BLOT)){   //18T
-            opponent->kill();                                                                                     //2T
-        }else if(trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_RUNES) ||
-                trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_BLOT)){                  //18T
-            kill();
-        }else if(attackResult > defenseResult){                                                                     //3T
-            opponent->setCharacteristic(defenseResult-attackResult,POSITION_OF_CHARACTERISTIC_LIFE);                //6T
-            lifeUpdate(opponent->getID(),defenseResult-attackResult);                                               //6T
-        }else{
-            opponent->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);                             //4T
-            lifeUpdate(opponent->getID(),ATTACK_DAMAGE);                                                            //4T
-            this->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);                                 //4T
-            lifeUpdate(*id,ATTACK_DAMAGE);                                                                          //3T
-        }
-    }//Si el primer elemento de la comparacion es menor, el ataque es menor que la defensa, por lo tanto no acierta
+    if(attackResult > defenseResult){                                                                     //3T
+        opponent->setCharacteristic(defenseResult-attackResult,POSITION_OF_CHARACTERISTIC_LIFE);                //6T
+        lifeUpdate(opponent->getID(),opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE));                                               //6T
+    }else if(attackResult < defenseResult){
+        setCharacteristic(attackResult - defenseResult, POSITION_OF_CHARACTERISTIC_LIFE);                   //9T
+        lifeUpdate(*id,getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE));                                                       //3T
+    }
     else{
-        if(trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_RUNES) ||
-                trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_BLOT)){                  //18T
-            kill();
-        }else if(trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_RUNES) ||
-                trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_BLOT)){   //18T
-            opponent->kill();
-        }else{
-            *(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) += (attackResult - defenseResult);                   //9T
-            lifeUpdate(*id,attackResult - defenseResult);                                                           //5T
-        }
+        opponent->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);                             //4T
+        lifeUpdate(opponent->getID(),ATTACK_DAMAGE);                                                            //4T
+        setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);                                 //4T
+        lifeUpdate(*id,getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE));
     }
 }
 
@@ -440,10 +462,10 @@ void Subject::delete_p_thread(){
 }
 
 void Subject::optionSelection() {
-    movilObject* object = movilObjectManager::getInstance()->getRandomObject();
-    ;
-    if(findObjectPath(object->getVector()))
-        object->applyEffect(this);
+    int value = trueRandom::randRange(0,100);
+    movilObject objectToGet = *(movilObjectManager::getInstance()->getRandomObject());
+    if(findObjectPath(objectToGet.getVector()))
+    objectToGet.applyEffect(this);
 }
 
 /**@brief metodo ejecutado por el pthread
@@ -466,10 +488,10 @@ void* subjectLife(void* parameter){
         //Si existe oponente ataca
         if(excecutioner->getOpponent()!=NULL && excecutioner->getOpponent()->isAlive()){
             excecutioner->attack();
-            excecutioner->setOppenent(NULL);
         }//Si no existe oponente selecciona random un objeto
         else{
-            excecutioner->optionSelection();
+            excecutioner->setOppenent(NULL);
+            //excecutioner->optionSelection();
         }
     }
     deleteSubject(excecutioner->getID());

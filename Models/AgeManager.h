@@ -33,6 +33,7 @@ class AgeManager {
         void thread();
         void delete_p_thread();
         void initPopulationManager();
+        bool lookForEnd();
 };
 
 void* ageManagerThread(void*);

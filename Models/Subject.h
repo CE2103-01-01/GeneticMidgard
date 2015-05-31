@@ -14,7 +14,7 @@
 #define GEN " / GEN "
 #define CHARACTERISTICS " / CHARACTERISTICS "
 
-static const int OFFSET_ATTACK = 5;
+static const int OFFSET_ATTACK = 1;
 
 #include "Chromosome.h"
 #include "../Algorithms/GeneralFitnessCalculator.h"
@@ -67,6 +67,7 @@ class Subject {
     void printParents();
 public:
     Subject(long,int*,unsigned char*,Vector2D);
+    Subject(long,int*,unsigned char*,Vector2D, int);
     Subject(Subject*,Subject*,Chromosome*,long,long,int*);
     Subject(const Subject&);
     ~Subject();
@@ -78,7 +79,7 @@ public:
     Subject* getMother(); // Obtiene padre 2
     float getFitness();
     unsigned char getCharacteristic(int);
-    void setCharacteristic(unsigned char, int);
+    void setCharacteristic(char, int);
     void attack();
     void updateLife();
     bool isAlive();

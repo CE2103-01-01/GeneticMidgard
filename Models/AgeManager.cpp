@@ -33,10 +33,27 @@ AgeManager::~AgeManager(){
     //free(actualAge);
 }
 
+bool AgeManager::lookForEnd(){
+    int godsCounter = 50;
+    int subjectsCounter = 50;
+    Subject** subjects = (PopulationManager::getInstance()->getPopulation()+INITIAL_NUMBER_OF_POPULATIONS)->getFittest();
+    Subject** gods = (PopulationManager::getInstance()->getPopulation()+INITIAL_NUMBER_OF_POPULATIONS+1)->getFittest();
+    for(int i=0; i<INITIAL_NUMBER_OF_SUBJECTS;i++){
+        if(!(*(subjects+i))->isAlive()) subjectsCounter--;
+        if(!(*(gods+i))->isAlive()) godsCounter--;
+    }
+    if(godsCounter+subjectsCounter > 50) return false;
+    else{
+        std::cout << "Guerra finalizada dioses vivos: " << godsCounter << ", sujetos vivos: " << subjectsCounter << std::endl;
+        return true;
+    }
+}
+
 /**@brief metodo del thread que evalua las eddas
  */
 void AgeManager::thread(){
-    evaluateEvolution();
+    if(*actualAge<TWILIGHT_OF_THE_GODS_AGE)evaluateEvolution();
+    else if(lookForEnd()) PopulationManager::getInstance()->killEmAll();
     (*years)++;
 }
 
