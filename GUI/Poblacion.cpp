@@ -30,10 +30,10 @@ void Poblacion::drawPoblacion(RenderTarget &target, const IntRect &rect) {
             text.setPosition(sprite.getPosition());
             text.move(-6,-6);
             if (life->life<0){
-                text.setCharacterSize(1000);
+                text.setCharacterSize(50);
                 text.setColor(Color(200,0,0));}
             else if(life->life>0) {
-                text.setCharacterSize(25);
+                text.setCharacterSize(50);
                 text.setColor(Color(0,200,0));}
             else text.setColor(Color(0,0,200));
             target.draw(text);
