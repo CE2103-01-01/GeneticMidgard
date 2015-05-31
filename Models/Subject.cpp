@@ -39,11 +39,11 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     *position = basePosition;
     selectProfession();
     //Asigna padres
-    father = 0;
-    mother = 0;
-    opponent = 0;
+    father = NULL;
+    mother = NULL;
+    opponent = NULL;
     //Coloca en 0 el puntero al thread
-    lifeThread = 0;
+    lifeThread = NULL;
 }
 
 /** Constructor
@@ -75,11 +75,11 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     //Asigna padres
     father = fatherParam;
     mother = motherParam;
-    opponent = 0;
+    opponent = NULL;
     //Coloca en 0 el puntero al thread
-    lifeThread = 0;
+    lifeThread = NULL;
     selectProfession();
-    }
+}
 
 /** Constructor
  * @brief genera un individuo de generacion N
@@ -124,10 +124,11 @@ Subject::~Subject(){
     free(fitness);
     free(geneticInformation);
     free(position);
-    actualYear = 0;
-    father = 0;
-    mother = 0;
-    opponent = 0;
+//    free(lifeThread);
+    actualYear = NULL;
+    father = NULL;
+    mother = NULL;
+ //   opponent = NULL;
 }
 
 /** @brief Accede al padre
@@ -244,28 +245,27 @@ void Subject::printProfession() {
 /**@brief sigue un camino hasta una ruta definida
  * @param Vector2D positionToFind: posicion a encontrar en el mapa
  */
-bool Subject::findPath(Vector2D positionToFind) { /* (7 + 68N)T */
+void Subject::findPath(Vector2D positionToFind) { /* (7 + 68N)T */
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
     timeController.tv_sec=1;
-    Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);                                  //7T
-    if(path.size()==0) return false;
+    Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);
     while (opponent->position->x-OFFSET_ATTACK > position->x || position->x > opponent->position->x+OFFSET_ATTACK
-           || opponent->position->y-OFFSET_ATTACK > position->y || position->y > opponent->position->y+OFFSET_ATTACK) {   //20T
-        if (path.size()!=0) {                                                                                   //4T
-            Vector2D next = path.top();                                                                         //5T
-            position->x = next.x;                                                                               //5T
-            position->y = next.y;
-            nanosleep(&timeController, NULL);
-            updateSubject(*id, position->x, position->y);                                                       //6T
-            path.pop();                                                                                         //2T
-            if(positionToFind != *opponent->position) {                                                         //4T
-                path = Terrain::findPathAS(*position,*opponent->position);                                      //6T
-            }
-        }
+           || opponent->position->y-OFFSET_ATTACK > position->y || position->y > opponent->position->y+OFFSET_ATTACK) {
+
+        if(!opponent || !opponent->isAlive()) break;
+        if(positionToFind != *opponent->position) path = Terrain::findPathAS(*position,*opponent->position);
+        if (path.size()==0) break;
+
+        Vector2D next = path.top();                                                                         //5T
+        position->x = next.x;                                                                               //5T
+        position->y = next.y;
+        updateSubject(*id, position->x, position->y);                                                       //6T
+        path.pop();
+
+        nanosleep(&timeController, NULL);
     }
-    return true;
 }
 
 bool Subject::findObjectPath(Vector2D positionToFind){
@@ -316,7 +316,7 @@ void Subject::print(){
 /** @brief Ataque
  */
 void Subject::attack(){/* 70T */
-    if(!findPath(*opponent->position))return;                                                                                  //3T
+    findPath(*opponent->position);                                                                                 //3T
     //Se suma el gen del ataque del atacante con la caracteristica arma
     int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)                                         //19T
                        + *(characteristics+POSITION_OF_CHARACTERISTIC_WEAPON)
@@ -331,10 +331,10 @@ void Subject::attack(){/* 70T */
     if(attackResult >= defenseResult){                                                                              //3T
         if(trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_RUNES) ||
                 trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_BLOT)){   //18T
-            opponent->kill();                                                                                       //2T
+            opponent->kill();                                                                                     //2T
         }else if(trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_RUNES) ||
                 trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_BLOT)){                  //18T
-            kill();                                                                                                 //T
+            kill();
         }else if(attackResult > defenseResult){                                                                     //3T
             opponent->setCharacteristic(defenseResult-attackResult,POSITION_OF_CHARACTERISTIC_LIFE);                //6T
             lifeUpdate(opponent->getID(),defenseResult-attackResult);                                               //6T
@@ -348,16 +348,15 @@ void Subject::attack(){/* 70T */
     else{
         if(trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_RUNES) ||
                 trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_BLOT)){                  //18T
-            kill();                                                                                                 //T
+            kill();
         }else if(trueRandom::getRandom()%256 < geneticInformation->getGene(POSITION_OF_GENE_RUNES) ||
                 trueRandom::getRandom()%256 < opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_BLOT)){   //18T
-            opponent->kill();                                                                                       //2T
+            opponent->kill();
         }else{
             *(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) += (attackResult - defenseResult);                   //9T
             lifeUpdate(*id,attackResult - defenseResult);                                                           //5T
         }
     }
-    //std::cout << *id  << " vs " << opponent->getID() << " = " << (int)*(characteristics+POSITION_OF_CHARACTERISTIC_LIFE) << "-" << (int)opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE) << std::endl;
 }
 
 /** @brief Retorna true si el jugador esta vivo, para ello la vida debe ser mayor a 0 y menor o igual a la edad
@@ -438,7 +437,6 @@ void Subject::start_p_thread(){
  */
 void Subject::delete_p_thread(){
     free(lifeThread);
-    deleteSubject(*id);
 }
 
 void Subject::optionSelection() {
@@ -474,7 +472,7 @@ void* subjectLife(void* parameter){
             //excecutioner->optionSelection();
         }
     }
-    excecutioner->delete_p_thread();
+    deleteSubject(excecutioner->getID());
     return 0;
 }
 

@@ -60,7 +60,7 @@ class Subject {
     unsigned char* characteristics;//vida-experiencia-arma-armadura-profesion
     std::string writeFileVariable;
     void calculateFitness();//funcion de calcular fitness y set fitness
-    bool findPath(Vector2D);
+    void findPath(Vector2D);
     bool findObjectPath(Vector2D);
     void printGeneralData();
     void printProfession();

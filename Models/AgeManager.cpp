@@ -15,6 +15,7 @@ AgeManager::AgeManager(){
     *years = 0;
     //Thread de manejo de eddas
     managementThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
+    printerThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
     //Mutex
     generalMutex = static_cast<pthread_mutex_t*>(malloc(sizeof(pthread_mutex_t)));
     pthread_mutex_init(generalMutex,NULL);
@@ -22,9 +23,8 @@ AgeManager::AgeManager(){
     pthread_cond_init(condition,NULL);
     //new(objectManager) movilObjectManager();
     pthread_create(managementThread,0,ageManagerThread, static_cast<void*>(this));
-    pthread_join(*managementThread,NULL);
     pthread_create(printerThread,0,subjectPrinter, NULL);
-    pthread_join(*printerThread,NULL);
+    pthread_join(*managementThread,NULL);
 }
 
 /**Destructor
@@ -120,17 +120,21 @@ void AgeManager::changeAge(){
         //Cambia la edda en el calculador de fitness
         GeneralFitnessCalculator::getInstance()->changeEdda();
     }else if(*actualAge == UNION_AGE){
+        std::cout << "UNION" << std::endl;
         //Cambia la edda en el calculador de fitness
+        constants::RANDOM_WAR_RANGE_BY_EDDA = 0;
         GeneralFitnessCalculator::getInstance()->changeEdda();
         //En la edda de la union mezcla las poblaciones
         PopulationManager::getInstance()->mergePopulations();
-    }else if(*actualAge == TWILIGHT_OF_THE_GODS_AGE){
-        //En la edda de la pelea contra los dioses genera la pelea
-        PopulationManager::getInstance()->initFinalWar();
         for(int i = 0; i < INITIAL_NUMBER_OF_POPULATIONS; i++){
             (PopulationManager::getInstance()->getPopulation()+i)->exterminate();
         }
+        std::cout << "~UNION" << std::endl;
+    }else if(*actualAge == TWILIGHT_OF_THE_GODS_AGE){
         std::cout << "TWILIGHT OF THE GODS" << std::endl;
+        //En la edda de la pelea contra los dioses genera la pelea
+        PopulationManager::getInstance()->initFinalWar();
+        std::cout << "~TWILIGHT OF THE GODS" << std::endl;
     }
 }
 

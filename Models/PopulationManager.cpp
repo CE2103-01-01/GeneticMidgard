@@ -46,7 +46,7 @@ PopulationManager::~PopulationManager(){
 void PopulationManager::mergePopulations(){
     //Se bloquea mutex
     pthread_mutex_lock(mutex);
-    new(population + INITIAL_NUMBER_OF_POPULATIONS+1) Population(INITIAL_NUMBER_OF_POPULATIONS, activePopulations);
+    new(population + INITIAL_NUMBER_OF_POPULATIONS) Population(INITIAL_NUMBER_OF_POPULATIONS, activePopulations);
     //Se crea tabla de indices que ayuda a saber cual fue el ultimo indice en los fittest que se recorrio
     //asi no se recorren sujetos que ya se incluyeron
     int* index = static_cast<int*>(calloc(0,sizeof(int) * INITIAL_NUMBER_OF_POPULATIONS));
@@ -64,11 +64,11 @@ void PopulationManager::mergePopulations(){
         //Suma uno al indice correspondiente a la poblacion del sujeto
         (*(index + tmp->getID()%10))++;
         //Inserta al sujeto en la nueva poblacion
-        (population + INITIAL_NUMBER_OF_POPULATIONS+1)->insertNewMember(tmp);
+        (population + INITIAL_NUMBER_OF_POPULATIONS)->insertNewMember(tmp);
     }
-    (population + INITIAL_NUMBER_OF_POPULATIONS+1)->updateFittest();
+    (population + INITIAL_NUMBER_OF_POPULATIONS)->updateFittest();
     //killEmAll();
-    (*activePopulations)=1;
+    (*activePopulations)++;
     (*actualID)++;
 }
 
@@ -88,14 +88,34 @@ void PopulationManager::init_war(){
     for(int i = 0; i < 2*SUBJECTS_BY_GENERATION; i++){
         //Toma un sujeto temporal y revisa si es guerrero
         Subject* tmpWarrior = *((population+firstPopulationNumber)->getFittest() + i);
-        Subject* tmpDefense = *((population+secondPopulationNumber)->getFittest() + i);
-        if(!tmpWarrior->getOpponent())tmpWarrior->setOppenent(tmpDefense);
+        if(tmpWarrior->getCharacteristic(POSITION_OF_CHARACTERISTIC_PROFESSION)==PROFESSION_WARRIOR && !tmpWarrior->getOpponent()){
+            //toma un sujeto temporal para iterta en busca de defensa
+            Subject* tmpDefense = 0;
+            //Busca un defensa
+            for(int j=lastDefense; j<2*SUBJECTS_BY_GENERATION;j++){
+                //Si encuentra a un defensa lo coloca en el temporal y actualiza el id
+                if((*((population+secondPopulationNumber)->getFittest() + j))
+                           ->getCharacteristic(POSITION_OF_CHARACTERISTIC_PROFESSION)==PROFESSION_DEFENSE){
+                    tmpDefense=*((population+secondPopulationNumber)->getFittest() + j);
+                    lastDefense = j+1;
+                }
+            }
+            //Si el defensa no es nulo lo coloca como oponente, si no corta el ciclo al no haber gente disponible
+            if(tmpDefense)tmpWarrior->setOppenent(tmpDefense);
+            else break;
+        }
     }
 }
 
 /**Inicia la ultima guerra
  */
 void PopulationManager::initFinalWar(){
+    //Se crea el controlador de tiempo
+    struct timespec timeController;
+    timeController.tv_nsec=0;
+    timeController.tv_sec=10;
+    *activePopulations--;
+    nanosleep(&timeController, NULL);
     for(int i = 0; i < INITIAL_NUMBER_OF_SUBJECTS; i++){
         //Toma un sujeto y crea un dios temporal
         God* tmpGod = static_cast<God*>(malloc(sizeof(God)));
@@ -146,24 +166,15 @@ void PopulationManager::initFinalWar(){
 /**Reproduce a las poblaciones
  */
 void PopulationManager::reproduce(){
-    if(*actualID > INITIAL_NUMBER_OF_POPULATIONS){
-        LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
-        new(laboratory) LifeLaboratory((population+*actualID));
-        //Primera generacion
-        laboratory->createGeneration();
-        free(laboratory);
-    }else{
-        for(int i = 0; i < *actualID; i++){
-            if(!(population+i)->isDefunct()){
-                LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
-                new(laboratory) LifeLaboratory((population+i));
-                //Primera generacion
-                laboratory->createGeneration();
-                free(laboratory);
-                //std::cout<< "POBLACION: " << i << " NUEVO PEOR: "<< ((*((population+i)->getFittest()+INITIAL_NUMBER_OF_SUBJECTS -1))->getFitness()) << std::endl;
-            }
+   for(int i = 0; i < *actualID; i++){
+        if(!(population+i)->isDefunct()){
+            LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
+            new(laboratory) LifeLaboratory((population+i));
+            //Primera generacion
+            laboratory->createGeneration();
+            free(laboratory);
         }
-    }
+   }
 }
 
 /**@brief metodo que ejecuta las acciones
@@ -204,7 +215,7 @@ pthread_t* PopulationManager::get_pthread(){
  * return pthread_t*
  */
 pthread_t* PopulationManager::get_war_pthread(){
-    return managementThread;
+    return warThread;
 }
 
 /**@brief accede al thread
@@ -273,7 +284,7 @@ void* populationManagerThread(void* param){
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=20;
+    timeController.tv_sec=5;
     pthread_mutex_lock(static_cast<PThreadParam*>(param)->getMutex());
     manager->createLife();
     pthread_cond_signal(static_cast<PThreadParam*>(param)->getCondition());
@@ -288,7 +299,6 @@ void* populationManagerThread(void* param){
         //Espera un segundo
         nanosleep(&timeController, NULL);
     }
-    manager->delete_pthread();
     return 0;
 }
 
@@ -302,12 +312,11 @@ void* populationManagerWarThread(void* param){
     timeController.tv_nsec=0;
     timeController.tv_sec=5;
     //Este while corre hasta que se mueran todos
-    while(manager->isSomeoneAlive()){
+    while(constants::RANDOM_WAR_RANGE_BY_EDDA){
         //Ejecuta el metodo
         manager->thread();
         //Espera un segundo
         nanosleep(&timeController, NULL);
     }
-    manager->delete_war_pthread();
     return 0;
 }
