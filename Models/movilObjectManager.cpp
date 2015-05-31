@@ -85,12 +85,17 @@ movilObjectManager::movilObjectManager() {
         *(listXmlData+h+1)= temp.last_attribute().as_int();
         temp = temp.next_sibling();
     }
+    objectSource.~xml_document();
     for(int i = 0; i<NUMBER_OF_OBJECTS-1; i++){
         int random = trueRandom::getRandom()%elementCounter;
         Vector2D position = Terrain::getRandomFreePosition();
         *(listObject+i) = movilObject(*(listXmlData+2*random), *(listXmlData+2*random+1), idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
                                       position.x, position.y, i);
-        createObject((listObject+i)->getId(),(listObject+i)->get_X_Position(),(listObject+i)->get_Y_Position());
+        movilObject* object = (listObject+i);
+        int id = object->getId();
+        int x_position =  object->get_X_Position();
+        int y_position =  object->get_Y_Position();
+        createObject(id,x_position,y_position);
         objectCounter++;
         idCounter++;
     }

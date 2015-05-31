@@ -440,10 +440,10 @@ void Subject::delete_p_thread(){
 }
 
 void Subject::optionSelection() {
-    int value = trueRandom::randRange(0,100);
-    movilObject objectToGet = *(movilObjectManager::getInstance()->getRandomObject());
-    if(findObjectPath(objectToGet.getVector()))
-    objectToGet.applyEffect(this);
+    movilObject* object = movilObjectManager::getInstance()->getRandomObject();
+    ;
+    if(findObjectPath(object->getVector()))
+        object->applyEffect(this);
 }
 
 /**@brief metodo ejecutado por el pthread
@@ -469,7 +469,7 @@ void* subjectLife(void* parameter){
             excecutioner->setOppenent(NULL);
         }//Si no existe oponente selecciona random un objeto
         else{
-            //excecutioner->optionSelection();
+            excecutioner->optionSelection();
         }
     }
     deleteSubject(excecutioner->getID());
