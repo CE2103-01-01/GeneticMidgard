@@ -15,7 +15,7 @@ Chromosome::Chromosome(unsigned char* red, unsigned char* green, unsigned char* 
     geneticData = static_cast<unsigned char*>(malloc(sizeof(unsigned char)*NUMBER_OF_GENES));
     best = 0;
     for (int i = 0; i < NUMBER_OF_GENES - 3; i++) {
-        *(geneticData+i) = trueRandom::getRandom()%200 + 56;
+        *(geneticData+i) = trueRandom::getRandom()%256;
         if(*(geneticData+best) < *(geneticData+i)) best = i;
     }
     *(geneticData + POSITION_OF_GENE_RED) = *red;

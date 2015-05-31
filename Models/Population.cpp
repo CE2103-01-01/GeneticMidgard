@@ -123,6 +123,9 @@ void Population::createNewStrongRandomMember() {
 void Population::updateFittest(Subject* newMember) {
     //Se ingresa al metodo porque el parametro tiene mayor fitness que el ultimo, por eso se asigna para evitar
     //comparaciones redundantes
+    if((*(fittest+2*SUBJECTS_BY_GENERATION-1))->getOpponent()) {
+        newMember->setOpponent((*(fittest+2*SUBJECTS_BY_GENERATION-1))->getOpponent());
+    }
     (*(fittest+2*SUBJECTS_BY_GENERATION-1))->kill();
     *(fittest+2*SUBJECTS_BY_GENERATION-1) = newMember;
     //Itera acomodando al nuevo miembro en la posicion correspondiente
