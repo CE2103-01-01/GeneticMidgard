@@ -28,7 +28,7 @@ PopulationManager::PopulationManager(int numberOfPopulations){
     //Reserva espacio para el ID de poblaciones
     actualID = static_cast<int*>(malloc(sizeof(int)));
     //Inicia el ID de poblaciones
-    *(actualID) = INITIAL_NUMBER_OF_POPULATIONS;
+    *(actualID) = 0;
     //Reserva espacio para N+1 cantidad de poblaciones, donde N = numberOfPopulations
     population = static_cast<Population*>(malloc(sizeof(Population)*INITIAL_NUMBER_OF_POPULATIONS + 2));
     managementThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
@@ -49,7 +49,7 @@ PopulationManager::~PopulationManager(){
  */
 void PopulationManager::mergePopulations(){
     //Se bloquea mutex
-    new(population + INITIAL_NUMBER_OF_POPULATIONS) Population(INITIAL_NUMBER_OF_POPULATIONS, activePopulations);
+    new(population + INITIAL_NUMBER_OF_POPULATIONS) Population(*(actualID), activePopulations);
     //Se crea tabla de indices que ayuda a saber cual fue el ultimo indice en los fittest que se recorrio
     //asi no se recorren sujetos que ya se incluyeron
     int* index = static_cast<int*>(calloc(0,sizeof(int) * INITIAL_NUMBER_OF_POPULATIONS));
@@ -90,9 +90,9 @@ void PopulationManager::init_war(){
         //Toma un sujeto temporal y revisa si es guerrero
         Subject* tmpOne = *((population+firstPopulationNumber)->getFittest() + i);
         Subject* tmpTwo = *((population+secondPopulationNumber)->getFittest() + i);
-        if(!tmpOne->getOpponent() && !tmpTwo->getOpponent()){
-            tmpOne->setOppenent(tmpTwo);
-            tmpTwo->setOppenent(tmpOne);
+        if(!(tmpOne->getOpponent() || tmpTwo->getOpponent()) && tmpOne->isAlive() && tmpTwo->isAlive()){
+            tmpOne->setOpponent(tmpTwo);
+            tmpTwo->setOpponent(tmpOne);
         }
     }
 }
@@ -100,31 +100,24 @@ void PopulationManager::init_war(){
 /**Inicia la ultima guerra
  */
 void PopulationManager::initFinalWar(){
-    new(population + INITIAL_NUMBER_OF_POPULATIONS + 1) Population(INITIAL_NUMBER_OF_POPULATIONS+1, activePopulations);
+    new(population + INITIAL_NUMBER_OF_POPULATIONS+1) Population(INITIAL_NUMBER_OF_POPULATIONS+1, activePopulations);
     for(int i = 0; i<INITIAL_NUMBER_OF_SUBJECTS; i++){
-        (population + INITIAL_NUMBER_OF_POPULATIONS + 1)->createNewStrongRandomMember();
+        (population + INITIAL_NUMBER_OF_POPULATIONS+1)->createNewStrongRandomMember();
     }
-    (population + INITIAL_NUMBER_OF_POPULATIONS + 1)->fillFittest();
+    (population + INITIAL_NUMBER_OF_POPULATIONS+1)->fillFittest();
+    *(actualID)=INITIAL_NUMBER_OF_POPULATIONS+2;
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
     timeController.tv_sec=10;
     *reproductionFlag=false;
     nanosleep(&timeController, NULL);
-    for(int i = 0; i < INITIAL_NUMBER_OF_SUBJECTS; i++){
-        Subject* tmpGod = *((population + INITIAL_NUMBER_OF_POPULATIONS + 1)->getFittest()+i);
-        Subject* tmpSubj = *((population + INITIAL_NUMBER_OF_POPULATIONS)->getFittest()+i);
-        if(tmpGod && tmpSubj->isAlive()) {
-            tmpSubj->setOppenent(tmpGod);
-            tmpGod->setOppenent(tmpSubj);
-        }
-    }
 }
 
 /**Reproduce a las poblaciones
  */
 void PopulationManager::reproduce(){
-   for(int i = 0; i < *actualID; i++){
+   for(int i = 0; i < INITIAL_NUMBER_OF_POPULATIONS; i++){
         if(!(population+i)->isDefunct()){
             LifeLaboratory* laboratory = static_cast<LifeLaboratory*>(malloc(sizeof(LifeLaboratory)));
             new(laboratory) LifeLaboratory((population+i));
@@ -138,7 +131,20 @@ void PopulationManager::reproduce(){
 /**@brief metodo que ejecuta las acciones
  */
 void PopulationManager::thread() {
-    if(trueRandom::getRandom()%RANDOM_WAR_LIMIT < constants::RANDOM_WAR_RANGE_BY_EDDA && *activePopulations>1) init_war();
+    if(*actualID<=INITIAL_NUMBER_OF_POPULATIONS
+       && trueRandom::getRandom()%RANDOM_WAR_LIMIT < constants::RANDOM_WAR_RANGE_BY_EDDA && *activePopulations>1){
+        init_war();
+    }else if(!*reproductionFlag){
+        for(int i = 0; i < INITIAL_NUMBER_OF_SUBJECTS; i++){
+            Subject* tmpGod = *((population + INITIAL_NUMBER_OF_POPULATIONS + 1)->getFittest()+i);
+            Subject* tmpSubj = *((population + INITIAL_NUMBER_OF_POPULATIONS)->getFittest()+i);
+            if(tmpGod && tmpGod->isAlive() && !tmpGod->getOpponent()
+               && tmpSubj && tmpSubj->isAlive() && !tmpSubj->getOpponent()) {
+                tmpSubj->setOpponent(tmpGod);
+                tmpGod->setOpponent(tmpSubj);
+            }
+        }
+    }
 }
 
 /**@brief devuelve true si hay personas vivas
@@ -226,12 +232,13 @@ void PopulationManager::createLife(){
         laboratory->createPopulation();
         free(laboratory);
     }
+    *(actualID)=INITIAL_NUMBER_OF_POPULATIONS;
 }
 
 /**@brief mata a todos
  */
 void PopulationManager::killEmAll(){
-    for(int i = 0; i < *actualID; i++){
+    for(int i = 0; i < INITIAL_NUMBER_OF_POPULATIONS; i++){
         if(!(population+i)->isDefunct()){
             //Inicia el pthread
             (population+i)->exterminate();
@@ -249,18 +256,15 @@ void* populationManagerThread(void* param){
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=5;
+    timeController.tv_sec=10;
     pthread_mutex_lock(static_cast<PThreadParam*>(param)->getMutex());
     manager->createLife();
     pthread_cond_signal(static_cast<PThreadParam*>(param)->getCondition());
     pthread_mutex_unlock(static_cast<PThreadParam*>(param)->getMutex());
     //Este while corre hasta que se mueran todos
     while(manager->isSomeoneAlive()){
-        //pthread_mutex_lock(static_cast<PThreadParam*>(param)->getMutex());
         //Ejecuta el metodo
-        if(manager->getReproductionFlag())manager->reproduce();
-        pthread_cond_signal(static_cast<PThreadParam*>(param)->getCondition());
-        //pthread_mutex_unlock(static_cast<PThreadParam*>(param)->getMutex());
+        if(manager->getReproductionFlag()) manager->reproduce();
         //Espera un segundo
         nanosleep(&timeController, NULL);
     }
@@ -275,9 +279,9 @@ void* populationManagerWarThread(void* param){
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=2;
+    timeController.tv_sec=1;
     //Este while corre hasta que se mueran todos
-    while(constants::RANDOM_WAR_RANGE_BY_EDDA){
+    while(manager->isSomeoneAlive()){
         //Ejecuta el metodo
         manager->thread();
         //Espera un segundo

@@ -86,7 +86,7 @@ public:
     void kill();
     pthread_t* get_p_thread();
     void start_p_thread();
-    void setOppenent(Subject*);
+    void setOpponent(Subject*);
     void delete_p_thread();
     Subject* getOpponent();
     void optionSelection();

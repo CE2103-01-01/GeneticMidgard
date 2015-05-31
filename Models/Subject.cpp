@@ -190,9 +190,13 @@ Chromosome* Subject::getGeneticInformation() {
  * @param int position:posicion donde es encuentra la caracteristica
  */
 void Subject::setCharacteristic(char value, int position) {
-    if(0<=((int)*(characteristics+position)+(int)value)<=255) *(characteristics+position)+=value;
-    else if(value>0) *(characteristics+position)=255;
-    else *(characteristics+position)=0;
+    if(value<0){
+        if(*(characteristics+position)>=value) *(characteristics+position)+=value;
+        else *(characteristics+position)=0;
+    }else{
+        if(255-value >= *(characteristics+position)) *(characteristics+position)+=value;
+        else *(characteristics+position)=255;
+    }
 }
 
 long Subject::getGeneration(){
@@ -283,14 +287,14 @@ void Subject::printProfession() {
 void Subject::findPath(Vector2D positionToFind) { /* (7 + 68N)T */
     //Se crea el controlador de tiempo
     struct timespec timeController;
-    timeController.tv_nsec=5000;
+    timeController.tv_nsec=0;
     timeController.tv_sec=1;
     Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);
     int counter = 0;
-    while (opponent && opponent->position->x-OFFSET_ATTACK > position->x || position->x > opponent->position->x+OFFSET_ATTACK
+    while (opponent->position->x-OFFSET_ATTACK > position->x || position->x > opponent->position->x+OFFSET_ATTACK
            || opponent->position->y-OFFSET_ATTACK > position->y || position->y > opponent->position->y+OFFSET_ATTACK) {
 
-        if(!opponent || !opponent->isAlive()) break;
+        if(!isAlive() || !opponent || !opponent->isAlive()) break;
         if(counter == 10 && positionToFind != *opponent->position){
             path = Terrain::findPathAS(*position,*opponent->position);
             counter = 0;
@@ -355,29 +359,33 @@ void Subject::print(){
  */
 void Subject::attack(){/* 70T */
     findPath(*opponent->position);                                                                                 //3T
-    //Se suma el gen del ataque del atacante con la caracteristica arma
-    int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)                                         //19T
-                       + *(characteristics+POSITION_OF_CHARACTERISTIC_WEAPON)
-                       + geneticInformation->getGene(POSITION_OF_GENE_DEFENSE)
-                       + *(characteristics+POSITION_OF_CHARACTERISTIC_ARMOR);
-    //Se suma el gen de la defensa del oponente con la caracteristica armadura
-    int defenseResult = opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_ATTACK)                         //23T
-                        + opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_DEFENSE)
-                        + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_WEAPON)
-                        + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
-    //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
-    if(attackResult > defenseResult){                                                                     //3T
-        opponent->setCharacteristic(defenseResult-attackResult,POSITION_OF_CHARACTERISTIC_LIFE);                //6T
-        lifeUpdate(opponent->getID(),opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE));                                               //6T
-    }else if(attackResult < defenseResult){
-        setCharacteristic(attackResult - defenseResult, POSITION_OF_CHARACTERISTIC_LIFE);                   //9T
-        lifeUpdate(*id,getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE));                                                       //3T
-    }
-    else{
-        opponent->setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);                             //4T
-        lifeUpdate(opponent->getID(),ATTACK_DAMAGE);                                                            //4T
-        setCharacteristic(ATTACK_DAMAGE,POSITION_OF_CHARACTERISTIC_LIFE);                                 //4T
-        lifeUpdate(*id,getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE));
+    if(opponent->isAlive()) {
+        //Se suma el gen del ataque del atacante con la caracteristica arma
+        int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)                                         //19T
+                + *(characteristics + POSITION_OF_CHARACTERISTIC_WEAPON);
+        //Se suma el gen de la defensa del oponente con la caracteristica armadura
+        int defenseResult = opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_DEFENSE)
+                + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
+        //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
+        if (attackResult > defenseResult) {                                                                     //3T
+            opponent->setCharacteristic(defenseResult - attackResult,
+                                        POSITION_OF_CHARACTERISTIC_LIFE);                //6T
+            lifeUpdate(opponent->getID(), opponent->getCharacteristic(
+                    POSITION_OF_CHARACTERISTIC_LIFE));                                               //6T
+        } else if (attackResult < defenseResult) {
+            setCharacteristic(attackResult - defenseResult, POSITION_OF_CHARACTERISTIC_LIFE);                   //9T
+            lifeUpdate(*id, getCharacteristic(
+                    POSITION_OF_CHARACTERISTIC_LIFE));                                                       //3T
+        }
+        else {
+            opponent->setCharacteristic(ATTACK_DAMAGE,
+                                        POSITION_OF_CHARACTERISTIC_LIFE);                             //4T
+            lifeUpdate(opponent->getID(),
+                       ATTACK_DAMAGE);                                                            //4T
+            setCharacteristic(ATTACK_DAMAGE, POSITION_OF_CHARACTERISTIC_LIFE);                                 //4T
+            lifeUpdate(*id, getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE));
+        }
+        opponent = NULL;
     }
 }
 
@@ -397,11 +405,11 @@ void Subject::kill(){
 /**@brief Agrega un oponente
  * @param Subject* opponentParam: oponente a setear
  */
-void Subject::setOppenent(Subject* opponentParam){
+void Subject::setOpponent(Subject* opponentParam){
     opponent = opponentParam;
 }
 
-/**@brief Metodo que inicia el pthread
+/**@brief Metodo que nicia el pthread
  */
 Subject* Subject::getOpponent(){
     return opponent;
@@ -444,6 +452,7 @@ void Subject::create(){
 /**@brief Metodo que inicia el pthread
  */
 void Subject::start_p_thread(){
+    opponent = NULL;
     Vector2D positionsVector = Terrain::getRandomFreePosition();
     Terrain::set(positionsVector,*id);
     //parametros
@@ -481,8 +490,6 @@ void* subjectLife(void* parameter){
     timeController.tv_sec=1;
     //Este while corre hasta que se llame al metodo kill()
     while(excecutioner->isAlive()){
-        //Espera un segundo
-        nanosleep(&timeController, NULL);
         //Llama al metodo de vida del sujeto
         excecutioner->updateLife();
         //Si existe oponente ataca
@@ -490,9 +497,10 @@ void* subjectLife(void* parameter){
             excecutioner->attack();
         }//Si no existe oponente selecciona random un objeto
         else{
-            excecutioner->setOppenent(NULL);
             //excecutioner->optionSelection();
         }
+        //Espera un segundo
+        nanosleep(&timeController, NULL);
     }
     deleteSubject(excecutioner->getID());
     return 0;

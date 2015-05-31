@@ -42,8 +42,10 @@ bool AgeManager::lookForEnd(){
         if(!(*(subjects+i))->isAlive()) subjectsCounter--;
         if(!(*(gods+i))->isAlive()) godsCounter--;
     }
-    if(godsCounter+subjectsCounter > 50) return false;
-    else{
+    if(godsCounter+subjectsCounter > 50) {
+        std::cout << "Guerra en curso dioses vivos: " << godsCounter << ", sujetos vivos: " << subjectsCounter << std::endl;
+        return false;
+    }else{
         std::cout << "Guerra finalizada dioses vivos: " << godsCounter << ", sujetos vivos: " << subjectsCounter << std::endl;
         return true;
     }
@@ -130,13 +132,15 @@ void AgeManager::delete_p_thread(){
 /**@brief cambia el calculo de fitness
  */
 void AgeManager::changeAge(){
-    (*actualAge)++;
+    struct timespec timeController;
+    timeController.tv_nsec=0;
+    timeController.tv_sec=10;
     (*years) = 0;
     //Comprueba en que edda se encuentra
-    if(*actualAge < UNION_AGE){
+    if(*actualAge + 1 < UNION_AGE){
         //Cambia la edda en el calculador de fitness
         GeneralFitnessCalculator::getInstance()->changeEdda();
-    }else if(*actualAge == UNION_AGE){
+    }else if(*actualAge + 1 == UNION_AGE){
         std::cout << "UNION" << std::endl;
         //Cambia la edda en el calculador de fitness
         constants::RANDOM_WAR_RANGE_BY_EDDA = 0;
@@ -146,13 +150,16 @@ void AgeManager::changeAge(){
         for(int i = 0; i < INITIAL_NUMBER_OF_POPULATIONS; i++){
             (PopulationManager::getInstance()->getPopulation()+i)->exterminate();
         }
+        nanosleep(&timeController, NULL);
         std::cout << "~UNION" << std::endl;
-    }else if(*actualAge == TWILIGHT_OF_THE_GODS_AGE){
+    }else if(*actualAge + 1 == TWILIGHT_OF_THE_GODS_AGE){
         std::cout << "TWILIGHT OF THE GODS" << std::endl;
         //En la edda de la pelea contra los dioses genera la pelea
         PopulationManager::getInstance()->initFinalWar();
         std::cout << "~TWILIGHT OF THE GODS" << std::endl;
     }
+    nanosleep(&timeController, NULL);
+    (*actualAge)++;
 }
 
 void AgeManager::initPopulationManager(){
@@ -184,14 +191,18 @@ void AgeManager::showSubjectsByAge()
 /**@brief pthread del manejador de eddas
  */
 void* ageManagerThread(void* parameter){
+    struct timespec timeController;
+    timeController.tv_nsec=0;
+    timeController.tv_sec=10;
     //Extrae el parametro
     AgeManager* excecutioner = static_cast<AgeManager*>(parameter);
     //Inicializa el manager de poblacion
     excecutioner->initPopulationManager();
+    PopulationManager* manager = PopulationManager::getInstance();
     //Ejecute metodo del thread
-    while(PopulationManager::getInstance()->getActivePopulations() > 0){
-        pthread_cond_wait(excecutioner->getGeneralCondition(),excecutioner->getGeneralMutex());
+    while(manager->getActivePopulations() > 0){
         excecutioner->thread();
+        nanosleep(&timeController,NULL);
     }
     //Desbloquea mutex
     excecutioner->delete_p_thread();
@@ -225,5 +236,6 @@ void* subjectPrinter(void* parameter){
         }
         nanosleep(&timeController,NULL);
     }
+    return 0;
 }
 
