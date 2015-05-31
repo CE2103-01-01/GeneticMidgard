@@ -8,6 +8,7 @@
 
 PopulationManager* PopulationManager::singleton = 0;
 pthread_t* PopulationManager::managementThread = 0;
+pthread_t* PopulationManager::warThread = 0;
 pthread_mutex_t* PopulationManager::mutex = 0;
 
 /**@brief constructor
@@ -28,6 +29,7 @@ PopulationManager::PopulationManager(int numberOfPopulations){
     //Reserva espacio para N+1 cantidad de poblaciones, donde N = numberOfPopulations
     population = static_cast<Population*>(malloc(sizeof(Population)*INITIAL_NUMBER_OF_POPULATIONS + 1));
     managementThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
+    warThread = static_cast<pthread_t*>(malloc(sizeof(pthread_t)));
 }
 
 /**@brief destructor
@@ -167,7 +169,6 @@ void PopulationManager::reproduce(){
 /**@brief metodo que ejecuta las acciones
  */
 void PopulationManager::thread() {
-    reproduce();
     if(trueRandom::getRandom()%RANDOM_WAR_LIMIT < constants::RANDOM_WAR_RANGE_BY_EDDA && *activePopulations>1) init_war();
 }
 
@@ -202,6 +203,13 @@ pthread_t* PopulationManager::get_pthread(){
 /**@brief accede al thread
  * return pthread_t*
  */
+pthread_t* PopulationManager::get_war_pthread(){
+    return managementThread;
+}
+
+/**@brief accede al thread
+ * return pthread_t*
+ */
 int PopulationManager::getActivePopulations(){
     return *activePopulations;
 }
@@ -224,6 +232,11 @@ PopulationManager* PopulationManager::getInstance() {
  */
 void PopulationManager::delete_pthread(){
     free(managementThread);
+}
+/**@brief elimina el pthread
+ */
+void PopulationManager::delete_war_pthread(){
+    free(warThread);
 }
 /**Inicia pthread de poblaiciones, se asume que al no haber empezado, las poblaciones activas son todas
  */
@@ -260,7 +273,7 @@ void* populationManagerThread(void* param){
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=5;
+    timeController.tv_sec=20;
     pthread_mutex_lock(static_cast<PThreadParam*>(param)->getMutex());
     manager->createLife();
     pthread_cond_signal(static_cast<PThreadParam*>(param)->getCondition());
@@ -269,12 +282,32 @@ void* populationManagerThread(void* param){
     while(manager->isSomeoneAlive()){
         //pthread_mutex_lock(static_cast<PThreadParam*>(param)->getMutex());
         //Ejecuta el metodo
-        manager->thread();
+        manager->reproduce();
         pthread_cond_signal(static_cast<PThreadParam*>(param)->getCondition());
         //pthread_mutex_unlock(static_cast<PThreadParam*>(param)->getMutex());
         //Espera un segundo
         nanosleep(&timeController, NULL);
     }
     manager->delete_pthread();
+    return 0;
+}
+
+/**@brief Thread del manejador de poblaciones
+ */
+void* populationManagerWarThread(void* param){
+    //Obtiene manager
+    PopulationManager* manager = PopulationManager::getInstance();
+    //Se crea el controlador de tiempo
+    struct timespec timeController;
+    timeController.tv_nsec=0;
+    timeController.tv_sec=5;
+    //Este while corre hasta que se mueran todos
+    while(manager->isSomeoneAlive()){
+        //Ejecuta el metodo
+        manager->thread();
+        //Espera un segundo
+        nanosleep(&timeController, NULL);
+    }
+    manager->delete_war_pthread();
     return 0;
 }

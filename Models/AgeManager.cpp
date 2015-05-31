@@ -141,6 +141,7 @@ void AgeManager::initPopulationManager(){
     //Inicia el pthread del manejador de poblaciomnes
     pthread_create(PopulationManager::getInstance()->get_pthread(),NULL,populationManagerThread,populationManagerThreadParameters);
     pthread_cond_wait(condition,generalMutex);
+    pthread_create(PopulationManager::getInstance()->get_war_pthread(),NULL,populationManagerWarThread,populationManagerThreadParameters);
 }
 
 void AgeManager::showSubjectsByAge()

@@ -101,7 +101,6 @@ movilObjectManager::movilObjectManager() {
  * @param Vector2D position: una posicion especifica
  * @return movilObject object: el objeto de la position
  */
-
 movilObject movilObjectManager::getDataByPosistion(Vector2D position) {
     for(int i = 0; i<NUMBER_OF_OBJECTS;i++){
         movilObject* tmp = listObject+i;

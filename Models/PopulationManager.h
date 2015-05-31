@@ -9,13 +9,13 @@
 
 class PopulationManager {
     static pthread_t* managementThread;
+    static pthread_t* warThread;
     static pthread_mutex_t* mutex;
     static PopulationManager* singleton;
     int* actualID;
     int* activePopulations;
     Population* population;
     void init_war();
-    void reproduce();
     public:
         PopulationManager(int);
         ~PopulationManager();
@@ -25,8 +25,11 @@ class PopulationManager {
         Population* getPopulation();
         static PopulationManager* getInstance();
         static pthread_t* get_pthread();
+        static pthread_t* get_war_pthread();
         void delete_pthread();
+        void delete_war_pthread();
         void createLife();
+        void reproduce();
         void mergePopulations();
         int getActivePopulations();
         int getActualID();
@@ -34,5 +37,6 @@ class PopulationManager {
 };
 
 void* populationManagerThread(void*);
+void* populationManagerWarThread(void*);
 
 #endif //PROJECTMIDGARDLOGIC_POPULATIONMANAGER_H

@@ -245,6 +245,10 @@ void Subject::printProfession() {
  * @param Vector2D positionToFind: posicion a encontrar en el mapa
  */
 bool Subject::findPath(Vector2D positionToFind) { /* (7 + 68N)T */
+    //Se crea el controlador de tiempo
+    struct timespec timeController;
+    timeController.tv_nsec=0;
+    timeController.tv_sec=1;
     Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);                                  //7T
     if(path.size()==0) return false;
     while (opponent->position->x-OFFSET_ATTACK > position->x || position->x > opponent->position->x+OFFSET_ATTACK
@@ -252,8 +256,8 @@ bool Subject::findPath(Vector2D positionToFind) { /* (7 + 68N)T */
         if (path.size()!=0) {                                                                                   //4T
             Vector2D next = path.top();                                                                         //5T
             position->x = next.x;                                                                               //5T
-            position->y = next.y;                                                                               //5T
-            sf::sleep(microseconds(actionSleepNano));                                                           //4T
+            position->y = next.y;
+            nanosleep(&timeController, NULL);
             updateSubject(*id, position->x, position->y);                                                       //6T
             path.pop();                                                                                         //2T
             if(positionToFind != *opponent->position) {                                                         //4T
