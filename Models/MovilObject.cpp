@@ -20,6 +20,7 @@ MovilObject::MovilObject(int characteristic,int value, int identificator,int xPo
     id=identificator;
     positionOnList = positionOnListParam;
     isEmptyVar = -1;
+    Terrain::set(position,id);
 }
 
 int MovilObject::getPositionOnList(){
