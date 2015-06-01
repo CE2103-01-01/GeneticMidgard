@@ -32,7 +32,9 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     //Crea las caracteristicas
     characteristics = static_cast<unsigned char*>(calloc(0,NUMBER_OF_CHARACTERISTICS));
     //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
-    *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = 100;
+    *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = 200;
+    *(characteristics + POSITION_OF_CHARACTERISTIC_WEAPON) = 200;
+    *(characteristics + POSITION_OF_CHARACTERISTIC_ARMOR) = 200;
     //Crea posicion
     position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
     *position = basePosition;
@@ -67,7 +69,9 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     //Crea las caracteristicas
     characteristics = static_cast<unsigned char*>(calloc(0,NUMBER_OF_CHARACTERISTICS));
     //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
-    *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = gene_offset;
+    for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
+        *(characteristics + i) = gene_offset;
+    }
     //Crea posicion
     position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
     *position = basePosition;
@@ -191,7 +195,7 @@ Chromosome* Subject::getGeneticInformation() {
  */
 void Subject::setCharacteristic(char value, int position) {
     if(value<0){
-        if(*(characteristics+position)>=value) *(characteristics+position)+=value;
+        if(*(characteristics+position)>=-value) *(characteristics+position)+=value;
         else *(characteristics+position)=0;
     }else{
         if(255-value >= *(characteristics+position)) *(characteristics+position)+=value;
@@ -368,20 +372,16 @@ void Subject::attack(){/* 70T */
                 + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
         //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
         if (attackResult > defenseResult) {                                                                     //3T
-            opponent->setCharacteristic(defenseResult - attackResult,
-                                        POSITION_OF_CHARACTERISTIC_LIFE);                //6T
-            lifeUpdate(opponent->getID(), opponent->getCharacteristic(
-                    POSITION_OF_CHARACTERISTIC_LIFE));                                               //6T
+            opponent->setCharacteristic(static_cast<char>(defenseResult-attackResult), POSITION_OF_CHARACTERISTIC_LIFE);                //6T
+            lifeUpdate(opponent->getID(), (defenseResult-attackResult));                                               //6T
         } else if (attackResult < defenseResult) {
-            setCharacteristic(attackResult - defenseResult, POSITION_OF_CHARACTERISTIC_LIFE);                   //9T
-            lifeUpdate(*id, getCharacteristic(
-                    POSITION_OF_CHARACTERISTIC_LIFE));                                                       //3T
+            setCharacteristic(static_cast<char>(attackResult-defenseResult), POSITION_OF_CHARACTERISTIC_LIFE);                   //9T
+            lifeUpdate(*id, (attackResult-defenseResult));                                                       //3T
         }
         else {
             opponent->setCharacteristic(ATTACK_DAMAGE,
                                         POSITION_OF_CHARACTERISTIC_LIFE);                             //4T
-            lifeUpdate(opponent->getID(),
-                       ATTACK_DAMAGE);                                                            //4T
+            lifeUpdate(opponent->getID(), ATTACK_DAMAGE);                                                            //4T
             setCharacteristic(ATTACK_DAMAGE, POSITION_OF_CHARACTERISTIC_LIFE);                                 //4T
             lifeUpdate(*id, getCharacteristic(POSITION_OF_CHARACTERISTIC_LIFE));
         }
