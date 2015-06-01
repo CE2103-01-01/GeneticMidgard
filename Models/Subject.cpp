@@ -27,7 +27,7 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     fitness = static_cast<float*>(malloc(sizeof(float)));
     calculateFitness();
     //Crea las caracteristicas
-    characteristics = static_cast<unsigned char*>(calloc(0,NUMBER_OF_CHARACTERISTICS));
+    characteristics = static_cast<unsigned char*>(calloc(1,NUMBER_OF_CHARACTERISTICS));
     //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
     *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = 200;
     *(characteristics + POSITION_OF_CHARACTERISTIC_WEAPON) = 200;
@@ -64,7 +64,7 @@ Subject::Subject(long idParam, int* actualYearParam, unsigned char* colors,Vecto
     fitness = static_cast<float*>(malloc(sizeof(float)));
     calculateFitness();
     //Crea las caracteristicas
-    characteristics = static_cast<unsigned char*>(calloc(0,NUMBER_OF_CHARACTERISTICS));
+    characteristics = static_cast<unsigned char*>(calloc(1,NUMBER_OF_CHARACTERISTICS));
     //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
     for(int i = 0; i<NUMBER_OF_CHARACTERISTICS; i++){
         *(characteristics + i) = gene_offset;
@@ -101,7 +101,7 @@ Subject::Subject(Subject* fatherParam, Subject* motherParam, Chromosome* genetic
     fitness = static_cast<float*>(malloc(sizeof(float)));
     calculateFitness();
     //Crea las caracteristicas
-    characteristics = static_cast<unsigned char*>(calloc(0,NUMBER_OF_CHARACTERISTICS));
+    characteristics = static_cast<unsigned char*>(calloc(1,NUMBER_OF_CHARACTERISTICS));
     //Vida maxima, convierte el rango del gen (de 0-255 a 0-100)
     *(characteristics + POSITION_OF_CHARACTERISTIC_LIFE) = 100;
     position = static_cast<Vector2D*>(malloc(sizeof(Vector2D)));
@@ -473,7 +473,7 @@ void Subject::delete_p_thread(){
 
 void Subject::optionSelection() {
     MovilObject* objectToGet = MovilObjectManager::getInstance()->getRandomObject();
-    Vector2D position(objectToGet->position_x,objectToGet->position_y);
+    Vector2D position(objectToGet->get_X_Position(),objectToGet->get_Y_Position());
     findObjectPath(position);
     objectToGet->applyEffect(this);
 }
@@ -495,7 +495,7 @@ void* subjectLife(void* parameter){
         excecutioner->updateLife();
         //Si existe oponente ataca
         if(excecutioner->getOpponent()!=NULL && excecutioner->getOpponent()->isAlive()){
-            excecutioner->attack();
+            //excecutioner->attack();
         }//Si no existe oponente selecciona random un objeto
         else{
             excecutioner->optionSelection();

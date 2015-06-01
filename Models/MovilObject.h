@@ -15,9 +15,10 @@ class MovilObject {
     int object;
     bool use;
     int id;
-public:
     int position_x;
     int position_y;
+public:
+
     bool operator ==(MovilObject);
     MovilObject(int,int,int,int,int,int);
     void applyEffect(Subject* person);

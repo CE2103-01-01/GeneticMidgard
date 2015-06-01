@@ -24,7 +24,7 @@ MovilObjectManager::MovilObjectManager() {
     elementCounter = std::distance(objectSource.child("CONSTANTS").child("MOVILOBJECT").begin(),
                                    objectSource.child("CONSTANTS").child("MOVILOBJECT").end());
     listXmlData = static_cast<int*>(malloc(2*elementCounter*sizeof(int)));
-    listObject = static_cast<MovilObject*>(calloc(0,NUMBER_OF_OBJECTS*sizeof(MovilObject)));
+    listObject = static_cast<MovilObject*>(calloc(NUMBER_OF_OBJECTS,sizeof(MovilObject)));
 
     xml_node temp = objectSource.child("CONSTANTS").child("MOVILOBJECT").first_child();
 
@@ -60,7 +60,7 @@ MovilObjectManager::MovilObjectManager() {
 MovilObject* MovilObjectManager::getRandomObject() {
     
         int rango = trueRandom::randRange(0,NUMBER_OF_OBJECTS-1);
-    std::cout<<rango<<std::endl;
+    //std::cout<<rango<<std::endl;
         return (listObject+rango);
 
 }
@@ -73,7 +73,7 @@ MovilObject* MovilObjectManager::getRandomObject() {
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 MovilObjectManager* MovilObjectManager::getInstance() {
     pthread_mutex_lock(&mutex);
-    if(instance==0){
+    if(!instance){
         instance = static_cast<MovilObjectManager*>(malloc(sizeof(MovilObjectManager)));
         new(instance) MovilObjectManager();
     }

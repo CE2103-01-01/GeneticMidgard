@@ -6,7 +6,7 @@
 #include "../Algorithms/lifeLaboratory.h"
 #include "Terrain.h"
 
-#define COLOR_XML_PATH "../res/populationColors.xml"
+#define COLOR_XML_PATH "res/populationColors.xml"
 #define COLOR_XML_ROOT "POPULATION_COLORS"
 #define COLOR_XML_NODE "color"
 

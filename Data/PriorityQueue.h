@@ -16,9 +16,13 @@ private:
     NodeQ<T>* _head;
     unsigned int lenght;
     void pushNode(NodeQ<T>*);
+    PriorityQueue(const PriorityQueue<T> &other);
 public:
     PriorityQueue();
-    PriorityQueue(const PriorityQueue<T> &other);
+
+    ~PriorityQueue();
+
+
     void push(T*);
     void push(T);
     void pop();
@@ -102,11 +106,11 @@ T PriorityQueue<T>::top() {
 
 template<class T>
 void PriorityQueue<T>::pop() {
+    if (!_head) return;
     pthread_mutex_lock( &mutexData );
     NodeQ<T> * headTemp = _head;//Nodo para liberarlo
     _head = _head->getNextNode();
     lenght--;//Actualiza largo
-    free(headTemp);//GarbageCollection
     pthread_mutex_unlock( &mutexData );
 }
 
@@ -135,6 +139,7 @@ NodeQ<T>::NodeQ(T t) {
 template<class T>
 NodeQ<T>::~NodeQ() {
     next = 0;
+    if(data)
     free(data);
 }
 template<class T>
@@ -166,4 +171,14 @@ template<class T>
 PriorityQueue<T>::PriorityQueue() {
     _head = 0;
     lenght =0;
+}
+template<class T>
+PriorityQueue<T>::~PriorityQueue() {
+    std::cout << "Destruct PQ" << std::endl;
+    NodeQ<T> * node = _head;
+    while(!node) {
+        NodeQ<T> * toFree = node;
+        node = node->getNextNode();
+        free(toFree);
+    }
 }

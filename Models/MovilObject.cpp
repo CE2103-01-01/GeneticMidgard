@@ -37,7 +37,7 @@ void MovilObject::applyEffect(Subject* person) {
         position_y = newPosition.y;
         use = true;
         Terrain::set(Vector2D(position_x,position_y),id);
-        updateObject(id,position_x,position_y);
+        //updateObject(id,position_x,position_y);
     }
 
 }

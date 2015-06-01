@@ -210,6 +210,7 @@ void SocketLogic::receiving() {
 SocketLogic::~SocketLogic() {
     on = false;
     client.disconnect();
+    free(singleton);
 }
 
 void createSubject(unsigned int idSubject, unsigned int x, unsigned int y, unsigned int r, unsigned int g,

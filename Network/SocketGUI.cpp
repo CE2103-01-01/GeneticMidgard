@@ -109,6 +109,13 @@ void SocketGUI::manageMessage(std::string string) {
         unsigned int y = document.FindMember("y")->value.GetUint();
         Map::getInstance()->getPoblacion()->updateId(id,x,y);
     }
+    else if (action == "updateObject")
+    {
+        unsigned int id = document.FindMember("id")->value.GetUint();
+        unsigned int x = document.FindMember("x")->value.GetUint();
+        unsigned int y = document.FindMember("y")->value.GetUint();
+        Map::getInstance()->getObjects()->updateId(id,x,y);
+    }
     else if (action == "updateGods")
     {
 
