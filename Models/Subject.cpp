@@ -304,7 +304,12 @@ void Subject::findPath(Vector2D positionToFind) { /* (7 + 68N)T */
             counter = 0;
         }
         if (path.size()==0) break;
-        Vector2D next = path.top();                                                                         //5T
+
+        Vector2D next = path.top();
+        if (Terrain::get(next.x,next.y)!=0 ){
+            path = Terrain::findPathAS(*position,*opponent->position);
+            counter = 0;
+        }
         position->x = next.x;                                                                               //5T
         position->y = next.y;
         updateSubject(*id, position->x, position->y);                                                       //6T
