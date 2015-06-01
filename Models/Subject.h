@@ -63,7 +63,7 @@ class Subject {
     std::string writeFileVariable;
     void calculateFitness();//funcion de calcular fitness y set fitness
     void findPath(Vector2D);
-    bool findObjectPath(Vector2D);
+    void findObjectPath(Vector2D);
     void printGeneralData();
     void printProfession();
     void printParents();

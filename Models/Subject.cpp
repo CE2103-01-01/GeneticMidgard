@@ -296,21 +296,21 @@ void Subject::findPath(Vector2D positionToFind) { /* (7 + 68N)T */
            && (opponent->position->x-OFFSET_ATTACK > position->x || position->x > opponent->position->x+OFFSET_ATTACK
            || opponent->position->y-OFFSET_ATTACK > position->y || position->y > opponent->position->y+OFFSET_ATTACK)) {
         Vector2D next = path.top();
-        if(Terrain::get(next.x,next.y) || (counter == 10 && positionToFind != *opponent->position)){
-            path = Terrain::findPathAS(*position,*opponent->position);
-            counter = 0;
-        }else{
+        if(!Terrain::get(next.x,next.y) && counter != 10 && positionToFind == *opponent->position){
             position->x = next.x;                                                                               //5T
             position->y = next.y;
             updateSubject(*id, position->x, position->y);                                                       //6T
             path.pop();
             counter++;
             nanosleep(&timeController, NULL);
+        }else{
+            path = Terrain::findPathAS(*position,*opponent->position);
+            counter = 0;
         }
     }
 }
 
-bool Subject::findObjectPath(Vector2D positionToFind){
+void Subject::findObjectPath(Vector2D positionToFind){
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
@@ -328,7 +328,6 @@ bool Subject::findObjectPath(Vector2D positionToFind){
             path = Terrain::findPathAS(*position,positionToFind);
         }
     }
-    return true;
 }
 
 /**@brief imprime los datos de sujeto
