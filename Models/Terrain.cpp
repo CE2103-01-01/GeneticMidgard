@@ -268,7 +268,6 @@ Vector2D Terrain::getRandomFreePosition() {
  * Obtener una posicion libre cerca de x lugar
  */
 Vector2D Terrain::getFreePositionNear(Vector2D vector){
-
     while(true){
         //Tira dos numeros random que indican el offset a probar
         int randomX = rand()%POSITION_RANDOM_RANGE + 1;

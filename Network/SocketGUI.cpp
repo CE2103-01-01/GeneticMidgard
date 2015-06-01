@@ -174,7 +174,7 @@ void SocketGUI::updateSpeed(unsigned char speed) {
     writer.EndObject();
     packet<<s.GetString();
     send.lock();
-    socket.send(packet);
+    //socket.send(packet);
     send.unlock();
     std::cout << "sent" << std::endl;
 }
@@ -193,7 +193,7 @@ void SocketGUI::detailsSubject(unsigned int id) {
     writer.EndObject();
     packet<<s.GetString();
     send.lock();
-    socket.send(packet);
+    //socket.send(packet);
     send.unlock();
 }
 

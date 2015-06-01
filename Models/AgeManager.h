@@ -7,7 +7,7 @@
 
 #include <pthread.h>
 #include "PopulationManager.h"
-#include "movilObjectManager.h"
+#include "MovilObjectManager.h"
 
 #define ID_REQUEST "Ingrese el id a imprimir: "
 #define SUBJECT_ID_ERROR_MESSAGE "La seccion del id ingresado correspondiente al numero de sujeto es incorrecta"

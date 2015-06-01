@@ -23,6 +23,8 @@ static const int OFFSET_ATTACK = 1;
 #include "../Data/FileManager.h"
 #include "iostream"
 #include "string"
+#include "../Network/SocketLogic.h"
+#include "MovilObjectManager.h"
 
 #define ID_STR "ID: "
 #define GENERATION_STR "GENERATION: "

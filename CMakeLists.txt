@@ -11,7 +11,7 @@ set(HEADER_FILES Interface/Random.h
                  Models/Subject.h
                  Models/Chromosome.h
                  Models/Terrain.h
-                 Models/movilObjectManager.h
+                 Models/MovilObjectManager.h
                  Algorithms/lifeLaboratory.h
                  Algorithms/ChromosomeMixer.h
                  Algorithms/lifeLaboratory.h
@@ -41,7 +41,7 @@ set(SOURCE_FILES main.cpp
                  Models/Subject.cpp
                  Models/Chromosome.cpp
                  Models/Terrain.cpp
-                 Models/movilObjectManager.cpp
+                 Models/MovilObjectManager.cpp
                  Generators/EvolutionGenerator.cpp
                  Algorithms/ChromosomeMixer.cpp
                  Algorithms/lifeLaboratory.cpp
@@ -82,7 +82,7 @@ add_executable(ProjectMidgardLogic  ${SOURCE_FILES}
                                     ${HEADER_FILES}
                                     ${XML}
                                     ${DATA_STRUCTS}
-                                    ${RES_FILES})
+                                    ${RES_FILES} Models/MovilObject.cpp Models/MovilObject.h)
 include_directories(../libs)
 target_link_libraries (ProjectMidgardLogic ${CMAKE_THREAD_LIBS_INIT})
 

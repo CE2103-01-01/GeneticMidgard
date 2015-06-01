@@ -3,9 +3,6 @@
 //
 
 #include "Subject.h"
-#include "Terrain.h"
-#include "../Network/SocketLogic.h"
-#include "movilObjectManager.h"
 
 using namespace constantsSubjectXML;
 int Subject::actionSleepNano = 20;
@@ -295,36 +292,41 @@ void Subject::findPath(Vector2D positionToFind) { /* (7 + 68N)T */
     timeController.tv_sec=1;
     Stack<Vector2D> path = Terrain::findPathAS(*position,*opponent->position);
     int counter = 0;
-    while (opponent->position->x-OFFSET_ATTACK > position->x || position->x > opponent->position->x+OFFSET_ATTACK
-           || opponent->position->y-OFFSET_ATTACK > position->y || position->y > opponent->position->y+OFFSET_ATTACK) {
-
-        if(!isAlive() || !opponent || !opponent->isAlive()) break;
-        if(counter == 10 && positionToFind != *opponent->position){
+    while (isAlive() && opponent && opponent->isAlive() && path.size()
+           && (opponent->position->x-OFFSET_ATTACK > position->x || position->x > opponent->position->x+OFFSET_ATTACK
+           || opponent->position->y-OFFSET_ATTACK > position->y || position->y > opponent->position->y+OFFSET_ATTACK)) {
+        Vector2D next = path.top();
+        if(Terrain::get(next.x,next.y) || (counter == 10 && positionToFind != *opponent->position)){
             path = Terrain::findPathAS(*position,*opponent->position);
             counter = 0;
+        }else{
+            position->x = next.x;                                                                               //5T
+            position->y = next.y;
+            updateSubject(*id, position->x, position->y);                                                       //6T
+            path.pop();
+            counter++;
+            nanosleep(&timeController, NULL);
         }
-        if (path.size()==0) break;
-        Vector2D next = path.top();                                                                         //5T
-        position->x = next.x;                                                                               //5T
-        position->y = next.y;
-        updateSubject(*id, position->x, position->y);                                                       //6T
-        path.pop();
-        counter++;
-        nanosleep(&timeController, NULL);
     }
 }
 
 bool Subject::findObjectPath(Vector2D positionToFind){
+    //Se crea el controlador de tiempo
+    struct timespec timeController;
+    timeController.tv_nsec=0;
+    timeController.tv_sec=1;
     Stack<Vector2D> path = Terrain::findPathAS(*position,positionToFind);
-    if(path.size()==0) return false;
-    while(path.size()!=0)
-    {
-        Vector2D next = path.top();                                                                         //5T
-        position->x = next.x;                                                                               //5T
-        position->y = next.y;                                                                               //5T
-        sf::sleep(microseconds(actionSleepNano));                                                           //4T
-        updateSubject(*id, position->x, position->y);                                                       //6T
-        path.pop();
+    while(path.size()>1) {
+        Vector2D next = path.top();
+        if(!Terrain::get(next.x,next.y)){
+            position->x = next.x;                                                                               //5T
+            position->y = next.y;
+            updateSubject(*id, position->x, position->y);                      //6T
+            path.pop();
+            nanosleep(&timeController, NULL);
+        }else{
+            path = Terrain::findPathAS(*position,positionToFind);
+        }
     }
     return true;
 }
@@ -365,17 +367,17 @@ void Subject::attack(){/* 70T */
     findPath(*opponent->position);                                                                                 //3T
     if(opponent->isAlive()) {
         //Se suma el gen del ataque del atacante con la caracteristica arma
-        int attackResult = geneticInformation->getGene(POSITION_OF_GENE_ATTACK)                                         //19T
-                + *(characteristics + POSITION_OF_CHARACTERISTIC_WEAPON);
+        char attackResult = (geneticInformation->getGene(POSITION_OF_GENE_ATTACK)                                         //19T
+                            + *(characteristics + POSITION_OF_CHARACTERISTIC_WEAPON))/2;
         //Se suma el gen de la defensa del oponente con la caracteristica armadura
-        int defenseResult = opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_DEFENSE)
-                + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR);
+        char defenseResult = (opponent->getGeneticInformation()->getGene(POSITION_OF_GENE_DEFENSE)
+                            + opponent->getCharacteristic(POSITION_OF_CHARACTERISTIC_ARMOR))/2;
         //Si el primer elemento de la comparacion es mayor, el ataque es mayor que la defensa, por lo tanto acierta
         if (attackResult > defenseResult) {                                                                     //3T
-            opponent->setCharacteristic(static_cast<char>(defenseResult-attackResult), POSITION_OF_CHARACTERISTIC_LIFE);                //6T
+            opponent->setCharacteristic(defenseResult-attackResult, POSITION_OF_CHARACTERISTIC_LIFE);                //6T
             lifeUpdate(opponent->getID(), (defenseResult-attackResult));                                               //6T
         } else if (attackResult < defenseResult) {
-            setCharacteristic(static_cast<char>(attackResult-defenseResult), POSITION_OF_CHARACTERISTIC_LIFE);                   //9T
+            setCharacteristic(attackResult-defenseResult, POSITION_OF_CHARACTERISTIC_LIFE);                   //9T
             lifeUpdate(*id, (attackResult-defenseResult));                                                       //3T
         }
         else {
@@ -471,10 +473,9 @@ void Subject::delete_p_thread(){
 }
 
 void Subject::optionSelection() {
-    int value = trueRandom::randRange(0,100);
-    movilObject objectToGet = *(movilObjectManager::getInstance()->getRandomObject());
-    if(findObjectPath(objectToGet.getVector()))
-    objectToGet.applyEffect(this);
+    MovilObject* objectToGet = MovilObjectManager::getInstance()->getRandomObject();
+    if(findObjectPath(objectToGet->getVector()))
+    objectToGet->applyEffect(this);
 }
 
 /**@brief metodo ejecutado por el pthread
@@ -497,7 +498,7 @@ void* subjectLife(void* parameter){
             excecutioner->attack();
         }//Si no existe oponente selecciona random un objeto
         else{
-            //excecutioner->optionSelection();
+            excecutioner->optionSelection();
         }
         //Espera un segundo
         nanosleep(&timeController, NULL);
