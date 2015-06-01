@@ -13,19 +13,16 @@
  * @param int value: valor que se modifica en la caracteristica
  */
 MovilObject::MovilObject(int characteristic,int value, int identificator,int xPosition,int yPosition, int positionOnListParam)  {
-    position = Vector2D(xPosition,yPosition);
+    position_x = xPosition;
+    position_y = yPosition;
     use = false;
     object = characteristic;
     effect = value;
     id=identificator;
-    positionOnList = positionOnListParam;
-    isEmptyVar = -1;
-    Terrain::set(position,id);
+
+    Terrain::set(Vector2D(xPosition,yPosition),id);
 }
 
-int MovilObject::getPositionOnList(){
-    return positionOnList;
-}
 /**aplica el efecto del objeto a una persona
  * @brief modifica la caracteristica correspondiente de la persona
  * @param Subject* person: referencia de una persona
@@ -34,18 +31,14 @@ void MovilObject::applyEffect(Subject* person) {
     if (use!=true) {
         use = true;
         person->setCharacteristic(effect,(unsigned char)object);
-        Terrain::set(position,0);
-        MovilObjectManager::getInstance()->decreseCounter(*this);
-        deleteObject(id);
+        Terrain::set(Vector2D(position_x,position_y),0);
+        Vector2D newPosition =Terrain::getRandomFreePosition();
+        position_x = newPosition.x;
+        position_y = newPosition.y;
+        use = true;
+        Terrain::set(Vector2D(position_x,position_y),id);
+        updateObject(id,position_x,position_y);
     }
-
-}
-/**aplica el efecto del objeto a una persona
- * @brief modifica la caracteristica correspondiente de la persona
- * @param Subject* person: referencia de una persona
- */
-int MovilObject::isEmpty() {
-    return isEmptyVar;
 
 }
 /**obtener el id del objeto
@@ -62,7 +55,7 @@ int MovilObject::getId() {
  *
  */
 int MovilObject::get_X_Position() {
-    return position.x;
+    return position_x;
 }
 /**obtener la posicion en y del objeto
  *@brief obtener el posicion en y del objeto
@@ -70,17 +63,17 @@ int MovilObject::get_X_Position() {
  *
  */
 int MovilObject::get_Y_Position() {
-    return position.y;
+    return position_y;
 }
 Vector2D MovilObject::getVector() {
-    return position;
+    return Vector2D(position_x,position_y);
 }
 
 /**SobreCargar el operator ==
  * @brief sobrecargar el operator == de la clase MovilObject
  */
 bool MovilObject::operator==(MovilObject object) {
-    return position.x==object.position.x && position.y == object.position.y;
+    return position_x==object.position_x && position_y == object.position_y;
 }
 
 int MovilObject::getEffect() {
@@ -90,8 +83,5 @@ int MovilObject::getCharacteristic() {
     return object;
 }
 
-void MovilObject::freeSpace(int nextEmptyParam){
-    isEmptyVar = nextEmptyParam;
-}
 
 

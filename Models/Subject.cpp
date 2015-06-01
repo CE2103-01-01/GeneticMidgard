@@ -473,7 +473,8 @@ void Subject::delete_p_thread(){
 
 void Subject::optionSelection() {
     MovilObject* objectToGet = MovilObjectManager::getInstance()->getRandomObject();
-    findObjectPath(objectToGet->getVector());
+    Vector2D position(objectToGet->position_x,objectToGet->position_y);
+    findObjectPath(position);
     objectToGet->applyEffect(this);
 }
 

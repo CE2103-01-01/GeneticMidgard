@@ -19,7 +19,6 @@ MovilObjectManager* MovilObjectManager::instance = 0;
 MovilObjectManager::MovilObjectManager() {
     idCounter = 0;
     objectCounter = 0;
-    firstEmpty = -1;
     xml_document objectSource;
     objectSource.load_file(CONSTANT_XML_PATH);
     elementCounter = std::distance(objectSource.child("CONSTANTS").child("MOVILOBJECT").begin(),
@@ -35,8 +34,9 @@ MovilObjectManager::MovilObjectManager() {
         temp = temp.next_sibling();
     }
     objectSource.~xml_document();
-    for(int i = 0; i<NUMBER_OF_OBJECTS-1; i++){
-        int random = trueRandom::getRandom()%elementCounter;
+
+    for(int i = 0; i<NUMBER_OF_OBJECTS; i++){
+        int random = trueRandom::randRange(0,NUMBER_OF_OBJECTS-1);
         Vector2D position = Terrain::getRandomFreePosition();
         *(listObject+i) = MovilObject(*(listXmlData+2*random), *(listXmlData+2*random+1), idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
                                       position.x, position.y, i);
@@ -48,33 +48,9 @@ MovilObjectManager::MovilObjectManager() {
         objectCounter++;
         idCounter++;
     }
-    updateThread = static_cast<pthread_t *>(malloc(sizeof(pthread_t)));
-    pthread_create(updateThread,NULL,managerThread,NULL);
+
 }
 
-
-/**Destructor
- */
-MovilObjectManager::~MovilObjectManager(){
-    free(updateThread);
-}
-
-
-/**update a la lista para rellenar objetos
- * @brief rellena el object de la lista
- */
-void MovilObjectManager::update(){
-    MovilObject* tmp = listObject+firstEmpty;
-    while(tmp->isEmpty()!=-1){
-        int positionOnList = tmp->getPositionOnList();
-        firstEmpty = tmp->isEmpty();
-        Vector2D position = Terrain::getRandomFreePosition();
-        int random = trueRandom::randRange(0,elementCounter);
-        new(tmp) MovilObject(*(listXmlData+2*random), *(listXmlData+2*random+1), idCounter*OBJECT_ID_MULTIPLIER + OBJECT_ID,
-                             position.x, position.y, positionOnList);
-        tmp = listObject+firstEmpty;
-    }
-}
 
 
 /**retorna de forma random un objetos de la lista
@@ -82,13 +58,11 @@ void MovilObjectManager::update(){
  * @return MovilObject
  */
 MovilObject* MovilObjectManager::getRandomObject() {
-    if(firstEmpty!=-1){
-        MovilObject* tmp = listObject+firstEmpty;
-        firstEmpty = tmp->isEmpty();
-        return tmp;
-    }else{
-        return listObject+trueRandom::getRandom()%NUMBER_OF_OBJECTS;
-    }
+    
+        int rango = trueRandom::randRange(0,NUMBER_OF_OBJECTS-1);
+    std::cout<<rango<<std::endl;
+        return (listObject+rango);
+
 }
 
 
@@ -96,60 +70,22 @@ MovilObject* MovilObjectManager::getRandomObject() {
  * @brief obtiene la instancia singleton de la clase
  * @return MovilObjectManager*:puntero de instancia de la clase
  */
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 MovilObjectManager* MovilObjectManager::getInstance() {
+    pthread_mutex_lock(&mutex);
     if(instance==0){
         instance = static_cast<MovilObjectManager*>(malloc(sizeof(MovilObjectManager)));
         new(instance) MovilObjectManager();
     }
+    pthread_mutex_unlock(&mutex);
     return instance;
 }
-
-
-/**Obtiene el objeto segun la position de Vector2D
- * @brief Obtiene el objeto segun la position de Vector2D
- * @param Vector2D position: una posicion especifica
- * @return MovilObject object: el objeto de la position
+/**Destructor de la clase
+ * @brief restablecer como condicion inicial de la clase
+ *
  */
-MovilObject MovilObjectManager::getDataByPosistion(Vector2D position) {
-    for(int i = 0; i<NUMBER_OF_OBJECTS;i++){
-        MovilObject* tmp = listObject+i;
-        if(tmp->get_X_Position()==position.x && tmp->get_Y_Position()==position.y){
-            MovilObject tmp2 = *tmp;
-            tmp->freeSpace(firstEmpty);
-            firstEmpty=tmp->isEmpty();
-            return tmp2;
-        }
-    }
-}
-/**Reduce cantidad de contador de objetos
- * @brief se reduce 1 cantidad en el contador de objetos
- */
-void MovilObjectManager::decreseCounter(MovilObject object) {
-    objectCounter--;
-    int tmp = firstEmpty;
-    firstEmpty = object.getPositionOnList();
-    (listObject + object.getPositionOnList())->freeSpace(tmp);
-}
-
-/**@brief verifica si se requieren nuevos objetos moviles
- * @return bool
- */
-bool MovilObjectManager::needsToUpdate() {
-    return firstEmpty != -1;
-}
-
-
-
-/**Thread
- * @brief revisa periodicamente sobre la cantidad de objectos de la lista
- */
-void* managerThread(void* param){
-    MovilObjectManager* manager = MovilObjectManager::getInstance();
-    struct timespec time_controller;
-    time_controller.tv_sec = 5;
-    time_controller.tv_nsec = 0;
-    while(PopulationManager::getInstance()->getActivePopulations()){
-        if(manager->needsToUpdate()) manager->update();
-        nanosleep(&time_controller,NULL);
-    }
+MovilObjectManager::~MovilObjectManager() {
+    free(listObject);
+    free(listXmlData);
+    instance = 0;
 }

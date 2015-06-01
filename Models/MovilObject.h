@@ -10,14 +10,14 @@
 class Subject;
 
 class MovilObject {
-    Vector2D position;
+
     int effect;
     int object;
     bool use;
     int id;
-    int isEmptyVar;
-    int positionOnList;
 public:
+    int position_x;
+    int position_y;
     bool operator ==(MovilObject);
     MovilObject(int,int,int,int,int,int);
     void applyEffect(Subject* person);
@@ -27,9 +27,7 @@ public:
     int getEffect();
     int getCharacteristic();
     Vector2D getVector();
-    int isEmpty();
-    int getPositionOnList();
-    void freeSpace(int);
+
 };
 
 

@@ -48,6 +48,23 @@ SocketLogic *SocketLogic::getInstance() {
 SocketLogic::SocketLogic() {
     if(!initialized) init();
 }
+void SocketLogic::updateObject(unsigned int idSubject, unsigned int x, unsigned int y){
+    if(!NETWORK_ACTIVATED) return;
+    if(!initialized) return;
+    Packet packet;
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+    writer.StartObject();
+    writer.String("action"); writer.String("updateObject");
+    writer.String("id"); writer.Uint(idSubject);
+    writer.String("x"); writer.Uint(x);
+    writer.String("y"); writer.Uint(y);
+    writer.EndObject();
+    packet<<s.GetString();
+    send.lock();
+    client.send(packet);
+    send.unlock();
+}
 
 void SocketLogic::updateSubject(unsigned int idSubject, unsigned int x, unsigned int y) {
     if(!NETWORK_ACTIVATED) return;
@@ -208,6 +225,10 @@ void updateSubject(unsigned int idSubject, unsigned int x, unsigned int y){
     SocketLogic::getInstance()->updateSubject(idSubject, x, y);
 }
 
+void updateObject(unsigned int idObject, unsigned int x, unsigned int y){
+    SocketLogic::getInstance()->updateObject(idObject,x,y);
+
+}
 
 void lifeUpdate(unsigned int idSubject, int lifeUpdate) {
     SocketLogic::getInstance()->lifeUpdate(idSubject, lifeUpdate);

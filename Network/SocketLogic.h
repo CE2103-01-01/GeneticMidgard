@@ -29,6 +29,7 @@ public:
     void receiving();
     void createSubject(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
     void updateSubject(unsigned int, unsigned int, unsigned int);
+    void updateObject(unsigned int,unsigned int, unsigned int);
     void deleteSubject(unsigned int);
     void createGod(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
     void updateGod(unsigned int, unsigned int, unsigned int);
@@ -48,6 +49,7 @@ void createSubject(unsigned int, unsigned int, unsigned int, unsigned int, unsig
 void deleteSubject(unsigned int idSubject);
 void updateSubject(unsigned int, unsigned int, unsigned int);
 void lifeUpdate(unsigned int, int);
+void updateObject(unsigned int,unsigned int, unsigned int);
 void changeEdda(std::string);
 void battleDetails(unsigned int, char*);
 void exit();
