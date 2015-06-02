@@ -64,7 +64,7 @@ Chromosome::Chromosome(const Chromosome& other) {
 /**Destructor
  */
 Chromosome::~Chromosome(){
-    free(geneticData);
+    if(geneticData) free(geneticData);
 }
 
 /**Buscador de gen

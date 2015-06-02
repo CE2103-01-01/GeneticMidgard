@@ -162,7 +162,7 @@ template<class T>
 PriorityQueue<T>::PriorityQueue(const PriorityQueue &other) {
     std::cerr<<"WTF Copy Constructor"<<std::endl;
     NodeQ<T> * node = other._head;
-    while(!node) {
+    while(node) {
         push(node->getData());
         node = node->getNextNode();
     }

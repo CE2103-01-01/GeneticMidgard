@@ -145,6 +145,7 @@ Subject::Subject(const Subject& other){
     }
     father = other.father;
     mother = other.mother;
+
     opponent = other.opponent;
     lifeThread = other.lifeThread;
 }
@@ -495,7 +496,7 @@ void* subjectLife(void* parameter){
         excecutioner->updateLife();
         //Si existe oponente ataca
         if(excecutioner->getOpponent()!=NULL && excecutioner->getOpponent()->isAlive()){
-            //excecutioner->attack();
+            excecutioner->attack();
         }//Si no existe oponente selecciona random un objeto
         else{
             excecutioner->optionSelection();
