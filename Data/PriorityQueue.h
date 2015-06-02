@@ -19,7 +19,7 @@ private:
     PriorityQueue(const PriorityQueue<T> &other);
 public:
     PriorityQueue();
-
+    //operator =(PriorityQueue);
     ~PriorityQueue();
 
 
@@ -174,11 +174,15 @@ PriorityQueue<T>::PriorityQueue() {
 }
 template<class T>
 PriorityQueue<T>::~PriorityQueue() {
-    std::cout << "Destruct PQ" << std::endl;
     NodeQ<T> * node = _head;
-    while(!node) {
+    while(node) {
         NodeQ<T> * toFree = node;
         node = node->getNextNode();
         free(toFree);
     }
 }
+
+
+
+
+
