@@ -499,7 +499,7 @@ void* subjectLife(void* parameter){
             excecutioner->attack();
         }//Si no existe oponente selecciona random un objeto
         else{
-            excecutioner->optionSelection();
+            //excecutioner->optionSelection();
         }
         //Espera un segundo
         nanosleep(&timeController, NULL);

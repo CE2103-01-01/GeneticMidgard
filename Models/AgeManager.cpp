@@ -23,7 +23,7 @@ AgeManager::AgeManager(){
     pthread_cond_init(condition,NULL);
     //new(objectManager) movilObjectManager();
     pthread_create(managementThread,0,ageManagerThread, static_cast<void*>(this));
-    pthread_create(printerThread,0,subjectPrinter, NULL);
+    //pthread_create(printerThread,0,subjectPrinter, NULL);
     pthread_join(*managementThread,NULL);
 }
 
@@ -42,20 +42,13 @@ bool AgeManager::lookForEnd(){
         if(!(*(subjects+i))->isAlive()) subjectsCounter--;
         if(!(*(gods+i))->isAlive()) godsCounter--;
     }
-    if(godsCounter+subjectsCounter > 50) {
-        std::cout << "Guerra en curso dioses vivos: " << godsCounter << ", sujetos vivos: " << subjectsCounter << std::endl;
-        return false;
-    }else{
-        std::cout << "Guerra finalizada dioses vivos: " << godsCounter << ", sujetos vivos: " << subjectsCounter << std::endl;
-        return true;
-    }
 }
 
 /**@brief metodo del thread que evalua las eddas
  */
 void AgeManager::thread(){
     if(*actualAge<TWILIGHT_OF_THE_GODS_AGE)evaluateEvolution();
-    else if(lookForEnd()) PopulationManager::getInstance()->killEmAll();
+    //else if(lookForEnd()) PopulationManager::getInstance()->killEmAll();
     (*years)++;
 }
 
@@ -215,7 +208,7 @@ void* ageManagerThread(void* parameter){
 void* subjectPrinter(void* parameter){
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=1;
+    timeController.tv_sec=5;
     while(PopulationManager::getInstance()->getActivePopulations() > 0){
         //Crea y lee de consola el id de sujeto
         std::cout << ID_REQUEST << std::endl;

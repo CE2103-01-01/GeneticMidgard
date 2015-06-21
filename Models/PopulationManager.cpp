@@ -279,7 +279,7 @@ void* populationManagerWarThread(void* param){
     //Se crea el controlador de tiempo
     struct timespec timeController;
     timeController.tv_nsec=0;
-    timeController.tv_sec=1;
+    timeController.tv_sec=5;
     //Este while corre hasta que se mueran todos
     while(manager->isSomeoneAlive()){
         //Ejecuta el metodo
