@@ -75,6 +75,8 @@ Stack<Vector2D> Terrain::findPathAS(const Vector2D &start, const Vector2D &finis
     const int dy[dir]={0, 1, 0, -1};
 
     PriorityQueue<NodeAS> priorityQueue[2]; // list of open (not-yet-tried) Nodes
+    priorityQueue[0] = PriorityQueue<NodeAS>();
+    priorityQueue[1] = PriorityQueue<NodeAS>();
     int pqi; // pq index
     NodeAS* n0;
     NodeAS* m0;

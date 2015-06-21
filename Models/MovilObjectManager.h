@@ -15,6 +15,7 @@
 #define NUMBER_OF_OBJECTS 30
 
 class MovilObject;
+void* managerThread(void*);
 
 /** Clase MovilObjectManager
  * @brief clase a la cual pertenecen todos los objetos
@@ -23,11 +24,13 @@ class MovilObject;
 */
 
 class MovilObjectManager{
+    pthread_t* updateThread;
     int idCounter;
     int objectCounter;
     MovilObject* listObject;
     int* listXmlData;
     static MovilObjectManager* instance;
+    int firstEmpty;
     int elementCounter;
 public:
     MovilObjectManager();

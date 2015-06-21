@@ -12,6 +12,7 @@ void trueRandom::init(){
     fd = open("/dev/ttyACM0", O_RDONLY | O_NOCTTY);
     if (fd == -1)
     {
+        std::cout<<"C++ Random"<<std::endl;
         std::srand(std::time(NULL)); //use current time as seed for random generator
         return ;
     }
